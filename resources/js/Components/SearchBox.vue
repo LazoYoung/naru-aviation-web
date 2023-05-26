@@ -1,10 +1,8 @@
 <script setup>
-defineProps(['query']);
-defineEmits(['update:query']);
+defineProps(["value"]);
+defineEmits(["update:value"]);
 </script>
 
 <template>
-    <div class="flex">
-        <input type="search" placeholder="Search..." :value="query" @input="$emit('update:query', $event.target.value)" size="24">
-    </div>
+    <input class="inline min-w-[20%]" type="search" placeholder="Search..." :value="value" @input="$emit('update:value', $event.target.value)" size="24">
 </template>
