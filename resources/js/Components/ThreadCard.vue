@@ -1,5 +1,6 @@
 <script setup>
 const props = defineProps({
+    "id": Number,
     "title": String,
     "category": String,
     "color": String,
@@ -55,26 +56,32 @@ function getViewCount() {
     }
 }
 
-defineExpose({getDateFormat, getViewCount});
+function getLink() {
+    return route('forum.thread.show', {id: props.id});
+}
 </script>
 
 <template>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <tr class="flex flex-row items-center">
+    <tr class="flex flex-row items-center rounded-lg border-solid border-2 m-4">
         <td class="p-8 flex-shrink-0">
             <i class="fa-solid fa-circle-user fa-3x"></i>
         </td>
         <td class="flex-grow">
-            <span class="text-black text-lg font-bold">{{title}}</span>
-            <p class="block whitespace-nowrap overflow-hidden overflow-ellipsis max-w-md">This is nothing more than just a placeholder.</p>
-            <div>
-                <svg class="inline-block w-[8px] h-[16px]">
-                    <rect :style="{color: color}" width="100%" height="100%"/>
-                </svg>
-                <span class="text-black text-sm ps-2 pe-8">{{category}}</span>
-                <i class="fa-solid fa-user align-text-bottom"></i>
-                <span class="text-black text-sm ps-2">{{author}}</span>
-            </div>
+            <a :href="getLink()">
+                <div>
+                    <span class="text-black text-lg font-bold">{{title}}</span>
+                    <p class="block whitespace-nowrap overflow-hidden overflow-ellipsis w-fit">This is nothing more than just a placeholder.</p>
+                    <div>
+                        <svg class="inline-block w-[8px] h-[16px]">
+                            <rect :style="{color: color}" width="100%" height="100%"/>
+                        </svg>
+                        <span class="text-black text-sm ps-2 pe-8">{{category}}</span>
+                        <i class="fa-solid fa-user align-text-bottom"></i>
+                        <span class="text-black text-sm ps-2">{{author}}</span>
+                    </div>
+                </div>
+            </a>
         </td>
         <td class="flex flex-col flex-shrink-0 px-8">
             <div>

@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ThreadController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,9 +28,15 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/forum', function () {
-    return Inertia::render('Forum');
-})->name('forum');
+Route::get('/forum', [ForumController::class, 'browseView'])
+    ->name('forum.browse');
+
+Route::get('/thread', [ThreadController::class, 'show'])
+    ->name('forum.thread.show');
+
+Route::post('/thread/new', [ThreadController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('forum.thread.store');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
