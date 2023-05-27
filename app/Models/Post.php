@@ -25,7 +25,9 @@ use Illuminate\Support\Carbon;
 class Post extends Model {
     use HasFactory;
 
-    public mixed $content;
+    protected $touches = [
+        'thread'
+    ];
     protected $fillable = [
         'content'
     ];
