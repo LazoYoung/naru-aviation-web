@@ -78,4 +78,8 @@ class User extends Authenticatable
     public function threads(): HasMany {
         return $this->hasMany(Thread::class);
     }
+
+    public function posts(): HasMany {
+        return $this->hasMany(Post::class);
+    }
 }
