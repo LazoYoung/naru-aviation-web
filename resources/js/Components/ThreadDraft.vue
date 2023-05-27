@@ -16,11 +16,10 @@ const form = useForm({
 });
 
 function submitForm() {
-    window.alert(`content: ${form.content}`);
     form.post(route("forum.thread.store"), {
         onError: (errors) => {
             for (let key in errors) {
-                window.alert(`Failed to submit: ${key} - ${errors[key]}`);
+                window.alert(errors[key]);
             }
         }
     })
