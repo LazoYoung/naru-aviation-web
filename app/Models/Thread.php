@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereTitle($value)
  * @method static Builder|Thread whereUpdatedAt($value)
  * @method static Builder|Thread whereUserId($value)
+ * @property-read Collection<int, Post> $posts
+ * @property-read int|null $posts_count
  * @mixin Eloquent
  */
 class Thread extends Model {

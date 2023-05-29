@@ -62,7 +62,6 @@ function getLink() {
 </script>
 
 <template>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <tr class="flex flex-row items-center rounded-lg border-solid border-2 m-4">
         <td class="p-8 flex-shrink-0">
             <i class="fa-solid fa-circle-user fa-3x"></i>
@@ -85,11 +84,11 @@ function getLink() {
         </td>
         <td class="flex flex-col flex-shrink-0 px-8">
             <div>
-                <i class="fa-solid fa-clock align-text-bottom"></i>
+                <i class="fa-solid fa-clock"></i>
                 <span class="px-2">{{getDateFormat()}}</span>
             </div>
             <div>
-                <i class="fa-solid fa-eye fa-sm align-text-bottom"></i>
+                <i class="fa-solid fa-eye fa-sm"></i>
                 <span class="px-2">{{getViewCount()}}</span>
             </div>
         </td>
