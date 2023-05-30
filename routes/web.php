@@ -29,18 +29,37 @@ Route::get('/', function () {
 });
 
 Route::get('/forum', [ForumController::class, 'browseView'])
+    ->middleware(['auth', 'verified'])
     ->name('forum.browse');
 
 Route::get('/thread', [ThreadController::class, 'show'])
+    ->middleware(['auth', 'verified'])
     ->name('forum.thread.show');
 
 Route::post('/thread/new', [ThreadController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('forum.thread.store');
 
+Route::post('/post/like-count', [PostController::class, 'getLikeCount'])
+    ->name('forum.post.like-count');
+
+Route::post('/post/has-liked', [PostController::class, 'hasLiked'])
+    ->middleware(['auth', 'verified'])
+    ->name('forum.post.has-liked');
+
+Route::post('/post/like', [PostController::class, 'like'])
+    ->middleware(['auth', 'verified'])
+    ->name('forum.post.like');
+
+Route::post('/post/dislike', [PostController::class, 'dislike'])
+    ->middleware(['auth', 'verified'])
+    ->name('forum.post.dislike');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->name('dashboard');
+})
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
