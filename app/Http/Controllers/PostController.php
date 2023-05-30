@@ -89,7 +89,7 @@ class PostController extends Controller {
 
     private function validatePost(Request $request) {
         $request->validate([
-            'post-id' => ['exists:App\Models\Post,id']
+            'post-id' => 'exists:App\Models\Post,id'
         ]);
     }
 

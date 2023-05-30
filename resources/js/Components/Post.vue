@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 
 const props = defineProps(['post', 'user']);
-const csrfToken = usePage().props.csrf_token;
+const csrfToken = usePage().props['csrf_token'];
 const liked = ref(false);
 const likeCount = ref(0);
 
@@ -17,9 +17,9 @@ function onLikeAction() {
         let promise;
 
         if (liked.value) {
-            promise = fetchData(route('forum.post.dislike'));
+            promise = submitData(route('forum.post.dislike'));
         } else {
-            promise = fetchData(route('forum.post.like'));
+            promise = submitData(route('forum.post.like'));
         }
 
         promise.then(() => {
@@ -43,22 +43,33 @@ function fetchLiked() {
 
 function fetchLikeCount() {
     return fetchData(route('forum.post.like-count'))
-        .then(text => likeCount.value = parseInt(text));
+        .then(text => likeCount.value = parseInt(text ? text : '0'));
 }
 
 function fetchData(url) {
+    let locator = new URL(url);
+    let params = locator.searchParams;
+    params.append('post-id', props.post['id']);
+
+    return fetch(locator, {
+        method: 'GET',
+        headers: { 'X-CSRF-Token': csrfToken }
+    }).then(r => r.text(), reason => window.alert(`Failed to fetch data: ${reason}`));
+}
+
+function submitData(url) {
     let form = new FormData();
     form.append('post-id', props.post['id']);
 
     return fetch(url, {
         method: 'POST',
-        body: form,
-        headers: {
-            'X-CSRF-Token': csrfToken
-        }
+        headers: { 'X-CSRF-Token': csrfToken },
+        body: form
     }).then(r => r.text(), reason => window.alert(`Failed to fetch data: ${reason}`));
 }
 </script>
+
+<!-- todo Feature to add posts -->
 
 <template>
     <div class="p-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">

@@ -9,6 +9,10 @@ import CategorySelect from "@/Components/CategorySelect.vue";
 
 const query = ref("");
 const draft = ref(false);
+const posts = ref([]);
+
+defineProps(['threads']);
+defineExpose({ openDraft, closeDraft });
 
 function openDraft() {
     draft.value = true;
@@ -17,8 +21,6 @@ function openDraft() {
 function closeDraft() {
     draft.value = false;
 }
-
-defineExpose({ openDraft, closeDraft });
 </script>
 
 <template>
@@ -49,8 +51,9 @@ defineExpose({ openDraft, closeDraft });
             <div class="mt-6 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <table class="w-full">
                     <tbody>
-                        <ThreadCard :id="1" title="Hello, world!" category="General" color="#000000" author="Chanyoung Park" :date="new Date(2023, 4, 26, 18, 22)" :view.number="13"></ThreadCard>
-                        <ThreadCard :id="2" title="Hello, world!" category="General" color="#000000" author="Chanyoung Park" :date="new Date(2023, 4, 26, 18, 22)" :view.number="13"></ThreadCard>
+                        <ThreadCard v-for="thread in threads" :thread="thread" />
+<!--                        <ThreadCard :id="1" title="Hello, world!" category="General" color="#000000" author="Chanyoung Park" :date="new Date(2023, 4, 26, 18, 22)" :view.number="13"></ThreadCard>-->
+<!--                        <ThreadCard :id="2" title="Hello, world!" category="General" color="#000000" author="Chanyoung Park" :date="new Date(2023, 4, 26, 18, 22)" :view.number="13"></ThreadCard>-->
                     </tbody>
                 </table>
             </div>

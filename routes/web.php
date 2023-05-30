@@ -40,10 +40,22 @@ Route::post('/thread/new', [ThreadController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('forum.thread.store');
 
-Route::post('/post/like-count', [PostController::class, 'getLikeCount'])
+Route::get('/thread/content-peek', [ThreadController::class, 'getContentPeek'])
+    ->name('forum.thread.content-peek');
+
+Route::get('/thread/view-count', [ThreadController::class, 'getViewCount'])
+    ->name('forum.thread.view-count');
+
+Route::get('/thread/author-name', [ThreadController::class, 'getAuthorName'])
+    ->name('forum.thread.author-name');
+
+Route::get('/thread/created-time', [ThreadController::class, 'getCreatedTime'])
+    ->name('forum.thread.created-time');
+
+Route::get('/post/like-count', [PostController::class, 'getLikeCount'])
     ->name('forum.post.like-count');
 
-Route::post('/post/has-liked', [PostController::class, 'hasLiked'])
+Route::get('/post/has-liked', [PostController::class, 'hasLiked'])
     ->middleware(['auth', 'verified'])
     ->name('forum.post.has-liked');
 
