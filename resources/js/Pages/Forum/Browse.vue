@@ -12,15 +12,6 @@ const draft = ref(false);
 const posts = ref([]);
 
 defineProps(['threads']);
-defineExpose({ openDraft, closeDraft });
-
-function openDraft() {
-    draft.value = true;
-}
-
-function closeDraft() {
-    draft.value = false;
-}
 </script>
 
 <template>
@@ -35,13 +26,13 @@ function closeDraft() {
             <div class="p-6 bg-white shadow-sm sm:rounded-lg">
                 <div class="h-12 flex gap-x-4">
                     <CategorySelect :allow-all="true" />
-                    <SearchBox v-model:value="query"></SearchBox>
+                    <SearchBox v-model:value="query" />
                     <div class="flex-grow"></div>
                     <button class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
                         <i class="fa-regular fa-folder-open"></i>
                         <span class="ms-2 hidden md:inline">My Posts</span>
                     </button>
-                    <button @click="openDraft" class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
+                    <button @click="draft = true" class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
                         <i class="fa-solid fa-plus"></i>
                         <span class="ms-2 hidden md:inline">New Post</span>
                     </button>
@@ -52,13 +43,11 @@ function closeDraft() {
                 <table class="w-full">
                     <tbody>
                         <ThreadCard v-for="thread in threads" :thread="thread" />
-<!--                        <ThreadCard :id="1" title="Hello, world!" category="General" color="#000000" author="Chanyoung Park" :date="new Date(2023, 4, 26, 18, 22)" :view.number="13"></ThreadCard>-->
-<!--                        <ThreadCard :id="2" title="Hello, world!" category="General" color="#000000" author="Chanyoung Park" :date="new Date(2023, 4, 26, 18, 22)" :view.number="13"></ThreadCard>-->
                     </tbody>
                 </table>
             </div>
 
-            <ThreadDraft v-if="draft" @closed="closeDraft" />
+            <ThreadDraft v-if="draft" @close="draft = false" />
         </div>
     </MainLayout>
 </template>

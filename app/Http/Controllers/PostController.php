@@ -4,12 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Like;
 use App\Models\Post;
+use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Throwable;
 
 class PostController extends Controller {
 
+    /**
+     * Method: POST
+     * Expected input: thread-id, content
+     * Result: none
+     * Possible status: 200, 500
+     */
+    public function store(Request $request): Response {
+        try {
+            $this->createPost($request)
+                ->saveOrFail();
+            return response(null, 200);
+        } catch (Throwable $e) {
+            return response($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Method: GET
+     * Expected input: post-id
+     * Result: int
+     * Possible status: 200
+     */
     public function getLikeCount(Request $request): Response {
         $this->validatePost($request);
 
@@ -74,6 +98,20 @@ class PostController extends Controller {
         } else {
             return response(null, 500);
         }
+    }
+
+    private function createPost(Request $request): Post {
+        $validated = $request->validate([
+            'thread-id' => 'exists:App\Models\Thread,id',
+            'content' => 'required'
+        ]);
+        $post = new Post([
+            'content' => $validated['content']
+        ]);
+
+        $post->user()->associate($request->user());
+        $post->thread()->associate(Thread::find($validated['thread-id']));
+        return $post;
     }
 
     private function getPost(Request $request): Post {

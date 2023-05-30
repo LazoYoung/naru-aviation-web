@@ -52,6 +52,10 @@ Route::get('/thread/author-name', [ThreadController::class, 'getAuthorName'])
 Route::get('/thread/created-time', [ThreadController::class, 'getCreatedTime'])
     ->name('forum.thread.created-time');
 
+Route::post('/post/new', [PostController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('forum.post.store');
+
 Route::get('/post/like-count', [PostController::class, 'getLikeCount'])
     ->name('forum.post.like-count');
 

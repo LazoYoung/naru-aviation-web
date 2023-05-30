@@ -1,19 +1,10 @@
 <script setup>
-// const props = defineProps({
-//     "id": Number,
-//     "title": String,
-//     "category": String,
-//     "color": String,
-//     "author": String,
-//     "date": Date,
-//     "view": Number
-// });
 import {ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {Category} from "@/category.ts";
 
-const props = defineProps(['thread']);
 const csrfToken = usePage().props['csrf_token'];
+const props = defineProps(['thread']);
 const id = props.thread['id'];
 const title = props.thread['title'];
 const contentPeek = ref('');
@@ -26,42 +17,9 @@ fetchAuthorName();
 fetchCreatedTime();
 fetchViewCount();
 
-// function getDateFormat() {
-//     let diff = Date.now() - props.date.getTime();
-//
-//     let rem = Math.round(diff / 60000);
-//     let y = Math.floor(rem / year);
-//     rem -= y * year;
-//     let m = Math.floor(rem / month);
-//     rem -= m * month;
-//     let d = Math.floor(rem / day);
-//     rem -= d * day;
-//     let h = Math.floor(rem / hour);
-//     let min = rem - h * hour;
-//
-//     // todo l18n
-//     if (y > 1) {
-//         return y + " years ago";
-//     }
-//     if (m > 1) {
-//         return m + " months ago";
-//     }
-//     if (d > 1) {
-//         return d + " days ago";
-//     }
-//     if (h > 1) {
-//         return h + " hours ago";
-//     }
-//     if (min > 1) {
-//         return min + " minutes ago";
-//     }
-//     return "Just now";
-// }
-
 function getLink() {
     return route('forum.thread.show', { id: props.thread['id'] });
 }
-
 
 function getCategory() {
     return Category.byId(props.thread['category']);
@@ -116,7 +74,7 @@ function fetchData(url) {
             <a :href="getLink()">
                 <div>
                     <span class="text-black text-lg font-bold">{{ title }}</span>
-                    <p class="block whitespace-nowrap overflow-hidden overflow-ellipsis w-fit">{{ contentPeek }}</p>
+                    <p class="block text-gray-500 max-w-xs lg:max-w-lg whitespace-nowrap overflow-hidden overflow-ellipsis">{{ contentPeek }}</p>
                     <div>
                         <svg class="inline-block w-[8px] h-[16px]">
                             <g :fill="getCategory().getColor()">
@@ -130,7 +88,7 @@ function fetchData(url) {
                 </div>
             </a>
         </td>
-        <td class="flex flex-col flex-shrink-0 px-8">
+        <td class="flex flex-col flex-shrink-0 w-[170px]">
             <div>
                 <i class="fa-solid fa-clock"></i>
                 <span class="px-2">{{ createdTime }}</span>

@@ -6,11 +6,10 @@ use App\Enums\Category;
 use App\Models\Post;
 use App\Models\Thread;
 use Carbon\Carbon;
-use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Throwable;
 
 class ThreadController extends Controller {
     private const hour = 60;
@@ -22,26 +21,27 @@ class ThreadController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store(Request $request) {
-        $max = sizeof(Category::cases()) - 1;
-        $validated = $request->validate([
-            'title' => 'required|string|min:5|max:32',
-            'category' => 'required|int|min:0|max:'.$max,
-            'content' => 'required',
-        ]);
-        $thread = $this->createThread($request, $validated);
-        $post = new Post([
-            'content' => $validated['content'],
-        ]);
-        $post->thread()->associate($thread);
-        $post->user()->associate($request->user());
+        try {
+            $max = sizeof(Category::cases()) - 1;
+            $validated = $request->validate([
+                'title' => 'required|string|min:3|max:48',
+                'category' => 'required|int|min:0|max:' . $max,
+                'content' => 'required',
+            ]);
+            $thread = $this->createThread($request, $validated);
+            $post = new Post([
+                'content' => $validated['content'],
+            ]);
+            $post->thread()->associate($thread);
+            $post->user()->associate($request->user());
+            $post->saveOrFail();
 
-        if (!$post->save()) {
-            abort(500);
+            return redirect(route('forum.thread.show', [
+                'id' => $thread->getQueueableId(),
+            ]));
+        } catch (Throwable $t) {
+            return response($t->getMessage(), 500);
         }
-
-        return redirect(route('forum.thread.show', [
-            'id' => $thread->getQueueableId(),
-        ]));
     }
 
     /**
@@ -51,22 +51,32 @@ class ThreadController extends Controller {
      * Expected input: id
      */
     public function show(Request $request) {
-        $this->validateThread($request);
+        try {
+            $this->validateThread($request);
 
-        $thread = Thread::find($request->query('id'));
-        return Inertia::render('Forum/Thread', [
-            'thread' => $thread,
-            'posts' => $thread->posts()->oldest()->get(),
-            'user' => $request->user(),
-        ]);
+            $thread = Thread::find($request->query('id'));
+            return Inertia::render('Forum/Thread', [
+                'thread' => $thread,
+                'posts' => $thread->posts()->oldest()->get(),
+                'user' => $request->user(),
+            ]);
+        } catch (Throwable $t) {
+            return response($t->getMessage(), 500);
+        }
     }
 
+    /**
+     * Get content of first post within the given thread.
+     *
+     * Method: POST
+     * Expected input: id, limit
+     */
     public function getContentPeek(Request $request): Response {
         $this->validateThread($request);
 
         $thread = Thread::find($request->query('id'));
         $content = $thread->posts->first()->content;
-        return response(Str::limit($content, 20));
+        return response($content);
     }
 
     /**
@@ -173,7 +183,7 @@ class ThreadController extends Controller {
     }
 
     private function validateThread(Request $request) {
-        return $request->validate([
+        $request->validate([
             'id' => 'exists:App\Models\Thread,id'
         ]);
     }

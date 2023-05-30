@@ -25,7 +25,7 @@ function submitForm() {
     })
 }
 
-defineEmits(["closed"]);
+defineEmits(["close"]);
 </script>
 
 <template>
@@ -39,7 +39,7 @@ defineEmits(["closed"]);
         </div>
         <div class="mx-4 mb-4 flex flex-row">
             <button type="submit" :class="style.submit">Save</button>
-            <button @click="$emit('closed')" :class="style.close">Close</button>
+            <button @click="$emit('close')" :class="style.close">Close</button>
         </div>
     </form>
 </template>
