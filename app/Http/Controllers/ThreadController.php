@@ -109,7 +109,7 @@ class ThreadController extends Controller {
         $thread = Thread::find($request->query('id'));
         $ms = $thread->created_at
             ->diffAsCarbonInterval(new Carbon())
-            ->milliseconds;
+            ->totalMilliseconds;
         $format = $this->getTimeDiffFormat($ms);
         return response($format);
     }
