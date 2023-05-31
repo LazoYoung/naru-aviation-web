@@ -1,28 +1,35 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, onUpdated, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {Category} from "@/category.ts";
 
 const csrfToken = usePage().props['csrf_token'];
-const props = defineProps(['thread']);
-const id = props.thread['id'];
-const title = props.thread['title'];
+const props = defineProps(['id', 'title', 'category']);
 const contentPeek = ref('');
 const authorName = ref('N/A');
 const createdTime = ref('N/A');
 const viewCount = ref('0 view');
 
-fetchContent();
-fetchAuthorName();
-fetchCreatedTime();
-fetchViewCount();
+onMounted(() => {
+    fetchContent();
+    fetchAuthorName();
+    fetchCreatedTime();
+    fetchViewCount();
+});
+
+watch(props,  () => {
+    fetchContent();
+    fetchAuthorName();
+    fetchCreatedTime();
+    fetchViewCount();
+});
 
 function getLink() {
-    return route('forum.thread.show', { id: props.thread['id'] });
+    return route('forum.thread.show', { id: props.id });
 }
 
 function getCategory() {
-    return Category.byId(props.thread['category']);
+    return Category.byId(props.category);
 }
 
 function fetchContent() {
@@ -56,12 +63,12 @@ function fetchViewCount() {
 function fetchData(url) {
     let locator = new URL(url);
     let params = locator.searchParams;
-    params.append('id', props.thread['id']);
+    params.append('id', props.id);
 
     return fetch(locator, {
         method: 'GET',
         headers: { 'X-CSRF-Token': csrfToken }
-    }).then(r => r.text(), reason => window.alert(`Failed to fetch data: ${reason}`));
+    }).then(r => r.text(), reason => console.error(`Failed to fetch data: ${reason}`));
 }
 </script>
 

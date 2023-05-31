@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Thread;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
@@ -17,6 +18,37 @@ class ThreadController extends Controller {
     private const day = 24 * self::hour;
     private const month = 30 * self::day;
     private const year = 12 * self::month + 5 * self::day;
+
+    /**
+     * Fetch a list of threads by querying the database.
+     * <br>
+     * Expected input: search (string?), category (int?)
+     * Result: Rendered view
+     */
+    public function fetch(Request $request): Response {
+        $categoryId = $request->query('category', -1);
+        $query = $request->query('search');
+        $sql = Thread::query();
+        $category = null;
+
+        try {
+            $category = Category::byId($categoryId);
+        } catch (Throwable) { /* ignored */ }
+
+        $sql = $sql->when($category != null, function (Builder $sql) use ($categoryId) {
+            return $sql->where('category', '=', $categoryId);
+        });
+
+        $sql = $sql->when($query != null, function (Builder $sql) use ($query) {
+            try {
+                return $sql->where('title', 'like', "%$query%");
+            } catch (Throwable $t) {
+                dump($t->getMessage());
+            }
+        });
+
+        return response($sql->get()->toJson());
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -74,11 +106,15 @@ class ThreadController extends Controller {
      * Expected input: id, limit
      */
     public function getContentPeek(Request $request): Response {
-        $this->validateThread($request);
+        try {
+            $this->validateThread($request);
 
-        $thread = Thread::find($request->query('id'));
-        $content = $thread->posts->first()->content;
-        return response($content);
+            $thread = Thread::find($request->query('id'));
+            $content = $thread->posts->first()->content;
+            return response($content);
+        } catch (Throwable $t) {
+            return response($t->getMessage(), 500);
+        }
     }
 
     /**
