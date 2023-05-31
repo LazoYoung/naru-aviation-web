@@ -28,54 +28,62 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/forum', [ForumController::class, 'browseView'])
+Route::get('/forum', [ForumController::class, 'getView'])
     ->middleware(['auth', 'verified'])
     ->name('forum.browse');
 
-Route::get('/thread', [ThreadController::class, 'show'])
-    ->middleware(['auth', 'verified'])
-    ->name('forum.thread.show');
-
-Route::post('/thread/new', [ThreadController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('forum.thread.store');
-
-Route::get('/thread/content-peek', [ThreadController::class, 'getContentPeek'])
-    ->name('forum.thread.content-peek');
-
-Route::get('/thread/view-count', [ThreadController::class, 'getViewCount'])
-    ->name('forum.thread.view-count');
-
-Route::get('/thread/author-name', [ThreadController::class, 'getAuthorName'])
-    ->name('forum.thread.author-name');
-
-Route::get('/thread/created-time', [ThreadController::class, 'getCreatedTime'])
-    ->name('forum.thread.created-time');
-
-Route::post('/post/new', [PostController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('forum.post.store');
-
-Route::get('/post/like-count', [PostController::class, 'getLikeCount'])
-    ->name('forum.post.like-count');
-
-Route::get('/post/has-liked', [PostController::class, 'hasLiked'])
-    ->middleware(['auth', 'verified'])
-    ->name('forum.post.has-liked');
-
-Route::post('/post/like', [PostController::class, 'like'])
-    ->middleware(['auth', 'verified'])
-    ->name('forum.post.like');
-
-Route::post('/post/dislike', [PostController::class, 'dislike'])
-    ->middleware(['auth', 'verified'])
-    ->name('forum.post.dislike');
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})
+Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::controller(ThreadController::class)
+    ->group(function () {
+        Route::get('/thread', 'show')
+            ->middleware(['auth', 'verified'])
+            ->name('forum.thread.show');
+
+        Route::get('/thread/fetch', 'fetch')
+            ->name('forum.thread.fetch');
+
+        Route::post('/thread/new', 'store')
+            ->middleware(['auth', 'verified'])
+            ->name('forum.thread.store');
+
+        Route::get('/thread/content-peek', 'getContentPeek')
+            ->name('forum.thread.content-peek');
+
+        Route::get('/thread/view-count', 'getViewCount')
+            ->name('forum.thread.view-count');
+
+        Route::get('/thread/author-name', 'getAuthorName')
+            ->name('forum.thread.author-name');
+
+        Route::get('/thread/created-time', 'getCreatedTime')
+            ->name('forum.thread.created-time');
+    });
+
+Route::controller(PostController::class)
+    ->group(function () {
+    Route::post('/post/new', 'store')
+        ->middleware(['auth', 'verified'])
+        ->name('forum.post.store');
+
+    Route::get('/post/like-count', 'getLikeCount')
+        ->name('forum.post.like-count');
+
+    Route::get('/post/has-liked', 'hasLiked')
+        ->middleware(['auth', 'verified'])
+        ->name('forum.post.has-liked');
+
+    Route::post('/post/like', 'like')
+        ->middleware(['auth', 'verified'])
+        ->name('forum.post.like');
+
+    Route::post('/post/dislike', 'dislike')
+        ->middleware(['auth', 'verified'])
+        ->name('forum.post.dislike');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
