@@ -4,7 +4,7 @@ import { usePage } from "@inertiajs/vue3";
 
 const props = defineProps(['post', 'user', 'index', 'last']);
 const frame = ref();
-const csrfToken = usePage().props['csrf_token'];
+const csrfToken = usePage().props.auth['csrf_token'];
 const liked = ref(false);
 const likeCount = ref(0);
 const likeLabel = computed(() => {

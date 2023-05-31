@@ -27,7 +27,7 @@ class ThreadController extends Controller {
      */
     public function fetch(Request $request): Response {
         $categoryId = $request->query('category', -1);
-        $query = $request->query('search');
+        $search = $request->query('search');
         $sql = Thread::query();
         $category = null;
 
@@ -35,16 +35,18 @@ class ThreadController extends Controller {
             $category = Category::byId($categoryId);
         } catch (Throwable) { /* ignored */ }
 
-        $sql = $sql->when($category != null, function (Builder $sql) use ($categoryId) {
+        $sql->when($category != null, function (Builder $sql) use ($categoryId) {
             return $sql->where('category', '=', $categoryId);
         });
 
-        $sql = $sql->when($query != null, function (Builder $sql) use ($query) {
-            try {
-                return $sql->where('title', 'like', "%$query%");
-            } catch (Throwable $t) {
-                dump($t->getMessage());
+        $sql->when($search != null, function (Builder $sql) use ($search) {
+            if (str_starts_with($search, 'user:')) {
+                $user = $this->getUser(substr($search, 5));
+                if ($user != null) {
+                    return $sql->where('user_id', '=', $user->id);
+                }
             }
+            return $sql->where('title', 'like', "%$search%");
         });
 
         return response($sql->get()->toJson());
@@ -92,7 +94,6 @@ class ThreadController extends Controller {
             return Inertia::render('Forum/Thread', [
                 'thread' => $thread,
                 'posts' => $thread->posts()->oldest()->get(),
-                'user' => $request->user(),
             ]);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
@@ -162,7 +163,6 @@ class ThreadController extends Controller {
     }
 
     private function updateViewCount(Thread $thread, User $user) {
-        // todo check if user has already visited today
         $thread->view += 1;
         $thread->save();
     }
@@ -216,6 +216,11 @@ class ThreadController extends Controller {
      */
     public function destroy(Thread $thread) {
         //
+    }
+
+    private function getUser($query): ?User {
+        return User::where('name', 'like', "%$query%")
+            ->first();
     }
 
     private function createThread(Request $request, array $validated): Thread {

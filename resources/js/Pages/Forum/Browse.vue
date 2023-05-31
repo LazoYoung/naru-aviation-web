@@ -7,7 +7,8 @@ import ThreadCard from "@/Components/ThreadCard.vue";
 import ThreadDraft from "@/Components/ThreadDraft.vue";
 import CategorySelect from "@/Components/CategorySelect.vue";
 
-const csrfToken = usePage().props['csrf_token'];
+const user = usePage().props.auth['user'];
+const csrfToken = usePage().props.auth['csrf_token'];
 const category = ref(null);
 const search = ref(null);
 const draft = ref(false);
@@ -16,9 +17,9 @@ const throttlePeriod = 1500;
 let isThrottled = false;
 let queued = false;
 
-reloadThreads();
+reload();
 
-function reloadThreads() {
+function reload() {
     if (isThrottled) {
         queued = true;
         return;
@@ -44,6 +45,11 @@ function reloadThreads() {
     });
 }
 
+function findMyPost() {
+    search.value = 'user:' + user['name'].toLowerCase();
+    reload();
+}
+
 function startThrottle() {
     isThrottled = true;
 
@@ -51,7 +57,7 @@ function startThrottle() {
         isThrottled = false;
 
         if (queued) {
-            reloadThreads();
+            reload();
             queued = false;
         }
     }, throttlePeriod);
@@ -69,10 +75,10 @@ function startThrottle() {
         <div class="max-w-7xl mx-auto py-12 sm:px-6">
             <div class="p-6 bg-white shadow-sm sm:rounded-lg">
                 <div class="h-12 flex gap-x-4">
-                    <CategorySelect @input="reloadThreads" v-model="category" :allow-all="true" />
-                    <SearchBox @input="reloadThreads" v-model="search" />
+                    <CategorySelect @input="reload" v-model="category" :allow-all="true" />
+                    <SearchBox @input="reload" v-model="search" />
                     <div class="flex-grow"></div>
-                    <button class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
+                    <button @click="findMyPost" class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
                         <i class="fa-regular fa-folder-open"></i>
                         <span class="ms-2 hidden md:inline">My Posts</span>
                     </button>

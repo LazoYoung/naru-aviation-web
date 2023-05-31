@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 
-const csrfToken = usePage().props['csrf_token'];
+const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps(['thread']);
 const style = {
     form: "fixed bottom-0 left-0 right-0 max-w-2xl mx-auto h-1/2 bg-gray-100 flex flex-col",

@@ -1,12 +1,13 @@
 <script setup>
-import {Head} from "@inertiajs/vue3";
+import {Head, usePage} from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import Post from "@/Components/Post.vue";
-import {computed, ref} from "vue";
+import {ref} from "vue";
 import PostDraft from "@/Components/PostDraft.vue";
 
+const props = defineProps(['thread', 'posts']);
+const user = usePage().props.auth['user'];
 const draft = ref(false);
-const props = defineProps(['thread', 'posts', 'user']);
 const thread = props.thread;
 const posts = props.posts;
 

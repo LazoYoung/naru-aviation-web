@@ -3,7 +3,7 @@ import {onMounted, onUpdated, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {Category} from "@/category.ts";
 
-const csrfToken = usePage().props['csrf_token'];
+const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps(['id', 'title', 'category']);
 const contentPeek = ref('');
 const authorName = ref('N/A');
