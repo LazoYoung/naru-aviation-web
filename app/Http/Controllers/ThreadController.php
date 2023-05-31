@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Category;
 use App\Models\Post;
 use App\Models\Thread;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -55,6 +56,7 @@ class ThreadController extends Controller {
             $this->validateThread($request);
 
             $thread = Thread::find($request->query('id'));
+            $this->updateViewCount($thread, $request->user());
             return Inertia::render('Forum/Thread', [
                 'thread' => $thread,
                 'posts' => $thread->posts()->oldest()->get(),
@@ -88,9 +90,8 @@ class ThreadController extends Controller {
     public function getViewCount(Request $request): Response {
         $this->validateThread($request);
 
-        // todo restructure database to implement
         $thread = Thread::find($request->query('id'));
-        return response(0);
+        return response($thread->view);
     }
 
     /**
@@ -122,6 +123,12 @@ class ThreadController extends Controller {
             ->totalMilliseconds;
         $format = $this->getTimeDiffFormat($ms);
         return response($format);
+    }
+
+    private function updateViewCount(Thread $thread, User $user) {
+        // todo check if user has already visited today
+        $thread->view += 1;
+        $thread->save();
     }
 
     private function getTimeDiffFormat($ms) {

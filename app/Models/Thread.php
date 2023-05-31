@@ -34,6 +34,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereUserId($value)
  * @property-read Collection<int, Post> $posts
  * @property-read int|null $posts_count
+ * @property int $view
+ * @method static Builder|Thread whereView($value)
  * @mixin Eloquent
  */
 class Thread extends Model {
