@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -36,34 +37,32 @@ Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::controller(ThreadController::class)
-    ->group(function () {
-        Route::get('/thread', 'show')
-            ->middleware(['auth', 'verified'])
-            ->name('forum.thread.show');
+Route::controller(ThreadController::class)->group(function () {
+    Route::get('/thread', 'show')
+        ->middleware(['auth', 'verified'])
+        ->name('forum.thread.show');
 
-        Route::get('/thread/fetch', 'fetch')
-            ->name('forum.thread.fetch');
+    Route::get('/thread/fetch', 'fetch')
+        ->name('forum.thread.fetch');
 
-        Route::post('/thread/new', 'store')
-            ->middleware(['auth', 'verified'])
-            ->name('forum.thread.store');
+    Route::post('/thread/new', 'store')
+        ->middleware(['auth', 'verified'])
+        ->name('forum.thread.store');
 
-        Route::get('/thread/content-peek', 'getContentPeek')
-            ->name('forum.thread.content-peek');
+    Route::get('/thread/content-peek', 'getContentPeek')
+        ->name('forum.thread.content-peek');
 
-        Route::get('/thread/view-count', 'getViewCount')
-            ->name('forum.thread.view-count');
+    Route::get('/thread/view-count', 'getViewCount')
+        ->name('forum.thread.view-count');
 
-        Route::get('/thread/author-name', 'getAuthorName')
-            ->name('forum.thread.author-name');
+    Route::get('/thread/author-name', 'getAuthorName')
+        ->name('forum.thread.author-name');
 
-        Route::get('/thread/created-time', 'getCreatedTime')
-            ->name('forum.thread.created-time');
-    });
+    Route::get('/thread/created-time', 'getCreatedTime')
+        ->name('forum.thread.created-time');
+});
 
-Route::controller(PostController::class)
-    ->group(function () {
+Route::controller(PostController::class)->group(function () {
     Route::post('/post/new', 'store')
         ->middleware(['auth', 'verified'])
         ->name('forum.post.store');
@@ -84,6 +83,10 @@ Route::controller(PostController::class)
         ->name('forum.post.dislike');
 });
 
+Route::controller(CalendarController::class)->group(function () {
+    Route::get('/calendar', 'show')
+        ->name('calendar.show');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
