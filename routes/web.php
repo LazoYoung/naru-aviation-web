@@ -86,6 +86,14 @@ Route::controller(PostController::class)->group(function () {
 Route::controller(CalendarController::class)->group(function () {
     Route::get('/calendar', 'show')
         ->name('calendar.show');
+
+    Route::get('/calendar/form', 'getForm')
+        ->middleware(['auth', 'verified'])
+        ->name('calendar.form');
+
+    Route::post('/calendar/new', 'submitNewEvent')
+        ->middleware(['auth', 'verified'])
+        ->name('calendar.new');
 });
 
 Route::middleware('auth')->group(function () {

@@ -22,7 +22,7 @@ function submitForm() {
                 window.alert(errors[key]);
             }
         }
-    })
+    });
 }
 
 defineEmits(["close"]);
