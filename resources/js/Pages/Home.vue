@@ -1,6 +1,6 @@
 <script setup>
 import MainLayout from '@/Layouts/MainLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 
 defineProps({
     canLogin: {
@@ -24,13 +24,18 @@ defineProps({
     <Head title="Home" />
 
     <MainLayout>
-        <div class="fixed min-w-full min-h-full overflow-hidden">
-            <video autoplay loop muted disablePictureInPicture>
+        <div class="fixed">
+            <video class="object-cover w-screen h-screen" autoplay loop muted disablePictureInPicture>
                 <source src="/promo.mp4">
             </video>
         </div>
 
-        <div class="z-10 relative top-0 h-screen invisible"></div>
+        <div class="z-10 flex flex-col relative top-0 h-screen">
+            <div class="my-auto text-center">
+                <p class="text-5xl font-bold py-8">We are virtual aviators.</p>
+                <button class="inline-block bg-cyan-600 px-4 py-2">Join us</button>
+            </div>
+        </div>
 
         <div class="z-10 relative w-full h-screen bg-black sm:px-6 lg:px-8">
             <div class="py-80">blank area</div>
