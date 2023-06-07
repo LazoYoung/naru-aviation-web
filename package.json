@@ -21,6 +21,8 @@
         "@fullcalendar/core": "^6.1.8",
         "@fullcalendar/daygrid": "^6.1.8",
         "@fullcalendar/interaction": "^6.1.8",
-        "@fullcalendar/vue3": "^6.1.8"
+        "@fullcalendar/vue3": "^6.1.8",
+        "ink-mde": "^0.25.0-rc.0",
+        "marked": "^5.0.5"
     }
 }

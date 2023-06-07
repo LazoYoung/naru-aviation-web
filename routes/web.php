@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -63,6 +64,9 @@ Route::controller(PostController::class)->group(function () {
         ->middleware(['auth', 'verified'])
         ->name('forum.post.store');
 
+    Route::get('/post/content', 'getContent')
+        ->name('forum.post.content');
+
     Route::get('/post/like-count', 'getLikeCount')
         ->name('forum.post.like-count');
 
@@ -90,6 +94,12 @@ Route::controller(CalendarController::class)->group(function () {
     Route::post('/calendar/new', 'submitNewEvent')
         ->middleware(['auth', 'verified'])
         ->name('calendar.new');
+});
+
+Route::controller(FileController::class)->group(function () {
+    Route::post('/upload', 'upload')
+        ->middleware(['auth', 'verified'])
+        ->name('file.upload');
 });
 
 Route::middleware('auth')->group(function () {

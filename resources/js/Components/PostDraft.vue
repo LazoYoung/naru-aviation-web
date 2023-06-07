@@ -1,6 +1,7 @@
 <script setup>
 import {ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
+import InkMde from "ink-mde/vue";
 
 const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps(['thread']);
@@ -13,6 +14,24 @@ const style = {
 };
 const content = ref('');
 const emit = defineEmits(['close']);
+const options = {
+    files: {
+        clipboard: true,
+        dragAndDrop: true,
+        handler: onFileUpload,
+    },
+    hooks: {
+        afterUpdate: onContentChange,
+    },
+    interface: {
+        spellcheck: false,
+        toolbar: true,
+    },
+    placeholder: 'Write your post here...',
+    toolbar: {
+        upload: true,
+    },
+};
 
 function submitForm() {
     let form = new FormData();
@@ -32,12 +51,68 @@ function submitForm() {
         }
     });
 }
+
+function onContentChange(doc) {
+    form['content'] = doc;
+}
+
+async function onFileUpload(fileList) {
+    if (isFileInvalid(fileList)) {
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('file', fileList.item(0));
+
+    let response = await fetch(route('file.upload'), {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRF-Token': csrfToken }
+    });
+
+    if (!response.ok) {
+        let text = await response.text();
+        window.alert(`Failed to upload: ${text}`);
+        return;
+    }
+
+    let fileName = await response.text();
+    content.value = content.value.concat(`![](${fileName})`);
+}
+
+function isFileInvalid(fileList) {
+    if (fileList.length > 1) {
+        window.alert('Too many files!');
+        return true;
+    }
+
+    if (fileList.length < 1) {
+        return true;
+    }
+
+    let mime = fileList.item(0).type;
+
+    if (!mime.startsWith('image')) {
+        window.alert('Unsupported file type!');
+        return true;
+    }
+
+    return false;
+}
 </script>
+
+<style>
+#editor {
+    --ink-block-background-color: #ffffff;
+    --ink-code-background-color: #ffffff;
+    background-color: white;
+}
+</style>
 
 <template>
     <form @submit.prevent="submitForm" :class="style.form">
         <div class="flex-grow m-4">
-            <textarea v-model="content" :class="style.content" placeholder="Write your comment here..." required></textarea>
+            <InkMde id="editor" v-model="content" :options="options" :class="style.editor"></InkMde>
         </div>
         <div class="mx-4 mb-4 flex flex-row">
             <button type="submit" :class="style.submit">Save</button>
