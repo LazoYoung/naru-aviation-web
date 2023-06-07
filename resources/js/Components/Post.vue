@@ -67,6 +67,10 @@ function drawBorder() {
 async function fetchContent() {
     let data = await fetchData(route('forum.post.content'));
     content.value.innerHTML = marked.parse(data);
+
+    for (let child of Array.from(content.value.children)) {
+        child.classList.add('doc');
+    }
 }
 
 function fetchLiked() {
@@ -101,6 +105,15 @@ function submitData(url) {
     }).then(r => r.text(), reason => window.alert(`Failed to fetch data: ${reason}`));
 }
 </script>
+
+<style>
+/*noinspection ALL*/
+.doc {
+    all: revert;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+</style>
 
 <template>
     <div ref="frame" class="py-8">

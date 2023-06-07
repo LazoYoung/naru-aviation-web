@@ -1,24 +1,21 @@
 <script setup>
-import {onMounted, onUpdated, ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {Category} from "@/category.ts";
 
 const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps(['id', 'title', 'category']);
-const contentPeek = ref('');
 const authorName = ref('N/A');
 const createdTime = ref('N/A');
 const viewCount = ref('0 view');
 
 onMounted(() => {
-    fetchContent();
     fetchAuthorName();
     fetchCreatedTime();
     fetchViewCount();
 });
 
 watch(props,  () => {
-    fetchContent();
     fetchAuthorName();
     fetchCreatedTime();
     fetchViewCount();
@@ -30,11 +27,6 @@ function getLink() {
 
 function getCategory() {
     return Category.byId(props.category);
-}
-
-function fetchContent() {
-    fetchData(route('forum.thread.content-peek'))
-        .then(text => contentPeek.value = text);
 }
 
 function fetchAuthorName() {
@@ -81,8 +73,7 @@ function fetchData(url) {
             <a :href="getLink()">
                 <div>
                     <span class="text-black text-lg font-bold">{{ title }}</span>
-                    <p class="block text-gray-500 max-w-xs lg:max-w-lg whitespace-nowrap overflow-hidden overflow-ellipsis">{{ contentPeek }}</p>
-                    <div>
+                    <div class="mt-2">
                         <svg class="inline-block w-[8px] h-[16px]">
                             <g :fill="getCategory().getColor()">
                                 <rect width="100%" height="100%"/>
