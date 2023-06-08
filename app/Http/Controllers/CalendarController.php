@@ -11,11 +11,12 @@ class CalendarController extends Controller {
         return Inertia::render('Calendar/Calendar');
     }
 
-    public function getForm(): Response {
-        return Inertia::render('Calendar/EventForm');
+    public function submitNewEvent(): \Illuminate\Http\Response {
+        // todo
+        return response('', 500);
     }
 
-    public function submitNewEvent(): \Illuminate\Http\Response {
+    public function updateEvent(): \Illuminate\Http\Response {
         // todo
         return response('', 500);
     }

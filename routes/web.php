@@ -87,13 +87,13 @@ Route::controller(CalendarController::class)->group(function () {
     Route::get('/calendar', 'show')
         ->name('calendar.show');
 
-    Route::get('/calendar/form', 'getForm')
-        ->middleware(['auth', 'verified'])
-        ->name('calendar.form');
-
     Route::post('/calendar/new', 'submitNewEvent')
         ->middleware(['auth', 'verified'])
         ->name('calendar.new');
+
+    Route::post('/calendar/update', 'updateEvent')
+        ->middleware(['auth', 'verified'])
+        ->name('calendar.update');
 });
 
 Route::controller(FileController::class)->group(function () {

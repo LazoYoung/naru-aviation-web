@@ -6,11 +6,11 @@ import InkMde from "ink-mde/vue";
 const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps(['thread']);
 const style = {
-    form: "fixed bottom-0 left-0 right-0 max-w-2xl mx-auto h-1/2 bg-gray-100 flex flex-col",
+    form: "fixed bottom-0 left-0 right-0 max-w-2xl mx-auto h-fit bg-gray-100 flex flex-col",
     title: "border border-neutral-500 p-2 px-3 w-96 resize-none",
-    content: "w-full h-full resize-none",
-    submit: "px-4 py-2 me-4 bg-neutral-600 text-white",
-    close: "px-4 py-2 me-4 bg-amber-600 bg-opacity-70 text-white"
+    content: "w-full h-60 resize-none",
+    submit: "rounded-md bg-indigo-600 px-3 py-2 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
+    close: "text-sm font-semibold leading-6 text-gray-900",
 };
 const content = ref('');
 const emit = defineEmits(['close']);
@@ -111,12 +111,14 @@ function isFileInvalid(fileList) {
 
 <template>
     <form @submit.prevent="submitForm" :class="style.form">
-        <div class="flex-grow m-4">
-            <InkMde id="editor" v-model="content" :options="options" :class="style.editor"></InkMde>
-        </div>
-        <div class="mx-4 mb-4 flex flex-row">
-            <button type="submit" :class="style.submit">Save</button>
-            <button @click="$emit('close')" :class="style.close">Close</button>
+        <div class="p-4">
+            <div class="flex-grow m-4">
+                <InkMde id="editor" v-model="content" :options="options" :class="style.content"></InkMde>
+            </div>
+            <div class="flex justify-end items-center gap-4 me-4">
+                <button @click="$emit('close')" :class="style.cancel">Cancel</button>
+                <button type="submit" :class="style.submit">Post</button>
+            </div>
         </div>
     </form>
 </template>
