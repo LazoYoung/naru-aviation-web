@@ -112,7 +112,7 @@ function isFileInvalid(fileList) {
 <template>
     <form @submit.prevent="submitForm" :class="style.form">
         <div class="p-4">
-            <div class="flex-grow m-4">
+            <div class="flex-grow m-4 overflow-y-scroll bg-white">
                 <InkMde id="editor" v-model="content" :options="options" :class="style.content"></InkMde>
             </div>
             <div class="flex justify-end items-center gap-4 me-4">

@@ -9,13 +9,16 @@ use App\Models\Thread;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
 
 class EventController extends Controller {
-    public function showCalendar(): Response {
-        return Inertia::render('Event/Calendar');
+    public function showCalendar(Request $request): Response {
+        return Inertia::render('Event/Calendar', [
+            'admin' => $request->user()?->is_admin ?? false
+        ]);
     }
 
     public function getEvents(): JsonResponse {
@@ -40,14 +43,8 @@ class EventController extends Controller {
     }
 
     public function submitNewEvent(Request $request) {
-        $user = $request->user();
-
-        // todo require admin privilege
-        if ($user == null) {
-            return redirect(route('login'));
-        }
-
         try {
+            $user = $request->user();
             $validated = $request->validate([
                 'title' => ['string', 'min:5'],
                 'start' => ['required', 'date'],
@@ -85,18 +82,16 @@ class EventController extends Controller {
         return response(null, 200);
     }
 
-    public function updateEvent(Request $request): \Illuminate\Http\Response {
-        // todo require admin privilege
-        $user = $request->user();
-        $validated = $request->validate([
-            'id' => 'exists:App\Models\Event,id',
-            'title' => ['string', 'min:5'],
-            'start' => ['required', 'date'],
-            'end' => ['required', 'date'],
-            'description' => ['required', 'string'],
-        ]);
-
+    public function updateEvent(Request $request) {
         try {
+            $validated = $request->validate([
+                'id' => 'exists:App\Models\Event,id',
+                'title' => ['string', 'min:5'],
+                'start' => ['required', 'date'],
+                'end' => ['required', 'date'],
+                'description' => ['required', 'string'],
+            ]);
+
             $event = Event::find($validated['id']);
             $event->title = $validated['title'];
             $event->start = $validated['start'];

@@ -94,11 +94,11 @@ Route::controller(EventController::class)->group(function () {
         ->name('event.fetch.all');
 
     Route::post('/event/new', 'submitNewEvent')
-        ->middleware(['auth', 'verified'])
+        ->middleware(['auth', 'auth.admin'])
         ->name('event.submit.new');
 
     Route::post('/event/update', 'updateEvent')
-        ->middleware(['auth', 'verified'])
+        ->middleware(['auth', 'auth.admin'])
         ->name('event.submit.update');
 });
 

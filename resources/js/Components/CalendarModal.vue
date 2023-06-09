@@ -4,7 +4,7 @@ import {computed, reactive} from "vue";
 import InkMde from "ink-mde/vue";
 import {usePage} from "@inertiajs/vue3";
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'update']);
 const props = defineProps({
     show: {
         type: Boolean
@@ -75,6 +75,7 @@ async function submitForm() {
     });
 
     if (response.ok) {
+        emit('update');
         closeModal();
     } else {
         let text = await response.text();

@@ -14,16 +14,16 @@ const viewIcon = 'fa-solid fa-eye';
 const editText = 'Editing';
 const viewText = 'Viewing';
 const csrfToken = usePage().props.auth['csrf_token'];
+const props = defineProps({
+    admin: {
+        type: Boolean,
+        default: false,
+    }
+});
 const state = reactive({
     showModal: false,
     modeIcon: viewIcon,
     modeText: viewText,
-});
-const props = defineProps({
-    admin: {
-        type: Boolean,
-        default: true // todo delete on production
-    }
 });
 const calendarRef = ref();
 const options = {
@@ -87,6 +87,8 @@ async function fetchEvents() {
     let array = JSON.parse(json);
     let calendar = calendarRef.value.getApi();
 
+    calendar.removeAllEvents();
+
     for (let key in array) {
         let elem = array[key];
         let event = {
@@ -114,6 +116,6 @@ async function fetchEvents() {
                 <span class="ms-2">{{ state.modeText }}</span>
             </button>
         </div>
-        <CalendarModal :show="state.showModal" @close="state.showModal = false"></CalendarModal>
+        <CalendarModal :show="state.showModal" @close="state.showModal = false" @update="fetchEvents"></CalendarModal>
     </MainLayout>
 </template>

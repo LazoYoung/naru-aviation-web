@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,7 +52,9 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read Collection<int, Event> $events
  * @property-read int|null $events_count
- * @mixin \Eloquent
+ * @property int $is_admin
+ * @method static Builder|User whereIsAdmin($value)
+ * @mixin Eloquent
  */
 class User extends Authenticatable {
     use HasApiTokens, HasFactory, Notifiable;
@@ -73,6 +76,7 @@ class User extends Authenticatable {
      * @var array<int, string>
      */
     protected $hidden = [
+        'is_admin',
         'password',
         'remember_token',
     ];
@@ -83,6 +87,7 @@ class User extends Authenticatable {
      * @var array<string, string>
      */
     protected $casts = [
+        'is_admin' => 'boolean',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
