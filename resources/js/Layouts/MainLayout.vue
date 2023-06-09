@@ -36,6 +36,12 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('image.show.gallery')" :active="route().current('gallery.*')">
+                                    Gallery
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('event.show.calendar')" :active="route().current('event.show.*')">
                                     Calendar
                                 </NavLink>
@@ -138,8 +144,10 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('forum.browse')" :active="route().current('forum.*')">
                             Forum
                         </ResponsiveNavLink>
-
-                        <ResponsiveNavLink :href="route('event.show.calendar')" :active="route().current('event.show.*')">
+                        <ResponsiveNavLink :href="route('image.show.gallery')" :active="route().current('image.*')">
+                            Gallery
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('event.show.calendar')" :active="route().current('event.*')">
                             Calendar
                         </ResponsiveNavLink>
                     </div>

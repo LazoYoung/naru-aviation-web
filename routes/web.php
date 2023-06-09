@@ -3,6 +3,7 @@
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ForumController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
@@ -81,6 +82,17 @@ Route::controller(PostController::class)->group(function () {
     Route::post('/post/dislike', 'dislike')
         ->middleware(['auth', 'verified'])
         ->name('forum.post.dislike');
+});
+
+Route::controller(GalleryController::class)->group(function () {
+    Route::get('/gallery', 'showGallery')
+        ->name('image.show.gallery');
+
+    Route::get('/image/fetch/all', 'getImages')
+        ->name('image.fetch.all');
+
+    Route::post('/image/new', 'submitImage')
+        ->name('image.submit.new');
 });
 
 Route::controller(EventController::class)->group(function () {

@@ -13,14 +13,15 @@ class FileController extends Controller {
      * Upload a single file into storage.
      *
      * Expected input: file
-     * Expected result: 200, 500
+     * Expected result: path to stored file
+     * Possible status: 200, 500
      */
     public function upload(Request $request): Response {
-        $request->validate([
-            'file' => 'file'
-        ]);
-
         try {
+            $request->validate([
+                'file' => 'file'
+            ]);
+
             $file = $request->file('file');
             $fileName = $file->hashName();
             $success = $file->storePubliclyAs('public', $fileName);
