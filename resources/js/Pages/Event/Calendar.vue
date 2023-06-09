@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
 import MainLayout from "@/Layouts/MainLayout.vue";
 import {onMounted, reactive, ref} from "vue";
-import {router, useForm, usePage} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import FullCalendar from "@fullcalendar/vue3";
 import CalendarModal from "@/Components/CalendarModal.vue";
 

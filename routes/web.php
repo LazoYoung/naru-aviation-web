@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ForumController;
