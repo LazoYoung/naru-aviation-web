@@ -1,56 +1,10 @@
-<template>
-    <Modal :show="show" @close="$emit('close')">
-        <form @submit.prevent="submitForm">
-            <div class="max-w-2xl mx-auto p-8 bg-white rounded-xl">
-                <h1 class="text-xl font-semibold leading-7 text-gray-900">{{title}}</h1>
-                <p class="mt-1 text-sm leading-6 text-gray-600">{{subtitle}}</p>
-
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div class="sm:col-span-3">
-                        <label for="title" :class="style.label">Title</label>
-                        <div class="mt-2">
-                            <input type="text" name="title" id="title" :class="style.input" />
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-3 sm:col-start-1">
-                        <label for="start" :class="style.label">Start date</label>
-                        <div class="mt-2">
-                            <input id="start" v-model="state.start" type="datetime-local" :class="style.input" />
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-3">
-                        <label for="end" :class="style.label">End date</label>
-                        <div class="mt-2">
-                            <input id="end" v-model="state.end" type="datetime-local" :class="style.input" />
-                        </div>
-                    </div>
-
-                    <div class="col-span-full">
-                        <label for="description" :class="style.label">Description</label>
-                        <div class="mt-2">
-                            <InkMde id="editor" :options="options" :class="style.editor"></InkMde>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-end items-center gap-4 mt-8">
-                    <button @click="show = false" :class="style.cancel">Cancel</button>
-                    <button @click="submitForm" :class="style.submit">Submit</button>
-                </div>
-            </div>
-        </form>
-    </Modal>
-</template>
-
 <script setup>
 import Modal from "@/Components/Modal.vue";
 import {computed, reactive} from "vue";
 import InkMde from "ink-mde/vue";
 import {usePage} from "@inertiajs/vue3";
 
-defineEmits(['close']);
+const emit = defineEmits(['close']);
 const props = defineProps({
     show: {
         type: Boolean
@@ -100,13 +54,18 @@ const state = reactive({
 });
 
 async function submitForm() {
-    let link = isNewEvent() ? route('calendar.new') : route('calendar.update');
+    if (!state.description) {
+        window.alert('Content is empty!');
+        return;
+    }
+
+    let link = isNewEvent() ? route('event.submit.new') : route('event.submit.update');
     let url = new URL(link);
     let form = new FormData();
 
     form.append('title', state.title);
-    form.append('start', state.start);
-    form.append('end', state.end);
+    form.append('start', new Date(state.start).toISOString());
+    form.append('end', new Date(state.end).toISOString());
     form.append('description', state.description);
 
     let response = await fetch(url, {
@@ -115,12 +74,12 @@ async function submitForm() {
         headers: {'X-CSRF-Token': csrfToken},
     });
 
-    if (!response.ok) {
+    if (response.ok) {
+        closeModal();
+    } else {
         let text = await response.text();
-        window.alert(`Failed to submit: ${text}`);
+        window.alert(text);
     }
-
-    props.show = false;
 }
 
 function onContentChange(doc) {
@@ -174,4 +133,54 @@ function isFileInvalid(fileList) {
 
     return false;
 }
+
+function closeModal() {
+    emit('close');
+}
 </script>
+
+<template>
+    <Modal :show="show" @close="closeModal">
+        <form @submit.prevent="submitForm">
+            <div class="max-w-2xl mx-auto p-8 bg-white rounded-xl">
+                <h1 class="text-xl font-semibold leading-7 text-gray-900">{{title}}</h1>
+                <p class="mt-1 text-sm leading-6 text-gray-600">{{subtitle}}</p>
+
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-3">
+                        <label for="title" :class="style.label">Title</label>
+                        <div class="mt-2">
+                            <input type="text" id="title" v-model="state.title" :class="style.input" required/>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3 sm:col-start-1">
+                        <label for="start" :class="style.label">Start date</label>
+                        <div class="mt-2">
+                            <input id="start" v-model="state.start" type="datetime-local" :class="style.input" required/>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="end" :class="style.label">End date</label>
+                        <div class="mt-2">
+                            <input id="end" v-model="state.end" type="datetime-local" :class="style.input" required/>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <label for="description" :class="style.label">Description</label>
+                        <div class="mt-2">
+                            <InkMde id="editor" :options="options" :class="style.editor"></InkMde>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end items-center gap-4 mt-8">
+                    <button type="button" @click="closeModal" :class="style.cancel">Cancel</button>
+                    <button type="submit" :class="style.submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </Modal>
+</template>

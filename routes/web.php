@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
@@ -83,17 +84,23 @@ Route::controller(PostController::class)->group(function () {
         ->name('forum.post.dislike');
 });
 
-Route::controller(CalendarController::class)->group(function () {
-    Route::get('/calendar', 'show')
-        ->name('calendar.show');
+Route::controller(EventController::class)->group(function () {
+    Route::get('/calendar', 'showCalendar')
+        ->name('event.show.calendar');
 
-    Route::post('/calendar/new', 'submitNewEvent')
-        ->middleware(['auth', 'verified'])
-        ->name('calendar.new');
+    Route::get('/event/thread', 'visitEventThread')
+        ->name('event.thread');
 
-    Route::post('/calendar/update', 'updateEvent')
+    Route::get('/event/fetch/all', 'getEvents')
+        ->name('event.fetch.all');
+
+    Route::post('/event/new', 'submitNewEvent')
         ->middleware(['auth', 'verified'])
-        ->name('calendar.update');
+        ->name('event.submit.new');
+
+    Route::post('/event/update', 'updateEvent')
+        ->middleware(['auth', 'verified'])
+        ->name('event.submit.update');
 });
 
 Route::controller(FileController::class)->group(function () {

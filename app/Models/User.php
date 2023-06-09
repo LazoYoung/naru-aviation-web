@@ -49,6 +49,8 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read int|null $posts_count
  * @property-read Collection<int, Thread> $threads
  * @property-read Collection<int, PersonalAccessToken> $tokens
+ * @property-read Collection<int, Event> $events
+ * @property-read int|null $events_count
  * @mixin \Eloquent
  */
 class User extends Authenticatable {
@@ -95,5 +97,9 @@ class User extends Authenticatable {
 
     public function likes(): HasMany {
         return $this->hasMany(Like::class);
+    }
+
+    public function events(): HasMany {
+        return $this->hasMany(Event::class);
     }
 }

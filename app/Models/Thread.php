@@ -36,6 +36,9 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $posts_count
  * @property int $view
  * @method static Builder|Thread whereView($value)
+ * @property-read Event|null $event
+ * @property int|null $event_id
+ * @method static Builder|Thread whereEventId($value)
  * @mixin Eloquent
  */
 class Thread extends Model {
@@ -52,5 +55,9 @@ class Thread extends Model {
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function event(): BelongsTo {
+        return $this->belongsTo(Event::class);
     }
 }
