@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AirportController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ForumController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 /*
@@ -22,8 +24,10 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
     return Inertia::render('Home', [
+        'mapApiKey' => config('app.map_api_key'),
+        'isAdmin' => $request->user()?->is_admin ?? false,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -118,6 +122,14 @@ Route::controller(FileController::class)->group(function () {
     Route::post('/upload', 'upload')
         ->middleware(['auth', 'verified'])
         ->name('file.upload');
+});
+
+Route::controller(AirportController::class)->group(function () {
+    Route::post('/airport/new', 'addAirport')
+        ->middleware(['auth', 'auth.admin'])
+        ->name('airport.new');
+    Route::get('/airport/fetch/all', 'fetchAirports')
+        ->name('airport.fetch.all');
 });
 
 Route::middleware('auth')->group(function () {

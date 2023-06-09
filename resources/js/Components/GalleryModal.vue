@@ -56,26 +56,6 @@ function onFileChange(event) {
     state.preview = URL.createObjectURL(state.file);
 }
 
-async function uploadImage() {
-    let formData = new FormData();
-    formData.append('file', fileList.item(0));
-
-    let response = await fetch(route('file.upload'), {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-CSRF-Token': csrfToken }
-    });
-
-    if (!response.ok) {
-        let text = await response.text();
-        window.alert(`Failed to upload: ${text}`);
-        return;
-    }
-
-    let fileName = await response.text();
-    state.description = state.description.concat(`![](${fileName})`);
-}
-
 function closeModal() {
     emit('close');
 }

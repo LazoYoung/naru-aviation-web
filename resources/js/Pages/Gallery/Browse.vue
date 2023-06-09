@@ -76,11 +76,6 @@ function closeModal() {
             <div class="p-6 bg-white shadow-sm sm:rounded-lg">
                 <p v-if="isEmpty" class="text-center">Gallery is empty.</p>
                 <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-<!--                    <img src="https://cdn.flightsim.to/images/site/wallpapers/06/2023-6-08_21-44-43_39YpXZON.jpg" class="w-full h-full object-cover">-->
-<!--                    <img src="https://cdn.flightsim.to/images/site/wallpapers/06/2023-6-08_02-14-24_fdZvJuEW.jpg" class="w-full h-full object-cover">-->
-<!--                    <img src="https://cdn.flightsim.to/images/site/wallpapers/06/2023-6-08_21-44-43_39YpXZON.jpg" class="w-full h-full object-cover">-->
-<!--                    <img src="https://cdn.flightsim.to/images/site/wallpapers/06/2023-6-08_21-44-43_39YpXZON.jpg" class="w-full h-full object-cover">-->
-<!--                    <img src="https://cdn.flightsim.to/images/site/wallpapers/06/2023-6-08_02-14-24_fdZvJuEW.jpg" class="w-full h-full object-cover">-->
                     <a v-for="image in state.images" :data-id="image['id']" @click.prevent="onImageClick($event)" href="#">
                         <img :src="image['file']" :alt="image['title']" class="w-full h-full object-cover">
                     </a>
