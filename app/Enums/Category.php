@@ -19,4 +19,13 @@ enum Category: string {
             default => throw new InvalidArgumentException("Invalid id: " . $id),
         };
     }
+
+    public static function getId(Category $category): int {
+        return match ($category) {
+            Category::GENERAL => 0,
+            Category::QUESTION => 1,
+            Category::NOTAM => 2,
+            Category::EVENT => 3,
+        };
+    }
 }

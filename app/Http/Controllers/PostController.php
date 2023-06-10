@@ -29,6 +29,19 @@ class PostController extends Controller {
     }
 
     /**
+     * Returns raw content
+     * Expected input: post-id
+     * Result: string
+     * Possible status: 200, 500
+     */
+    public function getContent(Request $request): Response {
+        $this->validatePost($request);
+
+        $content = $this->getPost($request)->content;
+        return response($content, 200);
+    }
+
+    /**
      * Method: GET
      * Expected input: post-id
      * Result: int

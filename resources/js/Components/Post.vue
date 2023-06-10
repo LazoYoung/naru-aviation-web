@@ -1,10 +1,13 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
-import { usePage } from "@inertiajs/vue3";
+import {usePage} from "@inertiajs/vue3";
+import {marked} from "marked";
 
 const props = defineProps(['post', 'user', 'index', 'last']);
+const postId = props.post['id'];
 const frame = ref();
 const csrfToken = usePage().props.auth['csrf_token'];
+const content = ref();
 const liked = ref(false);
 const likeCount = ref(0);
 const likeLabel = computed(() => {
@@ -13,6 +16,7 @@ const likeLabel = computed(() => {
 
 onMounted(() => {
     drawBorder();
+    fetchContent();
     fetchLiked();
     fetchLikeCount();
 });
@@ -60,6 +64,15 @@ function drawBorder() {
     }
 }
 
+async function fetchContent() {
+    let data = await fetchData(route('forum.post.content'));
+    content.value.innerHTML = marked.parse(data);
+
+    for (let child of Array.from(content.value.children)) {
+        child.classList.add('doc');
+    }
+}
+
 function fetchLiked() {
     return fetchData(route('forum.post.has-liked'))
         .then(text => liked.value = (text === 'true'));
@@ -73,7 +86,7 @@ function fetchLikeCount() {
 function fetchData(url) {
     let locator = new URL(url);
     let params = locator.searchParams;
-    params.append('post-id', props.post['id']);
+    params.append('post-id', postId);
 
     return fetch(locator, {
         method: 'GET',
@@ -83,7 +96,7 @@ function fetchData(url) {
 
 function submitData(url) {
     let form = new FormData();
-    form.append('post-id', props.post['id']);
+    form.append('post-id', postId);
 
     return fetch(url, {
         method: 'POST',
@@ -93,15 +106,22 @@ function submitData(url) {
 }
 </script>
 
+<style>
+/*noinspection ALL*/
+.doc {
+    all: revert;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+</style>
+
 <template>
     <div ref="frame" class="py-8">
         <div class="flex flex-row leading-8">
             <i class="fa-solid fa-circle-user fa-2x"></i>
             <span class="mx-4 font-semibold">{{ user['name'] }}</span>
         </div>
-        <div class="p-8">
-            <span>{{ post['content'] }}</span>
-        </div>
+        <div class="p-8" ref="content"></div>
         <div class="flex flex-row justify-end gap-4">
             <button @click="onLikeAction" class="px-2">
                 <i v-if="liked" class="fa-solid fa-thumbs-up"></i>

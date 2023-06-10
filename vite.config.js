@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
+            input: ['resources/scss/app.scss', 'resources/js/app.js'],
             refresh: true,
         }),
         vue({
@@ -17,4 +17,7 @@ export default defineConfig({
             },
         }),
     ],
+    optimizeDeps: {
+        exclude: ['ink-mde']
+    }
 });
