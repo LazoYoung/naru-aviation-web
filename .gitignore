@@ -5,9 +5,6 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
-.env.backup
-.env.production
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -17,3 +14,16 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Laravel environment values
+.env
+.env.backup
+.env.production
+.env.example
+
+# IDE helper
+.phpstorm.meta.php
+_ide_helper.php
+
+# Others
+.editorconfig
