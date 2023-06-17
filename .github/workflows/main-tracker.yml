@@ -9,8 +9,11 @@ jobs:
     name: Fetch
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      #- name: Checkout
+      #  uses: actions/checkout@v3
+      #  with:
+      #    ref: main
+      #    fetch-depth: 0
       - name: Fetch upstream
         shell: bash
         run: |
