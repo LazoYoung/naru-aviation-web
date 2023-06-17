@@ -7,7 +7,7 @@ on:
 jobs:
   fetch:
     name: Fetch
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Fetching updates from remote..."
       - uses: actions/checkout@v3
