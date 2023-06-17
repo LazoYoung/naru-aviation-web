@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -9,6 +9,13 @@ import {Link, usePage} from '@inertiajs/vue3';
 
 const auth = usePage().props.auth;
 const showingNavigationDropdown = ref(false);
+const props = defineProps({
+    innerBody: {
+        type: Boolean,
+        default: false,
+    }
+});
+const content = ref();
 </script>
 
 <template>
@@ -187,11 +194,15 @@ const showingNavigationDropdown = ref(false);
                     </div>
                 </header>
 
-                <!-- Page Content -->
-                <main>
+                <main v-if="innerBody">
                     <slot />
                 </main>
             </div>
+            <main v-if="!innerBody">
+                <div class="pt-32">
+                    <slot />
+                </div>
+            </main>
         </div>
     </div>
 </template>
