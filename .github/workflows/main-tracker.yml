@@ -9,6 +9,12 @@ jobs:
     name: Fetch
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Fetching updates from remote..."
-      - uses: actions/checkout@v3
-      - run: echo "Fetch complete."
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Fetch upstream
+        uses: 135e2/sync-upstream-repo@v0.1.5
+        with:
+          upstream_repo: https://github.com/LazoYoung/naru-aviation-web.git
+          upstream_branch: main
+          local_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
