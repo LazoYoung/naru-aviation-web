@@ -20,4 +20,4 @@ jobs:
         shell: bash
         run: |
           cd /var/www/naru-aviation-web
-          sudo npm run build
+          npm run build
