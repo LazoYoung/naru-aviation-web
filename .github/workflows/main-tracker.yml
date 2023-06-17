@@ -7,14 +7,13 @@ on:
 jobs:
   fetch:
     name: Fetch
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Fetch upstream
-        uses: 135e2/sync-upstream-repo@v0.1.5
-        with:
-          upstream_repo: https://github.com/LazoYoung/naru-aviation-web.git
-          upstream_branch: main
-          local_branch: main
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          git reset --hard
+          git checkout main
+          git pull
