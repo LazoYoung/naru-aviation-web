@@ -1,0 +1,14 @@
+name: Main Tracker
+run-name: ${{ github.actor }} triggered this action.
+on:
+  push:
+    branches:
+      - main
+jobs:
+  fetch:
+    name: Fetch
+    runs-on: [self-hosted, linux]
+    steps:
+      - run: echo "Fetching updates from remote..."
+      - uses: actions/checkout@v3
+      - run: echo "Fetch complete."
