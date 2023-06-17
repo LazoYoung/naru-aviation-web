@@ -47,7 +47,8 @@ div::-webkit-scrollbar {
     display: none;
 }
 
-article {
+/* Viewport - navbar height */
+.h-content {
     height: calc(100vh - 4rem);
 }
 </style>
@@ -62,18 +63,25 @@ article {
             </video>
         </div>
 
-        <div class="z-10 w-full h-screen p-0 overflow-y-scroll snap-y snap-mandatory scroll-smooth ">
-            <article class="flex flex-col relative h-screen snap-end">
-                <div class="my-auto text-center">
+        <div class="z-10 w-full h-content p-0 overflow-y-scroll">
+            <article class="relative h-full flex flex-col text-center">
+                <div class="flex-grow invisible"></div>
+                <div>
                     <h1 class="text-5xl text-white font-bold">We are virtual aviators.</h1>
                     <div class="h-10 invisible"></div>
                     <a :href="route('register')">
                         <button class="inline-block text-white bg-cyan-600 px-4 py-2">Join us</button>
                     </a>
                 </div>
+                <div class="flex-grow flex flex-col">
+                    <div class="flex-grow invisible"></div>
+                    <div class="h-16">
+                        <i class="fa-solid fa-angles-down fa-fade fa-2xl" style="color: #ffffff;"></i>
+                    </div>
+                </div>
             </article>
 
-            <article class="relative h-screen snap-end bg-black sm:px-6 lg:px-8">
+            <article class="relative h-content bg-black sm:px-6 lg:px-8">
                 <div class="max-w-4xl mx-auto">
                     <div class="pt-16">
                         <h1 class="text-4xl text-white text-center font-bold">Destinations</h1>
