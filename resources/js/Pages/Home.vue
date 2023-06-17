@@ -56,7 +56,7 @@ div::-webkit-scrollbar {
 <template>
     <Head title="Home" />
 
-    <MainLayout>
+    <MainLayout :inner-body="true">
         <div class="fixed w-full h-full">
             <video class="object-cover w-full h-full" autoplay loop muted disablePictureInPicture>
                 <source src="/promo.mp4">
