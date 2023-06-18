@@ -66,5 +66,5 @@ async function addMarker(map, airport) {
 </script>
 
 <template>
-    <div id="map" class="h-full"/>
+    <div id="map" />
 </template>
