@@ -85,12 +85,17 @@ div::-webkit-scrollbar {
                 <div class="max-w-4xl mx-auto">
                     <div class="pt-16">
                         <h1 class="text-4xl text-white text-center font-bold">Destinations</h1>
+                        <p class="text-gray-200 text-center py-4">
+                            These cities are served by the airline's scheduled flights.
+                            <br>
+                            We will continue to expand our flight network.
+                        </p>
                         <div class="flex flex-row justify-end mb-6">
                             <PrimaryButton v-if="isAdmin" @click="openAirportModal">
                                 Add airport
                             </PrimaryButton>
                         </div>
-                        <DestinationMap class="h-60 md:h-96" :api-key="mapApiKey"></DestinationMap>
+                        <DestinationMap class="h-80 md:h-96" :api-key="mapApiKey"></DestinationMap>
                     </div>
 
                     <div class="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">
