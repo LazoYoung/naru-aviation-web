@@ -28,7 +28,7 @@ class ThreadController extends Controller {
     public function fetch(Request $request): Response {
         $categoryId = $request->query('category', -1);
         $search = $request->query('search');
-        $sql = Thread::query();
+        $sql = Thread::latest();
         $category = null;
 
         try {
