@@ -97,7 +97,7 @@ div::-webkit-scrollbar {
                         <div class="text-center text-sm text-white dark:text-gray-400 sm:text-left">
                             <div class="flex items-center gap-4">
                                 <a
-                                    href="https://github.com/LazoYoung/virtual-airline-web"
+                                    href="https://github.com/LazoYoung/naru-aviation-web"
                                     target="_blank"
                                     class="group inline-flex items-center hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
                                 >
