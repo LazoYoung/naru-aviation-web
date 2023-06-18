@@ -3,7 +3,7 @@ import {computed, onMounted, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {marked} from "marked";
 
-const props = defineProps(['post', 'user', 'index', 'last']);
+const props = defineProps(['post', 'index', 'last']);
 const postId = props.post['id'];
 const frame = ref();
 const csrfToken = usePage().props.auth['csrf_token'];
@@ -119,7 +119,7 @@ function submitData(url) {
     <div ref="frame" class="py-8">
         <div class="flex flex-row leading-8">
             <i class="fa-solid fa-circle-user fa-2x"></i>
-            <span class="mx-4 font-semibold">{{ user['name'] }}</span>
+            <span class="mx-4 font-semibold">{{ post['username'] }}</span>
         </div>
         <div class="p-8" ref="content"></div>
         <div class="flex flex-row justify-end gap-4">

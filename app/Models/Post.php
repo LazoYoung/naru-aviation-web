@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,12 +41,9 @@ use Illuminate\Support\Carbon;
 class Post extends Model {
     use HasFactory;
 
-    protected $touches = [
-        'thread'
-    ];
-    protected $fillable = [
-        'content'
-    ];
+    protected $touches = ['thread'];
+    protected $fillable = ['content'];
+    protected $appends = ['username'];
 
     public function thread(): BelongsTo {
         return $this->belongsTo(Thread::class);
@@ -57,5 +55,11 @@ class Post extends Model {
 
     public function likes(): HasMany {
         return $this->hasMany(Like::class);
+    }
+
+    public function username(): Attribute {
+        return new Attribute(
+            get: fn() => $this->user->name
+        );
     }
 }
