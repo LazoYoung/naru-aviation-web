@@ -95,7 +95,7 @@ div::-webkit-scrollbar {
                                 Add airport
                             </PrimaryButton>
                         </div>
-                        <DestinationMap class="h-80 md:h-96" :api-key="mapApiKey"></DestinationMap>
+                        <DestinationMap class="h-96" :api-key="mapApiKey"></DestinationMap>
                     </div>
 
                     <div class="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">
