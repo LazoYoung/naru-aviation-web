@@ -13,8 +13,8 @@ class AirportController extends Controller {
             $validated = $request->validate([
                 'name' => 'string',
                 'icao' => ['string', 'min:4', 'max:4'],
-                'latitude' => 'decimal:6',
-                'longitude' => 'decimal:6',
+                'latitude' => 'decimal:0,6',
+                'longitude' => 'decimal:0,6',
             ]);
             $airport = new Airport([
                 'name' => $validated['name'],
