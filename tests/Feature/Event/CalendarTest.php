@@ -10,7 +10,7 @@ use Tests\TestCase;
 class CalendarTest extends TestCase {
     public function test_calendar_page_is_displayed(): void {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/calendar');
+        $response = $this->actingAs($user)->get(route('event.show.calendar'));
 
         $response->assertOk();
     }
