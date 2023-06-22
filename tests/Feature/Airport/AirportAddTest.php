@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Airport;
 
 use App\Models\Airport;
 use App\Models\User;
