@@ -58,8 +58,6 @@ function onDateClick() {
 }
 
 async function onEventClick(info) {
-    if (!props.admin) return;
-
     let eventId = info.event.id;
     let url = new URL(route('event.thread'));
     url.searchParams.append('id', eventId);
