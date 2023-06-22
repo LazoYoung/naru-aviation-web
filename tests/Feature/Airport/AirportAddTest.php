@@ -14,22 +14,20 @@ class AirportAddTest extends TestCase {
         $user = User::factory()->create();
         $user->is_admin = true;
         $airport = Airport::factory()->create();
-        $response = $this->actingAs($user)->post('/airport/new', [
+        $response = $this->actingAs($user)->post(route('airport.new'), [
             'name' => $airport->name,
             'icao' => $airport->icao,
             'latitude' => $airport->latitude,
             'longitude' => $airport->longitude,
         ]);
 
-        echo $response->getContent();
-        echo "test";
         $response->assertOk();
     }
 
     public function test_invalid_airport_is_rejected(): void {
         $user = User::factory()->create();
         $user->is_admin = true;
-        $response = $this->actingAs($user)->post('/airport/new', [
+        $response = $this->actingAs($user)->post(route('airport.new'), [
             'name' => null,
             'icao' => null,
             'latitude' => null,
@@ -43,7 +41,7 @@ class AirportAddTest extends TestCase {
         $user = User::factory()->create();
         $user->is_admin = false;
         $airport = Airport::factory()->create();
-        $response = $this->actingAs($user)->post('/airport/new', [
+        $response = $this->actingAs($user)->post(route('airport.new'), [
             'name' => $airport->name,
             'icao' => $airport->icao,
             'latitude' => $airport->latitude,
