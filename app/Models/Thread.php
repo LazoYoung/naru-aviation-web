@@ -17,10 +17,14 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property string $title
+ * @property int $view
  * @property int $category
- * @property string $content
+ * @property int|null $event_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Event|null $event
+ * @property-read int|null $posts_count
+ * @property-read Collection<int, Post> $posts
  * @property-read User $user
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
@@ -32,12 +36,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereTitle($value)
  * @method static Builder|Thread whereUpdatedAt($value)
  * @method static Builder|Thread whereUserId($value)
- * @property-read Collection<int, Post> $posts
- * @property-read int|null $posts_count
- * @property int $view
  * @method static Builder|Thread whereView($value)
- * @property-read Event|null $event
- * @property int|null $event_id
  * @method static Builder|Thread whereEventId($value)
  * @mixin Eloquent
  */

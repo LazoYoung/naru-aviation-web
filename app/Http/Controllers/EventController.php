@@ -21,10 +21,6 @@ class EventController extends Controller {
         ]);
     }
 
-    public function getEvents(): JsonResponse {
-        return response()->json(Event::all()->toJson());
-    }
-
     public function visitEventThread(Request $request) {
         $validated = $request->validate([
             'id' => 'exists:App\Models\Event,id',
@@ -40,6 +36,10 @@ class EventController extends Controller {
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
+    }
+
+    public function getEvents(): JsonResponse {
+        return response()->json(Event::all()->toJson());
     }
 
     public function submitNewEvent(Request $request) {

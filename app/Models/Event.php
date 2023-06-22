@@ -41,7 +41,6 @@ class Event extends Model {
         'title',
         'start',
         'end',
-        'description',
     ];
 
     protected $casts = [
