@@ -5,9 +5,12 @@ namespace Tests\Feature\Event;
 use App\Models\Event;
 use App\Models\Thread;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CalendarTest extends TestCase {
+    use RefreshDatabase;
+
     public function test_calendar_page_is_displayed(): void {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get(route('event.show.calendar'));

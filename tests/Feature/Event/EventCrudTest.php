@@ -7,9 +7,12 @@ use App\Models\Post;
 use App\Models\Thread;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EventCrudTest extends TestCase {
+    use RefreshDatabase;
+
     public function test_event_can_be_added(): void {
         $user = User::factory()->create();
         $data = [
