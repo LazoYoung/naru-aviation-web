@@ -34,7 +34,7 @@ class AirportAddTest extends TestCase {
             'longitude' => null,
         ]);
 
-        $response->assertServerError();
+        $response->assertBadRequest();
     }
 
     public function test_unauthorized_user_is_rejected(): void {
