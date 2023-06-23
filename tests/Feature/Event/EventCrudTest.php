@@ -79,4 +79,21 @@ class EventCrudTest extends TestCase {
         self::assertEquals($newEvent->end, $newDate);
         self::assertEquals($newPost->content, $newDesc);
     }
+
+    public function test_invalid_update_is_rejected(): void {
+        $user = User::factory()->create();
+        $user->is_admin = true;
+        $data = [];
+        $response = $this->actingAs($user)->post(route('event.submit.update'), $data);
+
+        $response->assertBadRequest();
+    }
+
+    public function test_unauthorized_update_is_rejected(): void {
+        $user = User::factory()->create();
+        $data = [];
+        $response = $this->actingAs($user)->post(route('event.submit.update'), $data);
+
+        $response->assertUnauthorized();
+    }
 }
