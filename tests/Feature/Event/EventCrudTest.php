@@ -91,6 +91,7 @@ class EventCrudTest extends TestCase {
 
     public function test_unauthorized_update_is_rejected(): void {
         $user = User::factory()->create();
+        $user->is_admin = false;
         $data = [];
         $response = $this->actingAs($user)->post(route('event.submit.update'), $data);
 
