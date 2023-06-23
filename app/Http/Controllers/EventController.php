@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -22,17 +23,18 @@ class EventController extends Controller {
     }
 
     public function visitEventThread(Request $request) {
-        $validated = $request->validate([
-            'id' => 'exists:App\Models\Event,id',
-        ]);
-
         try {
+            $validated = $request->validate([
+                'id' => 'exists:App\Models\Event,id',
+            ]);
             $event = Event::find($validated['id']);
             $thread = Thread::whereBelongsTo($event)->firstOrFail();
 
             return redirect(route('forum.thread.show', [
                 'id' => $thread->getQueueableId()
             ]));
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
@@ -75,6 +77,8 @@ class EventController extends Controller {
             $post->user()->associate($user);
             $post->thread()->associate($thread);
             $post->saveOrFail();
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
@@ -102,6 +106,8 @@ class EventController extends Controller {
             $post = Post::find($postId);
             $post->content = $validated['description'];
             $post->saveOrFail();
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }

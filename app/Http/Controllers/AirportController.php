@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Airport;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class AirportController extends Controller {
@@ -25,6 +26,8 @@ class AirportController extends Controller {
 
             $airport->saveOrFail();
             return response(null, 200);
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
