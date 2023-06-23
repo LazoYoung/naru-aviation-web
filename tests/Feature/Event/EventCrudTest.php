@@ -74,10 +74,10 @@ class EventCrudTest extends TestCase {
         $newPost = Post::find($postId);
 
         $response->assertOk();
-        self::assertEquals($newEvent->title, $newTitle);
-        self::assertEquals($newEvent->start, $newDate);
-        self::assertEquals($newEvent->end, $newDate);
-        self::assertEquals($newPost->content, $newDesc);
+        $this->assertEquals($newEvent->title, $newTitle);
+        $this->assertEquals($newEvent->start, $newDate);
+        $this->assertEquals($newEvent->end, $newDate);
+        $this->assertEquals($newPost->content, $newDesc);
     }
 
     public function test_invalid_update_is_rejected(): void {
