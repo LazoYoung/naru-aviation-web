@@ -83,7 +83,7 @@ class EventController extends Controller {
             return response($t->getMessage(), 500);
         }
 
-        return response(null, 200);
+        return response($event->id, 200);
     }
 
     public function updateEvent(Request $request) {
@@ -102,7 +102,7 @@ class EventController extends Controller {
             $event->end = $validated['end'];
             $event->saveOrFail();
 
-            $postId = Thread::whereBelongsTo($event)->posts()->firstOrFail()->getQueueableId();
+            $postId = Thread::whereBelongsTo($event)->first()->posts()->firstOrFail()->getQueueableId();
             $post = Post::find($postId);
             $post->content = $validated['description'];
             $post->saveOrFail();
@@ -112,6 +112,6 @@ class EventController extends Controller {
             return response($t->getMessage(), 500);
         }
 
-        return response(null, 500);
+        return response(null, 200);
     }
 }
