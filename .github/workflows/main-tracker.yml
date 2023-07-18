@@ -9,15 +9,5 @@ jobs:
     name: Deploy
     runs-on: [self-hosted, linux]
     steps:
-      - name: Fetch
-        shell: bash
-        run: |
-          cd /var/www/naru-aviation-web
-          git reset --hard
-          git checkout main
-          git pull
-      - name: Build
-        shell: bash
-        run: |
-          cd /var/www/naru-aviation-web
-          npm run build
+      - run: chmod u+x ./deploy.sh
+      - run: ./deploy.sh
