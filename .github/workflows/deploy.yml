@@ -1,4 +1,4 @@
-name: Main Tracker
+name: Deploy
 run-name: ${{ github.actor }} triggered this action.
 on:
   push:
@@ -7,7 +7,8 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, ARM64]
     steps:
+      - uses: actions/checkout@v3.3.0
       - run: chmod u+x ./deploy.sh
       - run: ./deploy.sh
