@@ -16,12 +16,9 @@ jobs:
         shell: bash
         working-directory: ${{ env.PATH }}
     steps:
-      - name: Execute
-        run: |
-          cd $PATH
-          pwd
-          git reset --hard
-          git checkout $GITHUB_REF_NAME
-          git fetch
-          chmod u+x ./deploy.sh
-          ./deploy.sh
+      - run: pwd
+      - run: git reset --hard
+      - run: git checkout $GITHUB_REF_NAME
+      - run: git fetch
+      - run: chmod u+x ./deploy.sh
+      - run: ./deploy.sh
