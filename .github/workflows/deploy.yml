@@ -14,6 +14,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ${{ secrets.DEPLOY_PATH }}
     steps:
       - name: Execute
         run: |
