@@ -9,10 +9,6 @@ jobs:
     runs-on: [self-hosted, linux, ARM64]
     env:
       PATH: ${{ secrets.DEPLOY_PATH }}
-    defaults:
-      run:
-        shell: bash
-        # working-directory: ${{ env.PATH }}
     steps:
       - id: add_path
         run: echo "/usr/bin" >> $GITHUB_PATH
