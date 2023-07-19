@@ -12,6 +12,12 @@ jobs:
     env:
       PATH: ${{ secrets.DEPLOY_PATH }}
     steps:
+      - name: Install git
+        run: |
+          apt-get install -y git
+          git --version
+          PATH=$PATH:$(which git)
+          echo "Path: $PATH"
       - run: cd $PATH
       - run: git reset --hard
       - run: git checkout $GITHUB_REF_NAME
