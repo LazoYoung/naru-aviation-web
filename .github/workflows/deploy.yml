@@ -9,16 +9,11 @@ jobs:
   deploy:
     name: Deploy
     runs-on: [self-hosted, linux, ARM64]
-    env:
-      PATH: ${{ secrets.DEPLOY_PATH }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ secrets.DEPLOY_PATH }}
     steps:
-      - name: Install git
-        run: |
-          apt-get install -y git
-          git --version
-          PATH=$PATH:$(which git)
-          echo "Path: $PATH"
-      - run: cd $PATH
       - run: git reset --hard
       - run: git checkout $GITHUB_REF_NAME
       - run: git fetch
