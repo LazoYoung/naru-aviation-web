@@ -12,6 +12,11 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ${{ env.PATH }}
+        # working-directory: ${{ env.PATH }}
     steps:
-      - run: ./deploy.sh ${{ github.ref_name }}
+      #- id: add_path
+      #  run: echo "/usr/bin" >> $GITHUB_PATH
+      - id: execute_sh
+        run: |
+          cd ${{ env.PATH }}
+          ./deploy.sh ${{ github.ref_name }}

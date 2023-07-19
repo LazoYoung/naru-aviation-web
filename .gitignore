@@ -15,11 +15,14 @@ yarn-error.log
 /.idea
 /.vscode
 
-# Laravel environment values
+# Laravel environment
 .env
 .env.backup
 .env.production
 .env.example
+
+# CI / CD
+deploy.sh
 
 # IDE helper
 .phpstorm.meta.php
