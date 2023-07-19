@@ -2,9 +2,7 @@ name: Deploy
 run-name: ${{ github.actor }} triggered this action.
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: [main, dev]
 jobs:
   deploy:
     name: Deploy
@@ -16,9 +14,10 @@ jobs:
         shell: bash
         working-directory: ${{ env.PATH }}
     steps:
-      - run: pwd
+      - run: echo "$PATH"
+      - run: echo "/usr/bin" >> $GITHUB_PATH
       - run: git reset --hard
-      - run: git checkout $GITHUB_REF_NAME
+      - run: git checkout ${{ github.ref_name }}
       - run: git fetch
       - run: chmod u+x ./deploy.sh
       - run: ./deploy.sh
