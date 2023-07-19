@@ -15,9 +15,9 @@ jobs:
       run:
         shell: bash
     steps:
-      - run: cd $PATH
+      - run: cd ${PATH}
       - run: git reset --hard
-      - run: git checkout $GITHUB_REF_NAME
+      - run: git checkout ${GITHUB_REF_NAME}
       - run: git fetch
       - run: chmod u+x ./deploy.sh
       - run: ./deploy.sh
