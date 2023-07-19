@@ -9,10 +9,12 @@ jobs:
   deploy:
     name: Deploy
     runs-on: [self-hosted, linux, ARM64]
+    env:
+      PATH: ${{ secrets.DEPLOY_PATH }}
     defaults:
       run:
         shell: bash
-        working-directory: ${{ secrets.DEPLOY_PATH }}
+        working-directory: $PATH
     steps:
       - run: git reset --hard
       - run: git checkout $GITHUB_REF_NAME
