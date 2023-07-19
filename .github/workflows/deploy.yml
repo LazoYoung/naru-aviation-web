@@ -14,8 +14,8 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: $PATH
     steps:
+      - run: cd $PATH
       - run: git reset --hard
       - run: git checkout $GITHUB_REF_NAME
       - run: git fetch
