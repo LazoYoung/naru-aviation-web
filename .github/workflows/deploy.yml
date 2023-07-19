@@ -14,7 +14,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ${PATH}
+        working-directory: ${{ env.DEPLOY_PATH }}
     steps:
       - name: Execute
         run: |
