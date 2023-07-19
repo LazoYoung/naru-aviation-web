@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 jobs:
   deploy:
     name: Deploy
@@ -12,6 +13,8 @@ jobs:
       PATH: ${{ secrets.DEPLOY_PATH }}
     steps:
       - run: cd $PATH
-      - uses: actions/checkout@v3.3.0
+      - run: git reset --hard
+      - run: git checkout $GITHUB_REF_NAME
+      - run: git fetch
       - run: chmod u+x ./deploy.sh
       - run: ./deploy.sh
