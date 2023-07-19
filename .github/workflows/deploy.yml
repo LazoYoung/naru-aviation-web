@@ -14,8 +14,8 @@ jobs:
         shell: bash
         # working-directory: ${{ env.PATH }}
     steps:
-      #- id: add_path
-      #  run: echo "/usr/bin" >> $GITHUB_PATH
+      - id: add_path
+        run: echo "/usr/bin" >> $GITHUB_PATH
       - id: execute_sh
         run: |
           cd ${{ env.PATH }}
