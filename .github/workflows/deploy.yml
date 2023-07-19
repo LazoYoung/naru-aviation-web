@@ -8,7 +8,10 @@ jobs:
   deploy:
     name: Deploy
     runs-on: [self-hosted, linux, ARM64]
+    env:
+      PATH: ${{ secrets.DEPLOY_PATH }}
     steps:
+      - run: cd $PATH
       - uses: actions/checkout@v3.3.0
       - run: chmod u+x ./deploy.sh
       - run: ./deploy.sh
