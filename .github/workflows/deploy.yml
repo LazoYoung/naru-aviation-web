@@ -14,5 +14,6 @@ jobs:
         shell: bash
         working-directory: ${{ env.PATH }}
     steps:
+      - run: echo "/usr/bin" >> $GITHUB_PATH
       - run: chmod u+x ./deploy.sh
       - run: ./deploy.sh ${{ github.ref_name }}
