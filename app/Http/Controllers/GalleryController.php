@@ -6,6 +6,7 @@ use App\Models\Image;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
 
@@ -46,6 +47,8 @@ class GalleryController extends Controller {
             } else {
                 throw new Exception('Failed to store file.');
             }
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }

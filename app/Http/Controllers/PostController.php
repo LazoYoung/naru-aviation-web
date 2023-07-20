@@ -8,6 +8,7 @@ use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class PostController extends Controller {
@@ -23,6 +24,8 @@ class PostController extends Controller {
             $this->createPost($request)
                 ->saveOrFail();
             return response(null, 200);
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $e) {
             return response($e->getMessage(), 500);
         }
@@ -35,7 +38,11 @@ class PostController extends Controller {
      * Possible status: 200, 500
      */
     public function getContent(Request $request): Response {
-        $this->validatePost($request);
+        try {
+            $this->validatePost($request);
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
+        }
 
         $content = $this->getPost($request)->content;
         return response($content, 200);

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
 
@@ -74,6 +75,8 @@ class ThreadController extends Controller {
             return redirect(route('forum.thread.show', [
                 'id' => $thread->getQueueableId(),
             ]));
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
@@ -95,6 +98,8 @@ class ThreadController extends Controller {
                 'thread' => $thread,
                 'posts' => $thread->posts()->oldest()->get(),
             ]);
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
@@ -113,6 +118,8 @@ class ThreadController extends Controller {
             $thread = Thread::find($request->query('id'));
             $content = $thread->posts->first()->content;
             return response($content);
+        } catch (ValidationException $e) {
+            return response($e->getMessage(), 400);
         } catch (Throwable $t) {
             return response($t->getMessage(), 500);
         }
