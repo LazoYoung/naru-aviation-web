@@ -2,7 +2,7 @@
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import {onMounted, ref} from "vue";
-import Notification from "@/notification.js";
+import Alert from "@/alert.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {usePage} from "@inertiajs/vue3";
 import {fetchResponse} from "@/api.js";
@@ -12,8 +12,8 @@ const inputValue = ref('');
 const inputType = ref('text');
 const keyExists = ref(false);
 const processing = ref(true);
-const successAlert = new Notification('success');
-const failAlert = new Notification('fail');
+const successAlert = new Alert('success');
+const failAlert = new Alert('fail');
 
 onMounted(loadKey);
 
@@ -63,7 +63,8 @@ function resetKey() {
             <h2 class="text-lg font-medium text-gray-900">ACARS Link</h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Your <a href="https://github.com/LazoYoung/Naru-ACARS" target="_blank" class="underline font-bold">ACARS software</a> requires the unique API key to record your flight.
+                Your <a href="https://github.com/LazoYoung/Naru-ACARS" target="_blank" class="underline font-bold">ACARS software</a>
+                requires the API key to record your flight.
             </p>
         </header>
 

@@ -2,12 +2,14 @@
 import {computed, onMounted, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {marked} from "marked";
+import Gravatar from "@/Components/Gravatar.vue";
 
 const props = defineProps(['post', 'index', 'last']);
 const postId = props.post['id'];
 const frame = ref();
 const csrfToken = usePage().props.auth['csrf_token'];
 const content = ref();
+const gravatarHash = ref('');
 const liked = ref(false);
 const likeCount = ref(0);
 const likeLabel = computed(() => {
@@ -19,6 +21,7 @@ onMounted(() => {
     fetchContent();
     fetchLiked();
     fetchLikeCount();
+    fetchGravatar();
 });
 
 defineEmits(['open-draft']);
@@ -83,6 +86,11 @@ function fetchLikeCount() {
         .then(text => likeCount.value = parseInt(text ? text : '0'));
 }
 
+function fetchGravatar() {
+    return fetchData(route('forum.post.gravatar'))
+        .then(text => gravatarHash.value = text);
+}
+
 function fetchData(url) {
     let locator = new URL(url);
     let params = locator.searchParams;
@@ -118,7 +126,8 @@ function submitData(url) {
 <template>
     <div ref="frame" class="py-8">
         <div class="flex flex-row leading-8">
-            <i class="fa-solid fa-circle-user fa-2x"></i>
+            <i v-if="!gravatarHash" class="fa-solid fa-circle-user fa-2x"></i>
+            <Gravatar v-else :hash="gravatarHash" :large="false" :size="50"></Gravatar>
             <span class="mx-4 font-semibold">{{ post['username'] }}</span>
         </div>
         <div class="p-8" ref="content"></div>

@@ -5,7 +5,7 @@ import Animate from "@/animate.js";
 /**
  * @license Original source kindly provided by wnynya (https://github.com/wnynya)
  */
-class Notification {
+class Alert {
     type;
     style;
     timeout;
@@ -260,8 +260,8 @@ class Notification {
     }
 }
 
-export default Notification;
+export default Alert;
 
 window.noty = (...args) => {
-    new Notification(...args);
+    new Alert(...args);
 };

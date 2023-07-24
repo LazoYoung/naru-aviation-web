@@ -7,9 +7,13 @@ use App\Models\Post;
 use App\Models\Thread;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
@@ -56,7 +60,7 @@ class ThreadController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {
+    public function store(Request $request): mixed {
         try {
             $max = sizeof(Category::cases()) - 1;
             $validated = $request->validate([
@@ -88,7 +92,7 @@ class ThreadController extends Controller {
      * Method: POST
      * Expected input: id
      */
-    public function show(Request $request) {
+    public function show(Request $request): mixed {
         try {
             $this->validateThread($request);
 
@@ -153,6 +157,21 @@ class ThreadController extends Controller {
     }
 
     /**
+     * Get gravatar hash of the original thread creator.
+     *
+     * Method: GET
+     * Expected query: id
+     */
+    public function getAuthorGravatarHash(Request $request): Response {
+        $this->validateThread($request);
+
+        $thread = Thread::find($request->query('id'));
+        $email = $thread->user->email;
+        $hash = md5(strtolower(trim($email)));
+        return response($hash);
+    }
+
+    /**
      * Get how much time has passed after creating the thread.
      *
      * Method: GET
@@ -169,12 +188,12 @@ class ThreadController extends Controller {
         return response($format);
     }
 
-    private function updateViewCount(Thread $thread, User $user) {
+    private function updateViewCount(Thread $thread, User $user): void {
         $thread->view += 1;
         $thread->save();
     }
 
-    private function getTimeDiffFormat($ms) {
+    private function getTimeDiffFormat($ms): string {
         $rem = round($ms / 60000);
         $y = floor($rem / self::year);
         $rem -= $y * self::year;
@@ -237,7 +256,7 @@ class ThreadController extends Controller {
         ]);
     }
 
-    private function validateThread(Request $request) {
+    private function validateThread(Request $request): void {
         $request->validate([
             'id' => 'exists:App\Models\Thread,id'
         ]);

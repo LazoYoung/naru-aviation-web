@@ -60,6 +60,9 @@ Route::controller(ThreadController::class)->group(function () {
     Route::get('/thread/author-name', 'getAuthorName')
         ->name('forum.thread.author-name');
 
+    Route::get('/thread/author-gravatar', 'getAuthorGravatarHash')
+        ->name('forum.thread.author-gravatar');
+
     Route::get('/thread/created-time', 'getCreatedTime')
         ->name('forum.thread.created-time');
 });
@@ -74,6 +77,9 @@ Route::controller(PostController::class)->group(function () {
 
     Route::get('/post/like-count', 'getLikeCount')
         ->name('forum.post.like-count');
+
+    Route::get('/post/gravatar', 'getGravatarHash')
+        ->name('forum.post.gravatar');
 
     Route::get('/post/has-liked', 'hasLiked')
         ->middleware(['auth', 'verified'])

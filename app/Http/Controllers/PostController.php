@@ -62,6 +62,20 @@ class PostController extends Controller {
     }
 
     /**
+     * Get gravatar hash of the post author.
+     *
+     * Method: GET
+     * Expected query: id
+     */
+    public function getGravatarHash(Request $request): Response {
+        $this->validatePost($request);
+
+        $email = $this->getPost($request)->user->email;
+        $hash = md5(strtolower(trim($email)));
+        return response($hash);
+    }
+
+    /**
      * Method: POST
      * Expected input: post-id
      * Result: true/false

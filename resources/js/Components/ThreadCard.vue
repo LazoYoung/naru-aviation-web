@@ -2,17 +2,20 @@
 import {onMounted, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {Category} from "@/category.ts";
+import Gravatar from "@/Components/Gravatar.vue";
 
 const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps(['id', 'title', 'category']);
 const authorName = ref('N/A');
 const createdTime = ref('N/A');
 const viewCount = ref('0 view');
+const gravatarHash = ref('');
 
 onMounted(() => {
     fetchAuthorName();
     fetchCreatedTime();
     fetchViewCount();
+    fetchAuthorGravatar();
 });
 
 watch(props,  () => {
@@ -32,6 +35,11 @@ function getCategory() {
 function fetchAuthorName() {
     fetchData(route('forum.thread.author-name'))
         .then(text => authorName.value = text);
+}
+
+function fetchAuthorGravatar() {
+    fetchData(route('forum.thread.author-gravatar'))
+        .then(text => gravatarHash.value = text);
 }
 
 function fetchCreatedTime() {
@@ -67,7 +75,8 @@ function fetchData(url) {
 <template>
     <tr class="flex flex-row items-center rounded-lg border-solid border-2 m-4">
         <td class="p-8 flex-shrink-0">
-            <i class="fa-solid fa-circle-user fa-3x"></i>
+            <i v-if="!gravatarHash" class="fa-solid fa-circle-user fa-3x"></i>
+            <Gravatar v-else :hash="gravatarHash" :large="false" :size="70"></Gravatar>
         </td>
         <td class="flex-grow">
             <a :href="getLink()">
