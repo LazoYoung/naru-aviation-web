@@ -30,7 +30,7 @@ class APIKeyController {
     public function resetACARSKey(Request $request): Response {
         $user = $this->getUser($request);
         try {
-            $newKey = $this->generateHash($this->acars_length);
+            $newKey = $this->generateKey($this->acars_length);
             $user->acars_key = $newKey;
             $user->saveOrFail();
         } catch (Throwable $e) {
@@ -47,13 +47,13 @@ class APIKeyController {
      * @noinspection SpellCheckingInspection
      * @throws Exception thrown if random int cannot be generated
      */
-    private function generateHash(int $length): string {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
+    private function generateKey(int $length): string {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        $clen = strlen($characters);
+        $key = '';
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[random_int(0, $charactersLength - 1)];
+            $key .= $characters[random_int(0, $clen - 1)];
         }
-        return $randomString;
+        return $key;
     }
 }
