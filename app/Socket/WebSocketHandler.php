@@ -1,15 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Socket;
 
+use stdClass;
 use Exception;
+use SplObjectStorage;
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\MessageComponentInterface;
-use SplObjectStorage;
 
 class WebSocketHandler implements MessageComponentInterface {
 
-    protected SplObjectStorage $clients;
+    private SplObjectStorage $clients;
     private int $nextId = 1;
 
     public function __construct() {
@@ -20,7 +21,7 @@ class WebSocketHandler implements MessageComponentInterface {
     function onOpen(ConnectionInterface $conn): void {
         // Prevent Ratchet from raising exception: undefined property
         $conn->socketId = $this->nextId++;
-        $conn->app = new \stdClass();
+        $conn->app = new stdClass();
         $conn->app->id = 'naru-socket';
         $this->clients->attach($conn);
     }

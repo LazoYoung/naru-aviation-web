@@ -53,6 +53,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read Collection<int, Event> $events
  * @property-read int|null $events_count
  * @property int $is_admin
+ * @property mixed|string $acars_key
  * @method static Builder|User whereIsAdmin($value)
  * @mixin Eloquent
  */
@@ -78,6 +79,7 @@ class User extends Authenticatable {
     protected $hidden = [
         'is_admin',
         'password',
+        'acars_key',
         'remember_token',
     ];
 
