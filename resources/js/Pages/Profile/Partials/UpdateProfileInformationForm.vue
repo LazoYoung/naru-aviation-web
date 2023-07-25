@@ -133,7 +133,7 @@ const form = useForm({
         </section>
 
         <div class="right-box sm-hidden">
-            <Gravatar :large="true" size="200"/>
+            <Gravatar :large="true" size="512"/>
         </div>
     </div>
 </template>

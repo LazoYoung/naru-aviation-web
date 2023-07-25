@@ -125,7 +125,7 @@ function submitData(url) {
 
 <template>
     <div ref="frame" class="py-8">
-        <div class="flex flex-row leading-8">
+        <div class="flex flex-row items-center leading-8">
             <i v-if="!gravatarHash" class="fa-solid fa-circle-user fa-2x"></i>
             <Gravatar v-else :hash="gravatarHash" :large="false" :size="50"></Gravatar>
             <span class="mx-4 font-semibold">{{ post['username'] }}</span>

@@ -14,11 +14,10 @@ const props = defineProps({
     },
     size: {
         type: Number,
-        default: 200
+        default: 512
     }
 });
 const user = usePage().props.auth.user;
-const imgHintElem = ref(null);
 const imgSrc = computed(() => {
     let hash = getGravatarHash();
     console.log(hash);
@@ -29,25 +28,19 @@ function getGravatarHash() {
     let def = props.hash;
     return def ? def : MD5(user.email.trim().toLowerCase());
 }
-
-function showHint() {
-    imgHintElem.value.classList.remove('p-hidden');
-}
-
-function hideHint() {
-    imgHintElem.value.classList.add('p-hidden');
-}
 </script>
 
 <style>
-.circle {
-    border-radius: 50%;
+[layer] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 .p-hover-bg {
-    position: absolute;
-    z-index: 1;
-    background-color: black;
-    opacity: 60%;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(2px);
 }
 .p-hover-fg {
     position: absolute;
@@ -58,27 +51,43 @@ function hideHint() {
 .p-hidden {
     opacity: 0;
 }
+.p-hidden:hover {
+    opacity: 1;
+}
 .p-font {
+    color: white;
     text-align: center;
     font-weight: 700;
     font-size: 1.5rem;
     line-height: 2rem;
 }
+.ratio-box {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+}
+.img-box {
+    border-radius: 100%;
+    border: 1px solid rgb(209, 213, 219);
+    overflow: hidden;
+}
 </style>
 
 <template>
-    <a
-        v-if="large"
-        href="https://www.gravatar.com"
-        target="_blank"
-        ref="imgHintElem"
-        class="p-hidden"
-        @mouseenter="showHint"
-        @mouseleave="hideHint"
-    >
-        <div class="p-hover-bg circle">
-            <p class="p-hover-fg p-font">Change my gravatar</p>
+<!-- given the width, 1:1 content box is generated  -->
+    <div v-if="large" class="ratio-box">
+        <div v-if="large" class="img-box" layer>
+            <a
+                href="https://www.gravatar.com"
+                target="_blank"
+                class="w-full h-full block"
+            >
+                <img :src="imgSrc" layer alt="My Avatar"/>
+                <div ref="imgHintElem" layer class="p-hover-bg p-hidden">
+                    <p class="p-hover-fg p-font">Change my gravatar</p>
+                </div>
+            </a>
         </div>
-    </a>
-    <img :src="imgSrc" class="circle" alt="My Avatar"/>
+    </div>
+    <img v-else :src="imgSrc" class="img-box" alt="My Avatar"/>
 </template>
