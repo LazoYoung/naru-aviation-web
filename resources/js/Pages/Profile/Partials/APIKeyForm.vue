@@ -38,7 +38,9 @@ async function loadKey() {
 
 function revealKey() {
     inputType.value = 'text';
-    successAlert.pop('Copied to clipboard.');
+    navigator.clipboard.writeText(inputValue.value)
+        .catch(() => failAlert.pop('Failed to access clipboard.'))
+        .then(() => successAlert.pop('Copied to clipboard.'));
 }
 
 function resetKey() {
