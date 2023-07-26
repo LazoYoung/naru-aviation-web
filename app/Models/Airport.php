@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\AirportFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Airport whereLongitude($value)
  * @method static Builder|Airport whereName($value)
  * @method static Builder|Airport whereUpdatedAt($value)
+ * @method static AirportFactory factory($count = null, $state = [])
  * @mixin Eloquent
  */
 class Airport extends Model {

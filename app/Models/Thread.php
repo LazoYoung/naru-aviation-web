@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ThreadFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -38,6 +39,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereUserId($value)
  * @method static Builder|Thread whereView($value)
  * @method static Builder|Thread whereEventId($value)
+ * @method static ThreadFactory factory($count = null, $state = [])
  * @mixin Eloquent
  */
 class Thread extends Model {

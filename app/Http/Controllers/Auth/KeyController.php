@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Key;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
 
-class APIKeyController {
+class KeyController {
 
     private int $acars_length;
 
@@ -18,42 +19,49 @@ class APIKeyController {
 
     public function getACARSKey(Request $request) {
         $user = $this->getUser($request);
-        $key = $user->acars_key;
+        $key = $user->keys->firstWhere('type', '=', 'acars');
 
         if ($key != null) {
-            return response($key, 200);
+            return response($key->value, 200);
         } else {
             return response(null, 404);
         }
     }
 
     public function resetACARSKey(Request $request): Response {
-        $user = $this->getUser($request);
         try {
-            $newKey = $this->generateKey($this->acars_length);
-            $user->acars_key = $newKey;
-            $user->saveOrFail();
+            $user = $this->getUser($request);
+            $key = $user->keys->firstWhere('type', '=', 'acars');
+
+            if ($key == null) {
+                $key = new Key();
+                $key->type = 'acars';
+                $key->user()->associate($user);
+            }
+
+            $key->value = $this->generateKey();
+            $key->saveOrFail();
+            return response($key->value, 200);
         } catch (Throwable $e) {
             return response($e->getMessage(), 500);
         }
-        return response($newKey, 200);
-    }
-
-    private function getUser(Request $request): User {
-        return $request->user();
     }
 
     /**
      * @noinspection SpellCheckingInspection
      * @throws Exception thrown if random int cannot be generated
      */
-    private function generateKey(int $length): string {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+    public function generateKey(): string {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz!@#$^*_';
         $clen = strlen($characters);
         $key = '';
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $this->acars_length; $i++) {
             $key .= $characters[random_int(0, $clen - 1)];
         }
         return $key;
+    }
+
+    private function getUser(Request $request): User {
+        return $request->user();
     }
 }

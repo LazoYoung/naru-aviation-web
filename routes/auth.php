@@ -4,7 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\APIKeyController;
+use App\Http\Controllers\Auth\KeyController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -58,9 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    Route::get('api-key/acars', [APIKeyController::class, 'getACARSKey'])
+    Route::get('api-key/acars', [KeyController::class, 'getACARSKey'])
         ->name('acars.get');
 
-    Route::post('api-key/reset-acars', [APIKeyController::class, 'resetACARSKey'])
+    Route::post('api-key/reset-acars', [KeyController::class, 'resetACARSKey'])
         ->name('acars.reset');
 });

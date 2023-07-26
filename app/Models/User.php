@@ -43,6 +43,8 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder|User wherePassword($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|User whereIsAdmin($value)
+ * @property int $is_admin
  * @property-read Collection<int, Like> $likes
  * @property-read int|null $likes_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
@@ -52,9 +54,8 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read Collection<int, PersonalAccessToken> $tokens
  * @property-read Collection<int, Event> $events
  * @property-read int|null $events_count
- * @property int $is_admin
- * @property mixed|string $acars_key
- * @method static Builder|User whereIsAdmin($value)
+ * @property-read Collection<int, Key> $keys
+ * @property-read int|null $keys_count
  * @mixin Eloquent
  */
 class User extends Authenticatable {
@@ -79,7 +80,6 @@ class User extends Authenticatable {
     protected $hidden = [
         'is_admin',
         'password',
-        'acars_key',
         'remember_token',
     ];
 
@@ -108,5 +108,9 @@ class User extends Authenticatable {
 
     public function events(): HasMany {
         return $this->hasMany(Event::class);
+    }
+
+    public function keys(): HasMany {
+        return $this->hasMany(Key::class);
     }
 }

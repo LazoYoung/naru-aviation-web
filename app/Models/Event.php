@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\EventFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Event whereTitle($value)
  * @method static Builder|Event whereUpdatedAt($value)
  * @method static Builder|Event whereUserId($value)
+ * @method static EventFactory factory($count = null, $state = [])
  * @mixin Eloquent
  */
 class Event extends Model {
