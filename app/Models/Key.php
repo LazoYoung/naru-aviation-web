@@ -39,6 +39,12 @@ class Key extends Model {
         'value'
     ];
 
+    public static function getDatalinkKey(string $key): ?Key {
+        return Key::where('value', '=', $key)
+            ->where('type', '=', 'acars')
+            ->first();
+    }
+
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }

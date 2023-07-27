@@ -1,6 +1,6 @@
 <?php
 
-use App\Socket\WebSocketHandler;
+use App\ACARS\WebSocketHandler;
 use BeyondCode\LaravelWebSockets\Exceptions\InvalidWebSocketController;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use BeyondCode\LaravelWebSockets\Server\Router;
