@@ -54,6 +54,7 @@ function resetKey() {
     }).then(response => response.text()
     ).then(key => {
         inputValue.value = key;
+        keyExists.value = true;
         successAlert.pop('Key regenerated!');
     });
 }
