@@ -168,7 +168,7 @@ class PostController extends Controller {
     private function validateLike(Post $post, User $user, bool $like) {
         $prev = $this->getLike($post, $user);
 
-        if (($like && $prev != null) || (!$like && $prev == null)) {
+        if (($like && $prev !== null) || (!$like && $prev === null)) {
             abort(400);
         }
     }

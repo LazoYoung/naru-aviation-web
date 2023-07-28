@@ -37,7 +37,7 @@ class ThreadTest extends TestCase {
         $response->assertOk();
 
         foreach ($response->json() as $item) {
-            if ($item['id'] == $thread->id) {
+            if ($item['id'] === $thread->id) {
                 $match = true;
                 break;
             }
@@ -59,7 +59,7 @@ class ThreadTest extends TestCase {
         $response->assertOk();
 
         foreach ($response->json() as $item) {
-            if ($item['id'] == $thread->id) {
+            if ($item['id'] === $thread->id) {
                 $match = true;
                 break;
             }

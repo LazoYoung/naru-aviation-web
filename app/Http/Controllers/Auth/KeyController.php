@@ -33,7 +33,7 @@ class KeyController {
             $user = $this->getUser($request);
             $key = $user->keys->firstWhere('type', '=', 'acars');
 
-            if ($key == null) {
+            if ($key === null) {
                 $key = new Key();
                 $key->type = 'acars';
                 $key->user()->associate($user);
