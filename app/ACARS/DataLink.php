@@ -8,14 +8,14 @@ use Ratchet\ConnectionInterface;
 
 class DataLink {
     private ConnectionInterface $connection;
-    private DataLinkController $manager;
+    private DataLinkHandler $handler;
     private ?Key $key;
     private ?User $user;
 
     public function __construct(ConnectionInterface $conn) {
         $this->connection = $conn;
         $this->key = null;
-        $this->manager = new DataLinkController($this);
+        $this->handler = new DataLinkHandler($this);
     }
 
     /**
@@ -64,10 +64,10 @@ class DataLink {
     }
 
     /**
-     * @return DataLinkController the message controller for this instance
+     * @return DataLinkHandler the message handler for this instance
      */
-    public function getController(): DataLinkController {
-        return $this->manager;
+    public function getHandler(): DataLinkHandler {
+        return $this->handler;
     }
 
 }

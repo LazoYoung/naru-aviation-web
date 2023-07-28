@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use JsonException;
 use Ratchet\RFC6455\Messaging\MessageInterface;
 
-class DataLinkController {
+class DataLinkHandler {
 
     private DataLink $dataLink;
 
