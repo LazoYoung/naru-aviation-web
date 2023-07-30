@@ -34,11 +34,11 @@ class Animate {
             const transforms = {};
             const transformsFrom = {};
             for (const key in styles) {
-                if (typeof styles[key] == 'number') {
+                if (typeof styles[key] === 'number') {
                     styles[key] = styles[key] + 'px';
                 }
 
-                if (key == 'transform') {
+                if (key === 'transform') {
                     types[key] = 'transform';
                     for (const part of styles.transform.split(' ')) {
                         const match = part.match(/(.+)\(([0-9.\-]+(?:.+)?)\)/);
@@ -82,7 +82,7 @@ class Animate {
                 let p = processor(n);
 
                 for (const key in styles) {
-                    if (types[key] == 'transform') {
+                    if (types[key] === 'transform') {
                         let value = '';
                         for (const part in transforms) {
                             let from = transformsFrom[part]?.value || 0.0;
@@ -94,9 +94,9 @@ class Animate {
                         element.style.transform = value;
                     } else if (['px', 'rem'].includes(types[key])) {
                         let target;
-                        if (types[key] == 'px') {
+                        if (types[key] === 'px') {
                             target = parseFloat(styles[key].replace('px', ''), 10);
-                        } else if (types[key] == 'rem') {
+                        } else if (types[key] === 'rem') {
                             target = Animate.#rem(
                                 parseFloat(styles[key].replace('rem', ''), 10)
                             );
@@ -104,7 +104,7 @@ class Animate {
                         let move = target - from[key];
                         let step = from[key] + move * p;
                         element.style[key] = step + 'px';
-                    } else if (types[key] == '%') {
+                    } else if (types[key] === '%') {
                         let target = parseFloat(styles[key].replace('%', ''), 10);
                         let move = target - from[key];
                         let step = from[key] + move * p;

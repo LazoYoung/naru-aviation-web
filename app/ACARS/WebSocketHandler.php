@@ -93,7 +93,7 @@ class WebSocketHandler implements MessageComponentInterface {
         if (!$dataLink->isAuthorized()) {
             $key = Key::getDatalinkKey($payload);
 
-            if ($key == null) {
+            if ($key === null) {
                 $conn->send("This key is invalid");
                 $conn->close();
                 Log::debug("Connection $id presented an invalid key: $payload");
@@ -113,14 +113,16 @@ class WebSocketHandler implements MessageComponentInterface {
             return;
         }
 
-        if ($msg->isCoalesced()) {
-            try {
-                $json = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
-                Log::info("Inbound payload from socket $id:", $json);
-            } catch (JsonException $e) {
-                Log::error("Failed to decode JSON payload.");
-                Log::error(print_r($e->getTraceAsString(), true));
-            }
+        try {
+            Log::info("Inbound payload from socket $id: $payload");
+
+            $response = $dataLink->getHandler()->computeMessage($msg);
+            $conn->send($response);
+
+            Log::debug("Response sent to socket $id: $response");
+        } catch (Throwable $t) {
+            Log::error($t->getMessage());
+            Log::error(print_r($t->getTraceAsString(), true));
         }
     }
 
