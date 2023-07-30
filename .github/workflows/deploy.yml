@@ -2,7 +2,7 @@ name: Deploy
 run-name: ${{ github.actor }} triggered this action.
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
 jobs:
   deploy:
     name: Deploy
