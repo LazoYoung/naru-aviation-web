@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Tasks\DatabaseTask;
+use App\Console\Tasks\FlightManagerTask;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel {
      * Define the application's command schedule.
      */
     protected function schedule(Schedule $schedule): void {
-        $schedule->call(new DatabaseTask())->daily();
+        $schedule->call(new FlightManagerTask())->everyMinute();
     }
 
     /**
