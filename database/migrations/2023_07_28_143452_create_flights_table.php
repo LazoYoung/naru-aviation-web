@@ -14,7 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
+            $table->boolean("offline")->default(true);
             $table->smallInteger("status")->default(0);
+            $table->time("off_block")->nullable();
+            $table->time("on_block")->nullable();
             $table->double("latitude")->nullable();
             $table->double("longitude")->nullable();
             $table->integer("altitude")->nullable();

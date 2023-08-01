@@ -18,7 +18,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property int $user_id
+ * @property int $offline
  * @property int $status
+ * @property string|null $off_block
+ * @property string|null $on_block
  * @property float|null $latitude
  * @property float|null $longitude
  * @property int|null $altitude
@@ -40,6 +43,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Flight whereStatus($value)
  * @method static Builder|Flight whereUpdatedAt($value)
  * @method static Builder|Flight whereUserId($value)
+ * @method static Builder|Flight whereOffline($value)
+ * @method static Builder|Flight whereOffBlock($value)
+ * @method static Builder|Flight whereOnBlock($value)
  * @mixin Eloquent
  */
 class Flight extends Model {

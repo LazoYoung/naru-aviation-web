@@ -39,6 +39,8 @@ use Illuminate\Support\Carbon;
 class Logbook extends Model {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
