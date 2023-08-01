@@ -7,16 +7,16 @@ use App\Models\Flight;
 class DatabaseTask {
 
     public function __invoke(): void {
-        $this->cancelAbandonedFlights();
+        $this->insertFlights();
+        $this->deleteFlights();
     }
 
-    private function cancelAbandonedFlights(): void {
-        $flights = Flight::getStaleModels();
+    private function insertFlights(): void {
+        // todo method stub
+    }
 
-        foreach ($flights as $flight) {
-            $flight->cancelled = true;
-            $flight->save();
-        }
+    private function deleteFlights(): void {
+        // todo method stub
     }
 
 }
