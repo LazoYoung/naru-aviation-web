@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use RuntimeException;
+use Throwable;
 
 /**
  * App\Models\Flight
@@ -56,12 +57,26 @@ class Flight extends Model {
     public $timestamps = false;
     protected $guarded = [];
 
+    public static function create(array $attributes = []): Flight {
+        $flight = new Flight($attributes);
+        $flight->refreshed_at = Carbon::now();
+        return $flight;
+    }
+
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 
     public function flightplan(): HasOne {
         return $this->hasOne(Flightplan::class);
+    }
+
+    public function isComplete(): bool {
+        try {
+            return $this->status == 4 && $this->getFlightTime()->minutes > 1;
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     /**

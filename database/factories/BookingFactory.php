@@ -24,8 +24,16 @@ class BookingFactory extends Factory {
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
             "user_id" => User::factory(),
-            "preflight_at" => Carbon::now()->addMinutes(30),
+            "preflight_at" => Carbon::now()->addMinutes(90)
         ];
+    }
+
+    public function overdue(int $minutes): BookingFactory {
+        return $this->state(function () use ($minutes) {
+            return [
+                "preflight_at" => Carbon::now()->subMinutes($minutes)
+            ];
+        });
     }
 
 }

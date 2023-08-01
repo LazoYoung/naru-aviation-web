@@ -35,4 +35,23 @@ class FlightFactory extends Factory {
         ];
     }
 
+    public function offline(int $period = 1): FlightFactory {
+        return $this->state(function () use ($period) {
+            return [
+                "offline" => true,
+                "refreshed_at" => Carbon::now()->subMinutes($period)
+            ];
+        });
+    }
+
+    public function complete(bool $complete = true): FlightFactory {
+        return $this->state(function () use ($complete) {
+            return [
+                "status" => 4,
+                "off_block" => $complete ? Carbon::now()->subHour() : null,
+                "on_block" => $complete ? Carbon::now()->subMinutes(10) : null
+            ];
+        });
+    }
+
 }

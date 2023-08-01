@@ -23,6 +23,7 @@ class FlightManagerTask {
     }
 
     /**
+     * @link https://github.com/LazoYoung/naru-aviation-web/wiki/Flight-service#service-flow
      * @throws Throwable
      */
     public function insertFlights(): void {
@@ -31,19 +32,20 @@ class FlightManagerTask {
         foreach ($bookings as $booking) {
             $flight = $this->createScheduledFlight($booking);
             $this->updateFlightplan($booking, $flight);
+            $flight->saveOrFail();
             $booking->deleteOrFail();
         }
     }
 
     /**
+     * @link https://github.com/LazoYoung/naru-aviation-web/wiki/Flight-service#service-flow
      * @throws Throwable
      */
     public function deleteFlights(): void {
         $flights = $this->getOfflineFlights();
 
         foreach ($flights as $flight) {
-            if ($flight->status == 4) { // Aircraft has landed
-
+            if ($flight->isComplete()) {
                 $logbook = Logbook::create($flight);
                 $logbook->saveOrFail();
                 $flight->deleteOrFail();
@@ -58,9 +60,8 @@ class FlightManagerTask {
      */
     private function createScheduledFlight(Booking $booking): Flight {
         $user = $booking->user;
-        $flight = new Flight();
+        $flight = Flight::create();
         $flight->user()->associate($user);
-        $flight->saveOrFail();
         return $flight;
     }
 
@@ -78,7 +79,7 @@ class FlightManagerTask {
      * @return Collection<Booking> collection of flights where preflight is overdue
      */
     private function getOverdueBookings(): Collection {
-        return Booking::whereDate("preflight_at", ">=", Carbon::now())->get();
+        return Booking::where("preflight_at", ">=", Carbon::now())->get();
     }
 
     /**

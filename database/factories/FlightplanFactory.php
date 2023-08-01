@@ -24,7 +24,7 @@ class FlightplanFactory extends Factory {
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
             "booking_id" => null,
-            "flight_id" => Flight::factory(),
+            "flight_id" => null,
             "callsign" => "NAR" . random_int(1, 999),
             "aircraft" => "A320",
             "origin" => "RKSS",
