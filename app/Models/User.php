@@ -25,6 +25,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property mixed $password
+ * @property int $is_admin
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -44,7 +45,6 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereIsAdmin($value)
- * @property int $is_admin
  * @property-read Collection<int, Like> $likes
  * @property-read int|null $likes_count
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications

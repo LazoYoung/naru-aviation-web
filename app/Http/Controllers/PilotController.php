@@ -26,13 +26,13 @@ class PilotController extends Controller {
             "callsign" => ["required", "string"],
             "aircraft" => ["required", "string", "size:4"],
             "origin" => ["required", "string", "size:4"],
-            "alternate" => ["required", "string", "size:4"],
+            "alternate" => ["nullable", "string", "size:4"],
             "destination" => ["required", "string", "size:4"],
             "altitude" => ["required", "numeric"],
             "off_block" => ["required", "date"],
             "flight_time" => ["required", "string"],
             "route" => ["required", "string"],
-            "remarks" => ["string"]
+            "remarks" => ["nullable", "string"]
         ]);
 
         try {
