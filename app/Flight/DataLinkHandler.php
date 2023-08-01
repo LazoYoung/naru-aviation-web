@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ACARS;
+namespace App\Flight;
 
 use App\Exceptions\MalformedBulkException;
 use App\Exceptions\UnknownIntentException;

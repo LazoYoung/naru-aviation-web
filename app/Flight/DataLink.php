@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ACARS;
+namespace App\Flight;
 
 use App\Models\Key;
 use App\Models\User;
