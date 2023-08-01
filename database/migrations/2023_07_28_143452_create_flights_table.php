@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('flights', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
+            $table->timestamp("refreshed_at");
             $table->boolean("offline")->default(true);
             $table->smallInteger("status")->default(0);
             $table->time("off_block")->nullable();

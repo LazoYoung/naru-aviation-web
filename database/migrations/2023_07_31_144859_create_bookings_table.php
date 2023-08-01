@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
-            $table->dateTime("preflight_at");
+            $table->timestamp("preflight_at");
         });
     }
 

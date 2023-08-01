@@ -21,10 +21,9 @@ class FlightFactory extends Factory {
      */
     public function definition(): array {
         return [
-            "created_at" => Carbon::now(),
-            "updated_at" => Carbon::now(),
+            "refreshed_at" => Carbon::now(),
             "user_id" => User::factory(),
-            "offline" => true,
+            "offline" => false,
             "status" => random_int(0, 4),
             "off_block" => Carbon::now()->subHour(),
             "on_block" => null,

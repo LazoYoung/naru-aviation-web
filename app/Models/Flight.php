@@ -17,9 +17,8 @@ use RuntimeException;
  * App\Models\Flight
  *
  * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
  * @property int $user_id
+ * @property string $refreshed_at
  * @property int $offline
  * @property int $status
  * @property string|null $off_block
@@ -48,11 +47,13 @@ use RuntimeException;
  * @method static Builder|Flight whereOffline($value)
  * @method static Builder|Flight whereOffBlock($value)
  * @method static Builder|Flight whereOnBlock($value)
+ * @method static Builder|Flight whereRefreshedAt($value)
  * @mixin Eloquent
  */
 class Flight extends Model {
     use HasFactory;
 
+    public $timestamps = false;
     protected $guarded = [];
 
     public function user(): BelongsTo {
@@ -82,7 +83,7 @@ class Flight extends Model {
      */
     public function getOfflineTime(): CarbonInterval {
         if ($this->offline) {
-            return $this->updated_at->diffAsCarbonInterval(Carbon::now());
+            return Carbon::now()->diffAsCarbonInterval($this->refreshed_at);
         } else {
             return CarbonInterval::seconds(0);
         }
