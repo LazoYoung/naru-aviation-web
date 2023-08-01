@@ -5,21 +5,15 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-
     /**
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('flights', function (Blueprint $table) {
+        Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
-            $table->smallInteger("status")->default(0);
-            $table->double("latitude")->nullable();
-            $table->double("longitude")->nullable();
-            $table->integer("altitude")->nullable();
-            $table->smallInteger("airspeed")->nullable();
-            $table->smallInteger("heading")->nullable();
+            $table->dateTime("preflight_at");
         });
     }
 
@@ -27,7 +21,6 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void {
-        Schema::dropIfExists('flights');
+        Schema::dropIfExists('bookings');
     }
-
 };
