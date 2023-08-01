@@ -5,6 +5,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\PilotController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
@@ -34,6 +35,15 @@ Route::get('/', function (Request $request) {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
+
+Route::controller(PilotController::class)
+    ->middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::get('/dispatch', 'getDispatchView')
+            ->name('pilot.dispatch.view');
+        Route::post('/dispatch', 'dispatchFlight')
+            ->name('pilot.dispatch.submit');
+    });
 
 Route::get('/forum', [ForumController::class, 'getView'])
     ->middleware(['auth', 'verified'])
@@ -144,4 +154,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
