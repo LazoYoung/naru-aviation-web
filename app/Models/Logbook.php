@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use RuntimeException;
 
 /**
  * App\Models\Logbook
@@ -40,6 +41,25 @@ class Logbook extends Model {
     use HasFactory;
 
     protected $guarded = [];
+
+    /**
+     * Create a {@link Logbook} out of this $flight
+     * @throws RuntimeException thrown if the flightplan is not available
+     */
+    public static function create(Flight $flight): Logbook {
+        if (!isset($flight->flightplan)) {
+            throw new RuntimeException("Unable to create a logbook without a flightplan.");
+        }
+
+        $logbook = new Logbook([
+            "origin" => $flight->flightplan->origin,
+            "destination" => $flight->flightplan->destination,
+            "date" => Carbon::parse($flight->flightplan->off_block),
+            "flight_time" => $flight->getFlightTime()->minutes
+        ]);
+        $logbook->user()->associate($flight->user);
+        return $logbook;
+    }
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterval;
 use Database\Factories\FlightFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use RuntimeException;
 
 /**
  * App\Models\Flight
@@ -59,6 +61,31 @@ class Flight extends Model {
 
     public function flightplan(): HasOne {
         return $this->hasOne(Flightplan::class);
+    }
+
+    /**
+     * @return CarbonInterval the actual recorded flight time
+     * @throws RuntimeException thrown if this flight has not finished yet
+     */
+    public function getFlightTime(): CarbonInterval {
+        if (!isset($this->off_block) || !isset($this->on_block)) {
+            throw new RuntimeException("Unable to calculate the flight time of an unfinished flight.");
+        }
+
+        $offBlock = Carbon::parse($this->off_block);
+        $onBlock = Carbon::parse($this->on_block);
+        return $onBlock->diffAsCarbonInterval($offBlock);
+    }
+
+    /**
+     * @return CarbonInterval
+     */
+    public function getOfflineTime(): CarbonInterval {
+        if ($this->offline) {
+            return $this->updated_at->diffAsCarbonInterval(Carbon::now());
+        } else {
+            return CarbonInterval::seconds(0);
+        }
     }
 
 }

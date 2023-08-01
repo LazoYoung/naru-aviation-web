@@ -6,7 +6,6 @@ use App\Models\Booking;
 use App\Models\Flight;
 use App\Models\Logbook;
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -26,7 +25,7 @@ class FlightManagerTask {
     /**
      * @throws Throwable
      */
-    protected function insertFlights(): void {
+    public function insertFlights(): void {
         $bookings = $this->getOverdueBookings();
 
         foreach ($bookings as $booking) {
@@ -39,49 +38,19 @@ class FlightManagerTask {
     /**
      * @throws Throwable
      */
-    protected function deleteFlights(): void {
+    public function deleteFlights(): void {
         $flights = $this->getOfflineFlights();
 
         foreach ($flights as $flight) {
             if ($flight->status == 4) { // Aircraft has landed
-                $this->createLogbook($flight);
-                $this->deleteFlight($flight);
-            } else if ($this->getOfflineTime($flight)->minutes >= 30) {
-                $this->deleteFlight($flight);
+
+                $logbook = Logbook::create($flight);
+                $logbook->saveOrFail();
+                $flight->deleteOrFail();
+            } else if ($flight->getOfflineTime()->minutes >= 30) {
+                $flight->deleteOrFail();
             }
         }
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function createLogbook(Flight $flight): void {
-        $plan = $flight->flightplan;
-        $logbook = new Logbook([
-            "origin" => $plan->origin,
-            "destination" => $plan->destination,
-            "date" => Carbon::parse($plan->off_block),
-            "flight_time" => $this->getFlightTime($flight)->minutes
-        ]);
-        $logbook->user()->associate($flight->user);
-        $logbook->saveOrFail();
-    }
-
-    private function getFlightTime(Flight $flight): CarbonInterval {
-        $offBlock = Carbon::parse($flight->off_block);
-        $onBlock = Carbon::parse($flight->on_block);
-        return $onBlock->diffAsCarbonInterval($offBlock);
-    }
-
-    private function getOfflineTime(Flight $flight): CarbonInterval {
-        return $flight->updated_at->diffAsCarbonInterval(Carbon::now());
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function deleteFlight(Flight $flight): void {
-        $flight->deleteOrFail();
     }
 
     /**
