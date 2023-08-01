@@ -7,6 +7,7 @@ use App\Models\User;
 use Ratchet\ConnectionInterface;
 
 class DataLink {
+
     private ConnectionInterface $connection;
     private DataLinkHandler $handler;
     private ?Key $key;

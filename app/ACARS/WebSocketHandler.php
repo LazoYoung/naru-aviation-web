@@ -116,7 +116,7 @@ class WebSocketHandler implements MessageComponentInterface {
         try {
             Log::info("Inbound payload from socket $id: $payload");
 
-            $response = $dataLink->getHandler()->computeMessage($msg);
+            $response = $dataLink->getHandler()->computeIntent($msg);
             $conn->send($response);
 
             Log::debug("Response sent to socket $id: $response");

@@ -25,7 +25,7 @@ class DataLinkHandler {
      * @throws InvalidArgumentException thrown if the message is not coalesced.
      * @throws JsonException thrown if JSON decode fails.
      */
-    public function computeMessage(MessageInterface $msg): string {
+    public function computeIntent(MessageInterface $msg): string {
         if (!$msg->isCoalesced()) {
             throw new InvalidArgumentException("Message is not coalesced.");
         }
@@ -36,10 +36,10 @@ class DataLinkHandler {
 
         try {
             return match ($intent) {
-                "fetch" => $this->computeFetch($bulk),
-                "dispatch" => $this->computeDispatch($bulk),
-                "report" => $this->computeReport($bulk),
-                "event" => $this->computeEventRelay($bulk),
+                "fetch" => $this->onFetch($bulk),
+                "start" => $this->onStart($bulk),
+                "report" => $this->onReport($bulk),
+                "event" => $this->onEvent($bulk),
                 default => throw new UnknownIntentException(),
             };
         } catch (MalformedBulkException) {
@@ -52,11 +52,11 @@ class DataLinkHandler {
     /**
      * @throws JsonException
      */
-    private function computeFetch(array $bulk): string {
+    private function onFetch(array $bulk): string {
         $type = $bulk["type"];
 
         if ($type === "booking") {
-            return $this->computeFetchBooking($bulk);
+            return $this->onFetchBooking($bulk);
         } else {
             throw new MalformedBulkException("Unknown type: $type");
         }
@@ -65,7 +65,7 @@ class DataLinkHandler {
     /**
      * @throws JsonException
      */
-    private function computeFetchBooking(array $bulk): string {
+    private function onFetchBooking(array $bulk): string {
         // todo method stub
 
         $value = [
@@ -88,8 +88,8 @@ class DataLinkHandler {
     /**
      * @throws JsonException
      */
-    private function computeDispatch(array $bulk): string {
-        $isBooked = strcasecmp("true", $bulk["booked"]);
+    private function onStart(array $bulk): string {
+        $scheduled = strcasecmp("true", $bulk["scheduled"]);
         $flightplan = $bulk["flightplan"];
 
         // todo method stub
@@ -100,7 +100,7 @@ class DataLinkHandler {
     /**
      * @throws JsonException
      */
-    private function computeReport(array $bulk): string {
+    private function onReport(array $bulk): string {
         $latitude = $bulk["latitude"];
         $longitude = $bulk["longitude"];
         $altitude = $bulk["altitude"];
@@ -115,7 +115,7 @@ class DataLinkHandler {
     /**
      * @throws JsonException
      */
-    private function computeEventRelay(array $bulk): string {
+    private function onEvent(array $bulk): string {
         $phase = $bulk["phase"];
 
         // todo method stub
