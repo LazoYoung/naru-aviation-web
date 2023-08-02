@@ -56,13 +56,12 @@ class Logbook extends Model {
             "flight_time" => $flight->getFlightTime()->i
         ]);
         $user_id = $flight->getUserId();
-        $user = User::whereId($user_id);
 
-        if (!isset($user)) {
+        if (User::whereId($user_id)->get()->isEmpty()) {
             throw new RuntimeException("User not found: $user_id");
         }
 
-        $logbook->user()->associate($user);
+        $logbook->user()->associate($user_id);
         return $logbook;
     }
 

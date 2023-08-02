@@ -4,8 +4,7 @@ namespace Console\Tasks;
 
 use App\Console\Tasks\FlightManagerTask;
 use App\Models\Booking;
-use App\Models\Flight;
-use App\Models\Flightplan;
+use App\Services\Flight\Flight;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use SplObjectStorage;
 use Tests\TestCase;
@@ -14,6 +13,7 @@ class FlightManagerTaskTest extends TestCase {
     use RefreshDatabase;
 
     public function test_booked_flights_are_inserted(): void {
+        Flight::clearAll();
         $task = new FlightManagerTask();
         $overdue = new SplObjectStorage();
         Booking::factory(3)->create();
@@ -21,39 +21,23 @@ class FlightManagerTaskTest extends TestCase {
         $b2 = Booking::factory()->overdue(20)->create();
         $b3 = Booking::factory()->overdue(60)->create();
 
-        Booking::all()->each(function (Booking $booking) {
-            $flightplan = Flightplan::factory()->create();
-            $flightplan->booking()->associate($booking);
-            $flightplan->saveOrFail();
-        });
-
         $overdue->attach($b1);
         $overdue->attach($b2);
         $overdue->attach($b3);
 
-        $this->assertDatabaseEmpty(Flight::class);
+        $this->assertCount(0, Flight::getAllFlights());
         $task->insertFlights();
-        $this->assertDatabaseCount(Flight::class, $overdue->count());
+        $this->assertCount($overdue->count(), Flight::getAllFlights());
     }
 
     public function test_offline_flights_are_deleted(): void {
+        Flight::clearAll();
         $task = new FlightManagerTask();
-        $online = Flight::factory(3)->create();
-        $offline = new SplObjectStorage();
+        $online = Flight::createMockings(2);
+        $offline = Flight::createMockings(2, true, true);
 
-        $f1 = Flight::factory()->offline()->complete()->create();
-        $f2 = Flight::factory()->offline(30)->create();
-        $offline->attach($f1);
-        $offline->attach($f2);
-
-        Flight::all()->each(function (Flight $flight) {
-            $flightplan = Flightplan::factory()->create();
-            $flightplan->flight()->associate($flight);
-            $flightplan->saveOrFail();
-        });
-
-        $this->assertDatabaseCount(Flight::class, $online->count() + $offline->count());
+        $this->assertCount(count($online) + count($offline), Flight::getAllFlights());
         $task->deleteFlights();
-        $this->assertDatabaseCount(Flight::class, $online->count());
+        $this->assertCount(count($online), Flight::getAllFlights());
     }
 }

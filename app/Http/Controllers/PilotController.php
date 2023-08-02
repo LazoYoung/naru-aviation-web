@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
-use App\Models\Flightplan;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\Exceptions\ParseErrorException;
@@ -38,7 +37,8 @@ class PilotController extends Controller {
         try {
             $offBlock = Carbon::parse($val["off_block"], DateTimeZone::UTC);
             $onBlock = $this->getOnBlockTime($offBlock, $val["flight_time"]);
-            $flightplan = new Flightplan([
+            $booking = new Booking([
+                "preflight_at" => $offBlock->subMinutes(30),
                 "callsign" => $val["callsign"],
                 "aircraft" => $val["aircraft"],
                 "origin" => $val["origin"],
@@ -50,12 +50,7 @@ class PilotController extends Controller {
                 "route" => $val["route"],
                 "remarks" => $val["remarks"]
             ]);
-            $booking = new Booking([
-                "preflight_at" => $offBlock->subMinutes(30)
-            ]);
-            $flightplan->booking()->associate($booking);
             $booking->user()->associate($request->user());
-            $flightplan->saveOrFail();
             $booking->saveOrFail();
             return response($booking->toJson(), 200);
         } catch (Throwable $e) {

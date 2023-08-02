@@ -3,6 +3,8 @@
 namespace App\Services\Flight;
 
 use App\Models\Booking;
+use Carbon\Carbon;
+use Exception;
 
 class FlightPlan {
     private string $callsign;
@@ -13,8 +15,8 @@ class FlightPlan {
     private int $altitude;
     private int $off_block;
     private int $on_block;
-    private string $route;
-    private string $remarks;
+    private ?string $route;
+    private ?string $remarks;
 
     private function __construct(
         string  $callsign,
@@ -25,8 +27,8 @@ class FlightPlan {
         int     $altitude,
         int     $off_block,
         int     $on_block,
-        string  $route,
-        string  $remarks
+        ?string  $route,
+        ?string  $remarks
     ) {
         $this->callsign = $callsign;
         $this->aircraft = $aircraft;
@@ -49,8 +51,8 @@ class FlightPlan {
         int     $altitude,
         int     $off_block,
         int     $on_block,
-        string  $route,
-        string  $remarks
+        ?string  $route,
+        ?string  $remarks
     ): FlightPlan {
         return new FlightPlan(
             $callsign, $aircraft, $origin,
@@ -67,10 +69,40 @@ class FlightPlan {
             $booking->alternate,
             $booking->destination,
             $booking->altitude,
-            $booking->off_block,
-            $booking->on_block,
+            Carbon::parse($booking->off_block)->timestamp,
+            Carbon::parse($booking->on_block)->timestamp,
             $booking->route,
             $booking->remarks
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function createMockings(int $count): array {
+        $arr = array();
+
+        for ($i = 0; $i < $count; $i++) {
+            $arr[] = self::createMocking();
+        }
+        return $arr;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function createMocking(): FlightPlan {
+        return self::create(
+            callsign: "NA" . random_int(1, 999),
+            aircraft: "A320",
+            origin: "RKSS",
+            alternate: "RKPK",
+            destination: "RKPC",
+            altitude: "27000",
+            off_block: Carbon::now()->timestamp,
+            on_block: Carbon::now()->addHour()->timestamp,
+            route: "KAMI1W KAMIT Y722 OLMEN OLME2T",
+            remarks: null
         );
     }
 

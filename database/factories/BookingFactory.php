@@ -24,7 +24,15 @@ class BookingFactory extends Factory {
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
             "user_id" => User::factory(),
-            "preflight_at" => Carbon::now()->addMinutes(90)
+            "preflight_at" => Carbon::now()->addMinutes(90),
+            "callsign" => "NA" . random_int(1, 999),
+            "aircraft" => "A320",
+            "origin" => "RKSS",
+            "destination" => "RKPC",
+            "altitude" => "27000",
+            "off_block" => Carbon::now()->addMinutes(120),
+            "on_block" => Carbon::now()->addMinutes(180),
+            "route" => "KAMI1W KAMIT Y722 OLMEN OLME2T"
         ];
     }
 

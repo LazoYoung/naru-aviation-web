@@ -14,6 +14,10 @@ class FlightBeacon {
     private int $airspeed = 0;
     private int $heading = 0;
 
+    public function __construct() {
+        $this->updated_at = time();
+    }
+
     public function getLatitude(): float {
         return $this->latitude;
     }

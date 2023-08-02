@@ -2,8 +2,10 @@
 
 namespace App\Services\Flight;
 
+use App\Models\User;
 use DateInterval;
 use DateTime;
+use Exception;
 
 class Flight {
 
@@ -49,6 +51,40 @@ class Flight {
         $flight = new Flight($user_id, $flightPlan);
         self::$storage[$user_id] = $flight;
         return $flight;
+    }
+
+    public static function clearAll(): void {
+        self::$storage = array();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function createMocking(bool $offline = false, bool $complete = false): Flight {
+        $user_id = User::factory()->create()->id;
+        $mock = self::create($user_id, FlightPlan::createMocking());
+
+        if ($offline) {
+            $mock->beacon->setOffline();
+        }
+        if ($complete) {
+            $mock->status = FlightStatus::Arrived;
+            $mock->origin = $mock->flightplan->getOrigin();
+            $mock->destination = $mock->flightplan->getDestination();
+        }
+        return $mock;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function createMockings(int $count, bool $offline = false, bool $complete = false): array {
+        $arr = array();
+
+        for ($i = 0; $i < $count; $i++) {
+            $arr[] = self::createMocking($offline, $complete);
+        }
+        return $arr;
     }
 
     private function __construct(int $user_id, FlightPlan $flightplan) {
