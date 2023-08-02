@@ -31,7 +31,6 @@ class FlightManagerTaskTest extends TestCase {
         $overdue->attach($b2);
         $overdue->attach($b3);
 
-
         $this->assertDatabaseEmpty(Flight::class);
         $task->insertFlights();
         $this->assertDatabaseCount(Flight::class, $overdue->count());

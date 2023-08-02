@@ -4,6 +4,7 @@ namespace App\Flight;
 
 use App\Exceptions\MalformedBulkException;
 use App\Exceptions\UnknownIntentException;
+use App\Models\Booking;
 use InvalidArgumentException;
 use JsonException;
 use Ratchet\RFC6455\Messaging\MessageInterface;
@@ -11,6 +12,12 @@ use Ratchet\RFC6455\Messaging\MessageInterface;
 class DataLinkHandler {
 
     private DataLink $dataLink;
+    private array $message = [
+        200 => "Success",
+        400 => "Bad Request",
+        404 => "Not Found",
+        500 => "Server Error",
+    ];
 
     public function __construct(DataLink $dataLink) {
         $this->dataLink = $dataLink;
@@ -43,9 +50,9 @@ class DataLinkHandler {
                 default => throw new UnknownIntentException(),
             };
         } catch (MalformedBulkException) {
-            return $this->getFailResponse("Bulk format is incorrect.");
+            return $this->getResponse(400, "Bulk format is incorrect.");
         } catch (UnknownIntentException) {
-            return $this->getFailResponse("Unknown intent: $intent");
+            return $this->getResponse(400, "Unknown intent: $intent");
         }
     }
 
@@ -56,7 +63,7 @@ class DataLinkHandler {
         $type = $bulk["type"];
 
         if ($type === "booking") {
-            return $this->onFetchBooking($bulk);
+            return $this->onFetchBooking();
         } else {
             throw new MalformedBulkException("Unknown type: $type");
         }
@@ -65,24 +72,17 @@ class DataLinkHandler {
     /**
      * @throws JsonException
      */
-    private function onFetchBooking(array $bulk): string {
-        // todo method stub
+    private function onFetchBooking(): string {
+        $user = $this->dataLink->getUser();
+        $booking = Booking::whereUserId($user->id)
+            ->orderBy("preflight_at")
+            ->first();
 
-        $value = [
-            "flightplan" => [
-                "origin" => "RKPC",
-                "destination" => "RKSS",
-                "alternate" => "RKPC",
-                "flightno" => "NA501",
-                "cruise" => "27000",
-                "route" => "DCT OLMEN OLME2T",
-            ],
-            "schedule" => [
-                "departure" => "0450",
-                "arrival" => "0600",
-            ]
-        ];
-        return $this->getSuccessResponse($value);
+        if (isset($booking)) {
+            return $this->getResponse(response: $booking->toJson());
+        } else {
+            return $this->getResponse(404);
+        }
     }
 
     /**
@@ -92,9 +92,27 @@ class DataLinkHandler {
         $scheduled = strcasecmp("true", $bulk["scheduled"]);
         $flightplan = $bulk["flightplan"];
 
-        // todo method stub
+        if ($scheduled) {
+            return $this->onStartScheduled($flightplan);
+        } else {
+            return $this->onStartUnscheduled($flightplan);
+        }
+    }
 
-        return $this->getSuccessResponse();
+    /**
+     * @throws JsonException
+     */
+    private function onStartUnscheduled(array $flightplan): string {
+        // todo method stub
+        return $this->getResponse(500);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    private function onStartScheduled(array $flightplan): string {
+        // todo method stub
+        return $this->getResponse(500);
     }
 
     /**
@@ -108,8 +126,7 @@ class DataLinkHandler {
         $heading = $bulk["heading"];
 
         // todo method stub
-
-        return $this->getSuccessResponse();
+        return $this->getResponse(500);
     }
 
     /**
@@ -119,27 +136,17 @@ class DataLinkHandler {
         $phase = $bulk["phase"];
 
         // todo method stub
-
-        return $this->getSuccessResponse();
+        return $this->getResponse(500);
     }
 
     /**
      * @throws JsonException
      */
-    private function getSuccessResponse(mixed $response = ""): string {
+    private function getResponse(int $status = 200, mixed $response = ""): string {
         $value = [
-            "status" => "success",
-            "response" => $response
-        ];
-        return json_encode($value, JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function getFailResponse(mixed $response = ""): string {
-        $value = [
-            "status" => "fail",
+            "intent" => "response",
+            "status" => $status,
+            "message" => $this->message[$status],
             "response" => $response
         ];
         return json_encode($value, JSON_THROW_ON_ERROR);
