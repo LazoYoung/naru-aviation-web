@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Flight;
+namespace App\Services\Datalink;
 
 use App\Exceptions\MalformedBulkException;
 use App\Exceptions\UnknownIntentException;
@@ -12,12 +12,6 @@ use Ratchet\RFC6455\Messaging\MessageInterface;
 class DataLinkHandler {
 
     private DataLink $dataLink;
-    private array $message = [
-        200 => "Success",
-        400 => "Bad Request",
-        404 => "Not Found",
-        500 => "Server Error",
-    ];
 
     public function __construct(DataLink $dataLink) {
         $this->dataLink = $dataLink;
@@ -50,15 +44,12 @@ class DataLinkHandler {
                 default => throw new UnknownIntentException(),
             };
         } catch (MalformedBulkException) {
-            return $this->getResponse(400, "Bulk format is incorrect.");
+            return JsonBuilder::response(400, "Request form is invalid.");
         } catch (UnknownIntentException) {
-            return $this->getResponse(400, "Unknown intent: $intent");
+            return JsonBuilder::response(400, "Unknown intent: $intent");
         }
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onFetch(array $bulk): string {
         $type = $bulk["type"];
 
@@ -69,9 +60,6 @@ class DataLinkHandler {
         }
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onFetchBooking(): string {
         $user = $this->dataLink->getUser();
         $booking = Booking::whereUserId($user->id)
@@ -79,15 +67,12 @@ class DataLinkHandler {
             ->first();
 
         if (isset($booking)) {
-            return $this->getResponse(response: $booking->toJson());
+            return JsonBuilder::response(response: $booking->toJson());
         } else {
-            return $this->getResponse(404);
+            return JsonBuilder::response(404);
         }
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onStart(array $bulk): string {
         $scheduled = strcasecmp("true", $bulk["scheduled"]);
         $flightplan = $bulk["flightplan"];
@@ -99,25 +84,16 @@ class DataLinkHandler {
         }
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onStartUnscheduled(array $flightplan): string {
         // todo method stub
-        return $this->getResponse(500);
+        return JsonBuilder::response(500);
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onStartScheduled(array $flightplan): string {
         // todo method stub
-        return $this->getResponse(500);
+        return JsonBuilder::response(500);
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onReport(array $bulk): string {
         $latitude = $bulk["latitude"];
         $longitude = $bulk["longitude"];
@@ -126,30 +102,14 @@ class DataLinkHandler {
         $heading = $bulk["heading"];
 
         // todo method stub
-        return $this->getResponse(500);
+        return JsonBuilder::response(500);
     }
 
-    /**
-     * @throws JsonException
-     */
     private function onEvent(array $bulk): string {
         $phase = $bulk["phase"];
 
         // todo method stub
-        return $this->getResponse(500);
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function getResponse(int $status = 200, mixed $response = ""): string {
-        $value = [
-            "intent" => "response",
-            "status" => $status,
-            "message" => $this->message[$status],
-            "response" => $response
-        ];
-        return json_encode($value, JSON_THROW_ON_ERROR);
+        return JsonBuilder::response(500);
     }
 
 }

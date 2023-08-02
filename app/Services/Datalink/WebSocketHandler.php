@@ -1,11 +1,10 @@
 <?php /** @noinspection PhpDynamicFieldDeclarationInspection */
 
-namespace App\Flight;
+namespace App\Services\Datalink;
 
 use App\Models\Key;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use JsonException;
 use Ratchet\ConnectionInterface;
 use Ratchet\RFC6455\Messaging\MessageInterface;
 use Ratchet\WebSocket\MessageComponentInterface;
@@ -87,34 +86,13 @@ class WebSocketHandler implements MessageComponentInterface {
     }
 
     private function _onMessage(DataLink $dataLink, ConnectionInterface $conn, MessageInterface $msg): void {
-        $id = $dataLink->getSocketId();
-        $payload = $msg->getPayload();
-
-        if (!$dataLink->isAuthorized()) {
-            $key = Key::getDatalinkKey($payload);
-
-            if ($key === null) {
-                $conn->send("This key is invalid");
-                $conn->close();
-                Log::debug("Connection $id presented an invalid key: $payload");
-                return;
-            }
-
-            if (isset($this->activeKeys[$key->id])) {
-                $conn->send("This key is in use.");
-                Log::debug("Connection $id presented a duplicate key: $payload");
-                return;
-            }
-
-            $dataLink->authorize($key);
-            $this->activeKeys[$key->id] = $key;
-            $conn->send("Authentication success.");
-            Log::info("Connection $id authorized with key: $payload");
+        if (!$dataLink->isAuthorized() && !$this->identify($dataLink, $conn, $msg)) {
             return;
         }
 
         try {
-            Log::info("Inbound payload from socket $id: $payload");
+            $id = $dataLink->getSocketId();
+            Log::info("Inbound payload from socket $id: {$msg->getPayload()}");
 
             $response = $dataLink->getHandler()->computeIntent($msg);
             $conn->send($response);
@@ -134,5 +112,48 @@ class WebSocketHandler implements MessageComponentInterface {
             throw new RuntimeException("Connection does not have 'app' property.");
         }
         return $this->dataLinks[$conn->socketId];
+    }
+
+    private function identify(DataLink $dataLink, ConnectionInterface $conn, MessageInterface $msg): bool {
+        try {
+            $id = $dataLink->getSocketId();
+            $request = json_decode($msg->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (Throwable) {
+            $conn->send(JsonBuilder::response(400, "Request form is invalid."));
+            return false;
+        }
+
+        if (!strcmp($request["intent"], "auth")) {
+            $conn->send(JsonBuilder::response(400, "You must be authorized before any request!"));
+            return false;
+        }
+
+        try {
+            $input = $request["bulk"]["key"];
+        } catch (Throwable) {
+            $conn->send(JsonBuilder::response(400, "Request form is invalid."));
+            return false;
+        }
+
+        $key = Key::getDatalinkKey($input);
+
+        if ($key === null) {
+            $conn->send(JsonBuilder::response(404, "Key does not match."));
+            $conn->close();
+            Log::debug("Connection $id presented an invalid key: $input");
+            return false;
+        }
+
+        if (isset($this->activeKeys[$key->id])) {
+            $conn->send(JsonBuilder::response(403, "Key already in use."));
+            Log::debug("Connection $id presented a duplicate key: $input");
+            return false;
+        }
+
+        $dataLink->authorize($key);
+        $this->activeKeys[$key->id] = $key;
+        $conn->send(JsonBuilder::response(200, "You are logged in."));
+        Log::info("Connection $id authorized with key: $input");
+        return true;
     }
 }

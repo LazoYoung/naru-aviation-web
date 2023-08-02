@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Flight;
+namespace App\Services\Datalink;
 
 use App\Models\Key;
 use App\Models\User;
