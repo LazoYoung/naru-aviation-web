@@ -6,7 +6,7 @@ use DateInterval;
 use DateTime;
 
 class FlightBeacon {
-    private DateTime $updated_at;
+    private int $updated_at;
     private bool $offline = true;
     private float $latitude = 0;
     private float $longitude = 0;
@@ -35,11 +35,11 @@ class FlightBeacon {
     }
 
     public function getUpdatedAt(): DateTime {
-        return $this->updated_at;
+        return new DateTime("@$this->updated_at");
     }
 
     public function getIdleTime(): DateInterval {
-        return $this->updated_at->diff(new DateTime(), true);
+        return $this->getUpdatedAt()->diff(new DateTime(), true);
     }
 
     public function isOffline(): bool {
@@ -56,7 +56,7 @@ class FlightBeacon {
         $this->altitude = $alt;
         $this->airspeed = $ias;
         $this->heading = $hdg;
-        $this->updated_at = new DateTime();
+        $this->updated_at = time();
         $this->offline = false;
     }
 }
