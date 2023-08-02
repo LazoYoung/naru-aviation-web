@@ -16,16 +16,38 @@ class Flight {
     private FlightStatus $status;
     private FlightPlan $flightplan;
     private FlightBeacon $beacon;
+    // todo fill these later on
+    private ?string $origin;
+    private ?string $destination;
     private ?int $off_block;
     private ?int $on_block;
 
+    /**
+     * @param int $user_id id of user who operates the flight
+     * @return Flight|null
+     */
     public static function get(int $user_id): ?Flight {
-        return Flight::$storage[$user_id];
+        return self::$storage[$user_id];
     }
 
-    public static function create(int $user_id, FlightPlan $flightplan): Flight {
-        $flight = new Flight($user_id, $flightplan);
-        Flight::$storage[$user_id] = $flight;
+    /**
+     * @return Flight[] indexed array of all flights
+     */
+    public static function getAllFlights(): array {
+        return array_values(self::$storage);
+    }
+
+    /**
+     * @return Flight[] indexed array of offline flights
+     */
+    public static function getOfflineFlights(): array {
+        $arr = array_filter(self::$storage, fn($flight) => $flight->getBeacon()->isOffline());
+        return array_values($arr);
+    }
+
+    public static function create(int $user_id, FlightPlan $flightPlan): Flight {
+        $flight = new Flight($user_id, $flightPlan);
+        self::$storage[$user_id] = $flight;
         return $flight;
     }
 
@@ -67,17 +89,48 @@ class Flight {
     }
 
     /**
-     * @return int|null
+     * @return DateTime|null
      */
-    public function getOffBlock(): ?int {
-        return $this->off_block;
+    public function getOffBlock(): ?DateTime {
+        return new DateTime("@$this->off_block");
     }
 
     /**
-     * @return int|null
+     * @return DateTime|null
      */
-    public function getOnBlock(): ?int {
-        return $this->on_block;
+    public function getOnBlock(): ?DateTime {
+        return new DateTime("@$this->on_block");
+    }
+
+    /**
+     * @return DateInterval duration of flight until now
+     */
+    public function getFlightTime(): DateInterval {
+        if (!isset($this->off_block)) {
+            return new DateInterval("PT0S");
+        }
+        if (!isset($this->on_block)) {
+            return $this->getOffBlock()->diff(new DateTime(), true);
+        }
+        return $this->getOffBlock()->diff($this->getOnBlock(), true);
+    }
+
+    /**
+     * @return string|null actual departure airport
+     */
+    public function getOrigin(): ?string {
+        return $this->origin;
+    }
+
+    /**
+     * @return string|null actual arrival airport
+     */
+    public function getDestination(): ?string {
+        return $this->destination;
+    }
+
+    public function delete(): void {
+        unset(self::$storage[$this->user_id]);
     }
 
 }

@@ -3,8 +3,10 @@
 namespace App\Console\Tasks;
 
 use App\Models\Booking;
-use App\Models\Flight;
 use App\Models\Logbook;
+use App\Services\Flight\Flight;
+use App\Services\Flight\FlightPlan;
+use App\Services\Flight\FlightStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -30,9 +32,7 @@ class FlightManagerTask {
         $bookings = $this->getOverdueBookings();
 
         foreach ($bookings as $booking) {
-            $flight = $this->createScheduledFlight($booking);
-            $this->updateFlightplan($booking, $flight);
-            $flight->saveOrFail();
+            $this->createScheduledFlight($booking);
             $booking->deleteOrFail();
         }
     }
@@ -42,15 +42,15 @@ class FlightManagerTask {
      * @throws Throwable
      */
     public function deleteFlights(): void {
-        $flights = $this->getOfflineFlights();
+        $flights = Flight::getOfflineFlights();
 
         foreach ($flights as $flight) {
-            if ($flight->isComplete()) {
+            if ($flight->getStatus() == FlightStatus::Arrived) {
                 $logbook = Logbook::create($flight);
                 $logbook->saveOrFail();
-                $flight->deleteOrFail();
-            } else if ($flight->getOfflineTime()->minutes >= 30) {
-                $flight->deleteOrFail();
+                $flight->delete();
+            } else if ($flight->getBeacon()->getIdleTime()->i >= 30) {
+                $flight->delete();
             }
         }
     }
@@ -58,21 +58,8 @@ class FlightManagerTask {
     /**
      * @throws Throwable
      */
-    private function createScheduledFlight(Booking $booking): Flight {
-        $user = $booking->user;
-        $flight = Flight::create();
-        $flight->user()->associate($user);
-        return $flight;
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function updateFlightplan(Booking $oldParent, Flight $newParent): void {
-        $flightplan = $oldParent->flightplan;
-        $flightplan->booking()->disassociate();
-        $flightplan->flight()->associate($newParent);
-        $flightplan->saveOrFail();
+    private function createScheduledFlight(Booking $booking): void {
+        Flight::create($booking->user_id, FlightPlan::createFromBooking($booking));
     }
 
     /**
@@ -80,13 +67,6 @@ class FlightManagerTask {
      */
     private function getOverdueBookings(): Collection {
         return Booking::where("preflight_at", ">=", Carbon::now())->get();
-    }
-
-    /**
-     * @return Collection<Flight> collection of flights with ACARS offline
-     */
-    private function getOfflineFlights(): Collection {
-        return Flight::where("offline", "=", true)->get();
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Flight\Flight;
 use Database\Factories\LogbookFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,17 +48,21 @@ class Logbook extends Model {
      * @throws RuntimeException thrown if the flightplan is not available
      */
     public static function create(Flight $flight): Logbook {
-        if (!isset($flight->flightplan)) {
-            throw new RuntimeException("Unable to create a logbook without a flightplan.");
+        $flightplan = $flight->getFlightplan();
+        $logbook = new Logbook([
+            "origin" => $flight->getOrigin(),
+            "destination" => $flight->getDestination(),
+            "date" => Carbon::parse($flightplan->getOffBlock()),
+            "flight_time" => $flight->getFlightTime()->i
+        ]);
+        $user_id = $flight->getUserId();
+        $user = User::whereId($user_id);
+
+        if (!isset($user)) {
+            throw new RuntimeException("User not found: $user_id");
         }
 
-        $logbook = new Logbook([
-            "origin" => $flight->flightplan->origin,
-            "destination" => $flight->flightplan->destination,
-            "date" => Carbon::parse($flight->flightplan->off_block),
-            "flight_time" => $flight->getFlightTime()->minutes
-        ]);
-        $logbook->user()->associate($flight->user);
+        $logbook->user()->associate($user);
         return $logbook;
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Services\Flight;
 
+use App\Models\Booking;
+
 class FlightPlan {
     private string $callsign;
     private string $aircraft;
@@ -14,28 +16,62 @@ class FlightPlan {
     private string $route;
     private string $remarks;
 
-    public function __construct(
-        string $callsign,
-        string $aircraft,
-        string $origin,
+    private function __construct(
+        string  $callsign,
+        string  $aircraft,
+        string  $origin,
         ?string $alternate,
-        string $destination,
-        int $cruise_altitude,
-        int $sched_off_block,
-        int $sched_on_block,
-        string $route,
-        string $remarks
+        string  $destination,
+        int     $altitude,
+        int     $off_block,
+        int     $on_block,
+        string  $route,
+        string  $remarks
     ) {
         $this->callsign = $callsign;
         $this->aircraft = $aircraft;
         $this->origin = $origin;
         $this->alternate = $alternate;
         $this->destination = $destination;
-        $this->altitude = $cruise_altitude;
-        $this->off_block = $sched_off_block;
-        $this->on_block = $sched_on_block;
+        $this->altitude = $altitude;
+        $this->off_block = $off_block;
+        $this->on_block = $on_block;
         $this->route = $route;
         $this->remarks = $remarks;
+    }
+
+    public static function create(
+        string  $callsign,
+        string  $aircraft,
+        string  $origin,
+        ?string $alternate,
+        string  $destination,
+        int     $altitude,
+        int     $off_block,
+        int     $on_block,
+        string  $route,
+        string  $remarks
+    ): FlightPlan {
+        return new FlightPlan(
+            $callsign, $aircraft, $origin,
+            $alternate, $destination, $altitude,
+            $off_block, $on_block, $route, $remarks
+        );
+    }
+
+    public static function createFromBooking(Booking $booking): FlightPlan {
+        return new FlightPlan(
+            $booking->callsign,
+            $booking->aircraft,
+            $booking->origin,
+            $booking->alternate,
+            $booking->destination,
+            $booking->altitude,
+            $booking->off_block,
+            $booking->on_block,
+            $booking->route,
+            $booking->remarks
+        );
     }
 
     /**
