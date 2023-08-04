@@ -49,21 +49,23 @@ class FlightPlan {
         ?string $alternate,
         string  $destination,
         int     $altitude,
-        string     $off_block,
-        string     $on_block,
+        int     $off_block,
+        int     $on_block,
         ?string  $route,
         ?string  $remarks
     ): FlightPlan {
         return new FlightPlan(
             $callsign, $aircraft, $origin,
             $alternate, $destination, $altitude,
-            Carbon::parse($off_block)->timestamp,
-            Carbon::parse($on_block)->timestamp,
+            $off_block, $on_block,
             $route, $remarks
         );
     }
 
     public static function createFromArray(array $arr, ?FlightPlan $base = null): FlightPlan {
+        $off_block = $arr["off_block"] ? Carbon::parse($arr["off_block"])->timestamp : $base?->off_block;
+        $on_block = $arr["on_block"] ? Carbon::parse($arr["on_block"])->timestamp : $base?->on_block;
+
         return self::create(
             $arr["callsign"] ?: $base?->callsign,
             $arr["aircraft"] ?: $base?->aircraft,
@@ -71,8 +73,8 @@ class FlightPlan {
             $arr["alternate"] ?: $base?->alternate,
             $arr["destination"] ?: $base?->destination,
             $arr["altitude"] ?: $base?->altitude,
-            $arr["off_block"] ?: $base?->off_block,
-            $arr["on_block"] ?: $base?->on_block,
+            $off_block,
+            $on_block,
             $arr["route"] ?: $base?->route,
             $arr["remarks"] ?: $base?->remarks
         );
@@ -86,8 +88,8 @@ class FlightPlan {
             $booking->alternate,
             $booking->destination,
             $booking->altitude,
-            Carbon::parse($booking->off_block)->timestamp,
-            Carbon::parse($booking->on_block)->timestamp,
+            intval($booking->off_block),
+            intval($booking->on_block),
             $booking->route,
             $booking->remarks
         );
