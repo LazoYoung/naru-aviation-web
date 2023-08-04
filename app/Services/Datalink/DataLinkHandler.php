@@ -7,7 +7,9 @@ use App\Exceptions\UnknownIntentException;
 use App\Models\Booking;
 use App\Services\Flight\Flight;
 use App\Services\Flight\FlightPlan;
+use App\Services\Flight\FlightStatus;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use JsonException;
 use Ratchet\RFC6455\Messaging\MessageInterface;
@@ -45,6 +47,7 @@ class DataLinkHandler {
                 "fetch" => $this->onFetch($ident, $bulk),
                 "start" => $this->onStart($ident, $bulk),
                 "report" => $this->onReport($bulk),
+                "event" => $this->onEvent($bulk),
                 default => throw new UnknownIntentException(),
             };
         } catch (MalformedBulkException) {
@@ -64,6 +67,49 @@ class DataLinkHandler {
         }
     }
 
+    private function onStart(string $ident, array $bulk): string {
+        $scheduled = strcasecmp("true", $bulk["scheduled"]);
+        $flightplan = $bulk["flightplan"];
+
+        if ($scheduled) {
+            return $this->onStartScheduled($ident, $flightplan);
+        } else {
+            return $this->onStartUnscheduled($ident, $flightplan);
+        }
+    }
+
+    private function onReport(array $bulk): null {
+        $user_id = $this->dataLink->getUser()->id;
+        $flight = Flight::get($user_id);
+
+        if (isset($flight)) {
+            $lat = $bulk["latitude"];
+            $lon = $bulk["longitude"];
+            $alt = $bulk["altitude"];
+            $ias = $bulk["ias"];
+            $hdg = $bulk["heading"];
+            $flight->getBeacon()->update($lat, $lon, $alt, $ias, $hdg);
+        }
+        return null;
+    }
+
+    private function onEvent(array $bulk): null {
+        $user_id = $this->dataLink->getUser()->id;
+        $flight = Flight::get($user_id);
+
+        if (isset($flight)) {
+            switch ($bulk["event"]) {
+                case "status":
+                    $this->onStatusChangeEvent($flight, $bulk);
+                    break;
+                case "divert":
+                    $this->onDivertEvent($flight, $bulk);
+                    break;
+            }
+        }
+        return null;
+    }
+
     private function onFetchBooking(string $ident): string {
         $user = $this->dataLink->getUser();
         $booking = Booking::whereUserId($user->id)
@@ -74,17 +120,6 @@ class DataLinkHandler {
             return JsonBuilder::response(200, $ident, $booking->toJson());
         } else {
             return JsonBuilder::response(404, $ident, null);
-        }
-    }
-
-    private function onStart(string $ident, array $bulk): string {
-        $scheduled = strcasecmp("true", $bulk["scheduled"]);
-        $flightplan = $bulk["flightplan"];
-
-        if ($scheduled) {
-            return $this->onStartScheduled($ident, $flightplan);
-        } else {
-            return $this->onStartUnscheduled($ident, $flightplan);
         }
     }
 
@@ -141,20 +176,18 @@ class DataLinkHandler {
         return JsonBuilder::response(200, $ident, "Flight is submitted.");
     }
 
-    private function onReport(array $bulk): null {
-        $user_id = $this->dataLink->getUser()->id;
-        $flight = Flight::get($user_id);
-
-        if (isset($flight)) {
-            $lat = $bulk["latitude"];
-            $lon = $bulk["longitude"];
-            $alt = $bulk["altitude"];
-            $ias = $bulk["ias"];
-            $hdg = $bulk["heading"];
-            $flight->setStatus($bulk["status"]);
-            $flight->getBeacon()->update($lat, $lon, $alt, $ias, $hdg);
+    private function onStatusChangeEvent(Flight $flight, array $bulk): void {
+        try {
+            $id = $bulk["status"];
+            $status = FlightStatus::from($id);
+            $flight->setStatus($status);
+        } catch (Throwable) {
+            Log::warning("Invalid FlightStatus received from ACARS: $id");
         }
-        return null;
+    }
+
+    private function onDivertEvent(Flight $flight, array $bulk): void {
+        $flight->setDestination($bulk["airport"]);
     }
 
 }

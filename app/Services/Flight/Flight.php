@@ -20,9 +20,8 @@ class Flight {
     private FlightStatus $status;
     private FlightPlan $flightPlan;
     private FlightBeacon $beacon;
-    // todo fill these later on
-    private ?string $origin;
-    private ?string $destination;
+    private string $origin;
+    private string $destination;
     private ?int $off_block;
     private ?int $on_block;
 
@@ -80,7 +79,7 @@ class Flight {
             $mock->beacon->setOffline();
         }
         if ($complete) {
-            $mock->status = FlightStatus::Arrived;
+            $mock->setStatus(FlightStatus::Arrived);
             $mock->origin = $mock->flightPlan->getOrigin();
             $mock->destination = $mock->flightPlan->getDestination();
         }
@@ -101,11 +100,11 @@ class Flight {
 
     private function __construct(int $user_id, FlightPlan $flightplan) {
         $this->user_id = $user_id;
-        $this->status = FlightStatus::Preflight;
         $this->flightPlan = $flightplan;
-        $this->beacon = new FlightBeacon();
         $this->off_block = null;
         $this->on_block = null;
+        $this->beacon = new FlightBeacon();
+        $this->status = FlightStatus::Preflight;
     }
 
     /**
@@ -164,17 +163,35 @@ class Flight {
     }
 
     /**
-     * @return string|null actual departure airport
+     * @return string actual departure airport
      */
-    public function getOrigin(): ?string {
+    public function getOrigin(): string {
         return $this->origin;
     }
 
     /**
-     * @return string|null actual arrival airport
+     * @return string actual arrival airport
      */
-    public function getDestination(): ?string {
+    public function getDestination(): string {
         return $this->destination;
+    }
+
+    /**
+     * @param FlightStatus $status new status of this flight
+     */
+    public function setStatus(FlightStatus $status): void {
+        $this->status = $status;
+
+        switch ($status) {
+            case FlightStatus::Departing:
+                $this->off_block = time();
+                break;
+            case FlightStatus::Arrived:
+                $this->on_block = time();
+                break;
+            default:
+                // do nothing
+        }
     }
 
     /**
@@ -185,10 +202,10 @@ class Flight {
     }
 
     /**
-     * @param FlightStatus $status new status of this flight
+     * @param string $destination new destination
      */
-    public function setStatus(FlightStatus $status): void {
-        $this->status = $status;
+    public function setDestination(string $destination): void {
+        $this->destination = $destination;
     }
 
     /**
