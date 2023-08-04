@@ -5,6 +5,7 @@ namespace App\Services\Datalink;
 use App\Models\Key;
 use App\Models\User;
 use Ratchet\ConnectionInterface;
+use RuntimeException;
 
 class DataLink {
 
@@ -42,16 +43,26 @@ class DataLink {
     }
 
     /**
-     * @return Key|null the API key if this session is authorized, null otherwise
+     * @return Key the API key
+     * @throws RuntimeException this datalink is unauthorized
      */
-    public function getAPIKey(): ?Key {
+    public function getAPIKey(): Key {
+        if (!$this->isAuthorized()) {
+            throw new RuntimeException("This datalink is unauthorized.");
+        }
+
         return $this->key;
     }
 
     /**
-     * @return User|null the user if this session is authorized, null otherwise
+     * @return User the user
+     * @throws RuntimeException this datalink is unauthorized
      */
-    public function getUser(): ?User {
+    public function getUser(): User {
+        if (!$this->isAuthorized()) {
+            throw new RuntimeException("This datalink is unauthorized.");
+        }
+
         return $this->user;
     }
 

@@ -32,8 +32,7 @@ class FlightManagerTask {
         $bookings = $this->getOverdueBookings();
 
         foreach ($bookings as $booking) {
-            $this->createScheduledFlight($booking);
-            $booking->deleteOrFail();
+            Flight::createFromBooking($booking);
         }
     }
 
@@ -53,13 +52,6 @@ class FlightManagerTask {
                 $flight->delete();
             }
         }
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function createScheduledFlight(Booking $booking): void {
-        Flight::create($booking->user_id, FlightPlan::createFromBooking($booking));
     }
 
     /**

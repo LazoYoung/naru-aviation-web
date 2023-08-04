@@ -2,10 +2,12 @@
 
 namespace App\Services\Flight;
 
+use App\Models\Booking;
 use App\Models\User;
 use DateInterval;
 use DateTime;
 use Exception;
+use Throwable;
 
 class Flight {
 
@@ -16,7 +18,7 @@ class Flight {
 
     private int $user_id;
     private FlightStatus $status;
-    private FlightPlan $flightplan;
+    private FlightPlan $flightPlan;
     private FlightBeacon $beacon;
     // todo fill these later on
     private ?string $origin;
@@ -53,6 +55,16 @@ class Flight {
         return $flight;
     }
 
+    /**
+     * Create a Flight out of $booking and delete the booking.
+     * @throws Throwable thrown if unable to delete the booking
+     */
+    public static function createFromBooking(Booking $booking): Flight {
+        $flight = self::create($booking->user_id, FlightPlan::createFromBooking($booking));
+        $booking->deleteOrFail();
+        return $flight;
+    }
+
     public static function clearAll(): void {
         self::$storage = array();
     }
@@ -69,8 +81,8 @@ class Flight {
         }
         if ($complete) {
             $mock->status = FlightStatus::Arrived;
-            $mock->origin = $mock->flightplan->getOrigin();
-            $mock->destination = $mock->flightplan->getDestination();
+            $mock->origin = $mock->flightPlan->getOrigin();
+            $mock->destination = $mock->flightPlan->getDestination();
         }
         return $mock;
     }
@@ -90,7 +102,7 @@ class Flight {
     private function __construct(int $user_id, FlightPlan $flightplan) {
         $this->user_id = $user_id;
         $this->status = FlightStatus::Preflight;
-        $this->flightplan = $flightplan;
+        $this->flightPlan = $flightplan;
         $this->beacon = new FlightBeacon();
         $this->off_block = null;
         $this->on_block = null;
@@ -113,8 +125,8 @@ class Flight {
     /**
      * @return FlightPlan
      */
-    public function getFlightplan(): FlightPlan {
-        return $this->flightplan;
+    public function getFlightPlan(): FlightPlan {
+        return $this->flightPlan;
     }
 
     /**
@@ -165,6 +177,23 @@ class Flight {
         return $this->destination;
     }
 
+    /**
+     * @param FlightPlan $flightPlan new flightplan of this flight
+     */
+    public function setFlightPlan(FlightPlan $flightPlan): void {
+        $this->flightPlan = $flightPlan;
+    }
+
+    /**
+     * @param FlightStatus $status new status of this flight
+     */
+    public function setStatus(FlightStatus $status): void {
+        $this->status = $status;
+    }
+
+    /**
+     * Delete this flight out of storage
+     */
     public function delete(): void {
         unset(self::$storage[$this->user_id]);
     }

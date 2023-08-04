@@ -11,12 +11,15 @@ class JsonBuilder {
         200 => "Success",
         400 => "Bad Request",
         404 => "Not Found",
+        440 => "Before Flight",
+        450 => "Bad State",
         500 => "Server Error",
     ];
 
-    public static function response(int $status = 200, mixed $response = ""): string {
+    public static function response(int $status, string $ident, mixed $response): string {
         $value = [
             "intent" => "response",
+            "ident" => $ident,
             "status" => $status,
             "message" => JsonBuilder::$response[$status],
             "response" => $response

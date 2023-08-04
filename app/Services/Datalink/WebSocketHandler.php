@@ -76,10 +76,9 @@ class WebSocketHandler implements MessageComponentInterface {
 
     private function _onClose(DataLink $dataLink): void {
         $id = $dataLink->getSocketId();
-        $key = $dataLink->getAPIKey();
 
-        if ($key != null) {
-            unset($this->activeKeys[$key->id]);
+        if ($dataLink->isAuthorized()) {
+            unset($this->activeKeys[$dataLink->getAPIKey()->id]);
         }
         unset($this->dataLinks[$id]);
         Log::info("Socket connection $id closed.");
@@ -95,9 +94,11 @@ class WebSocketHandler implements MessageComponentInterface {
             Log::info("Inbound payload from socket $id: {$msg->getPayload()}");
 
             $response = $dataLink->getHandler()->computeIntent($msg);
-            $conn->send($response);
 
-            Log::debug("Response sent to socket $id: $response");
+            if (isset($response)) {
+                $conn->send($response);
+                Log::debug("Response sent to socket $id: $response");
+            }
         } catch (Throwable $t) {
             Log::error($t->getMessage());
             Log::error(print_r($t->getTraceAsString(), true));
@@ -119,40 +120,42 @@ class WebSocketHandler implements MessageComponentInterface {
             $id = $dataLink->getSocketId();
             $request = json_decode($msg->getContents(), true, 512, JSON_THROW_ON_ERROR);
         } catch (Throwable) {
-            $conn->send(JsonBuilder::response(400, "Request form is invalid."));
+            $conn->send(JsonBuilder::response(400, null, "Request form is invalid."));
             return false;
         }
 
+        $ident = $request["ident"];
+
         if (!strcmp($request["intent"], "auth")) {
-            $conn->send(JsonBuilder::response(400, "You must be authorized before any request!"));
+            $conn->send(JsonBuilder::response(400, $ident, "You must be authorized before any request!"));
             return false;
         }
 
         try {
             $input = $request["bulk"]["key"];
         } catch (Throwable) {
-            $conn->send(JsonBuilder::response(400, "Request form is invalid."));
+            $conn->send(JsonBuilder::response(400, $ident, "Request form is invalid."));
             return false;
         }
 
         $key = Key::getDatalinkKey($input);
 
         if ($key === null) {
-            $conn->send(JsonBuilder::response(404, "Key does not match."));
+            $conn->send(JsonBuilder::response(404, $ident, "Key does not match."));
             $conn->close();
             Log::debug("Connection $id presented an invalid key: $input");
             return false;
         }
 
         if (isset($this->activeKeys[$key->id])) {
-            $conn->send(JsonBuilder::response(403, "Key already in use."));
+            $conn->send(JsonBuilder::response(403, $ident, "Key already in use."));
             Log::debug("Connection $id presented a duplicate key: $input");
             return false;
         }
 
         $dataLink->authorize($key);
         $this->activeKeys[$key->id] = $key;
-        $conn->send(JsonBuilder::response(200, "You are logged in."));
+        $conn->send(JsonBuilder::response(200, $ident, "You are logged in."));
         Log::info("Connection $id authorized with key: $input");
         return true;
     }

@@ -48,7 +48,7 @@ class Logbook extends Model {
      * @throws RuntimeException thrown if the flightplan is not available
      */
     public static function create(Flight $flight): Logbook {
-        $flightplan = $flight->getFlightplan();
+        $flightplan = $flight->getFlightPlan();
         $logbook = new Logbook([
             "origin" => $flight->getOrigin(),
             "destination" => $flight->getDestination(),

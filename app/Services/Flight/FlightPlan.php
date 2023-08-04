@@ -49,15 +49,32 @@ class FlightPlan {
         ?string $alternate,
         string  $destination,
         int     $altitude,
-        int     $off_block,
-        int     $on_block,
+        string     $off_block,
+        string     $on_block,
         ?string  $route,
         ?string  $remarks
     ): FlightPlan {
         return new FlightPlan(
             $callsign, $aircraft, $origin,
             $alternate, $destination, $altitude,
-            $off_block, $on_block, $route, $remarks
+            Carbon::parse($off_block)->timestamp,
+            Carbon::parse($on_block)->timestamp,
+            $route, $remarks
+        );
+    }
+
+    public static function createFromArray(array $arr, ?FlightPlan $base = null): FlightPlan {
+        return self::create(
+            $arr["callsign"] ?: $base?->callsign,
+            $arr["aircraft"] ?: $base?->aircraft,
+            $arr["origin"] ?: $base?->origin,
+            $arr["alternate"] ?: $base?->alternate,
+            $arr["destination"] ?: $base?->destination,
+            $arr["altitude"] ?: $base?->altitude,
+            $arr["off_block"] ?: $base?->off_block,
+            $arr["on_block"] ?: $base?->on_block,
+            $arr["route"] ?: $base?->route,
+            $arr["remarks"] ?: $base?->remarks
         );
     }
 
