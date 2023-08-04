@@ -25,7 +25,7 @@ class DataLinkHandler {
      * Compute against the inbound message to produce a response
      *
      * @param MessageInterface $msg
-     * @return string JSON-serialized response
+     * @return string|null JSON-serialized response
      *
      * @throws InvalidArgumentException thrown if the message is not coalesced.
      * @throws JsonException thrown if JSON decode fails.
