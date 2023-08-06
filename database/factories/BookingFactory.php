@@ -29,7 +29,6 @@ class BookingFactory extends Factory {
             "aircraft" => "A320",
             "origin" => "RKSS",
             "destination" => "RKPC",
-            "altitude" => "27000",
             "off_block" => Carbon::now()->addMinutes(120),
             "on_block" => Carbon::now()->addMinutes(180),
             "route" => "KAMI1W KAMIT Y722 OLMEN OLME2T"

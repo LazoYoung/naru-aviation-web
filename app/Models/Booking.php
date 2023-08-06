@@ -23,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property string $origin
  * @property string|null $alternate
  * @property string $destination
- * @property int $altitude
  * @property string $off_block
  * @property string $on_block
  * @property string|null $route
@@ -35,7 +34,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Booking query()
  * @method static Builder|Booking whereAircraft($value)
  * @method static Builder|Booking whereAlternate($value)
- * @method static Builder|Booking whereAltitude($value)
  * @method static Builder|Booking whereCallsign($value)
  * @method static Builder|Booking whereCreatedAt($value)
  * @method static Builder|Booking whereDestination($value)

@@ -11,7 +11,6 @@ const form = reactive({
     off_block: null, // 출발 날짜 및 시각 (국제표준시간, ISO 8601 문자열)
     origin: null, // 출발 공항
     destination: null, // 도착 공항
-    altitude: null, // 순항 고도
     route: null, // 비행 경로
     remarks: null, // 비고 (공란 가능)
 });

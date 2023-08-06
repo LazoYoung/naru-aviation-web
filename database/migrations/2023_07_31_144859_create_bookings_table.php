@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->string("origin", 4);
             $table->string("alternate", 4)->nullable();
             $table->string("destination", 4);
-            $table->mediumInteger("altitude");
             $table->dateTime("off_block");
             $table->dateTime("on_block");
             $table->text("route")->nullable();

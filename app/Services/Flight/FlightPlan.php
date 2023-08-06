@@ -12,9 +12,8 @@ class FlightPlan {
     private string $origin;
     private ?string $alternate;
     private string $destination;
-    private int $altitude;
-    private int $off_block;
-    private int $on_block;
+    private ?int $off_block;
+    private ?int $on_block;
     private ?string $route;
     private ?string $remarks;
 
@@ -24,9 +23,8 @@ class FlightPlan {
         string  $origin,
         ?string $alternate,
         string  $destination,
-        int     $altitude,
-        int     $off_block,
-        int     $on_block,
+        ?int     $off_block,
+        ?int     $on_block,
         ?string  $route,
         ?string  $remarks
     ) {
@@ -35,7 +33,6 @@ class FlightPlan {
         $this->origin = $origin;
         $this->alternate = $alternate;
         $this->destination = $destination;
-        $this->altitude = $altitude;
         $this->off_block = $off_block;
         $this->on_block = $on_block;
         $this->route = $route;
@@ -48,15 +45,14 @@ class FlightPlan {
         string  $origin,
         ?string $alternate,
         string  $destination,
-        int     $altitude,
-        int     $off_block,
-        int     $on_block,
+        ?int     $off_block,
+        ?int     $on_block,
         ?string  $route,
         ?string  $remarks
     ): FlightPlan {
         return new FlightPlan(
             $callsign, $aircraft, $origin,
-            $alternate, $destination, $altitude,
+            $alternate, $destination,
             $off_block, $on_block,
             $route, $remarks
         );
@@ -72,7 +68,6 @@ class FlightPlan {
             $arr["origin"] ?: $base?->origin,
             $arr["alternate"] ?: $base?->alternate,
             $arr["destination"] ?: $base?->destination,
-            $arr["altitude"] ?: $base?->altitude,
             $off_block,
             $on_block,
             $arr["route"] ?: $base?->route,
@@ -87,7 +82,6 @@ class FlightPlan {
             $booking->origin,
             $booking->alternate,
             $booking->destination,
-            $booking->altitude,
             intval($booking->off_block),
             intval($booking->on_block),
             $booking->route,
@@ -117,7 +111,6 @@ class FlightPlan {
             origin: "RKSS",
             alternate: "RKPK",
             destination: "RKPC",
-            altitude: "27000",
             off_block: Carbon::now()->timestamp,
             on_block: Carbon::now()->addHour()->timestamp,
             route: "KAMI1W KAMIT Y722 OLMEN OLME2T",
@@ -158,13 +151,6 @@ class FlightPlan {
      */
     public function getDestination(): string {
         return $this->destination;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAltitude(): int {
-        return $this->altitude;
     }
 
     /**
