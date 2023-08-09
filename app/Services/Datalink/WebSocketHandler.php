@@ -128,8 +128,9 @@ class WebSocketHandler implements MessageComponentInterface {
         }
 
         $ident = $request["ident"];
+        $intent = $request["intent"];
 
-        if (!strcmp($request["intent"], "auth")) {
+        if (strcmp($intent, "auth") != 0) {
             $conn->send(JsonBuilder::response(400, $ident, "You must be authorized before any request!"));
             return false;
         }
