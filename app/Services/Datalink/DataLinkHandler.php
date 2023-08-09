@@ -39,7 +39,7 @@ class DataLinkHandler {
 
         $json = json_decode($msg->getPayload(), true, 512, JSON_THROW_ON_ERROR);
         $intent = $json["intent"];
-        $ident = $json["ident"];
+        $ident = $json["ident"] ?? null;
         $bulk = $json["bulk"];
 
         try {
@@ -68,10 +68,9 @@ class DataLinkHandler {
     }
 
     private function onStart(string $ident, array $bulk): string {
-        $scheduled = strcasecmp("true", $bulk["scheduled"]);
         $flightplan = $bulk["flightplan"];
 
-        if ($scheduled) {
+        if (strcasecmp("true", $bulk["scheduled"]) == 0) {
             return $this->onStartScheduled($ident, $flightplan);
         } else {
             return $this->onStartUnscheduled($ident, $flightplan);

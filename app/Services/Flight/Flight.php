@@ -30,7 +30,7 @@ class Flight {
      * @return Flight|null
      */
     public static function get(int $user_id): ?Flight {
-        return self::$storage[$user_id];
+        return self::$storage[$user_id] ?? null;
     }
 
     /**
