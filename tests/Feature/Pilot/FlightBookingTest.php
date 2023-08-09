@@ -13,13 +13,14 @@ class FlightBookingTest extends TestCase {
 
     public function test_correct_form_is_accepted(): void {
         $user = User::factory()->create();
+        $offBlock = Carbon::parse("2023-07-30T04:50Z");
         $data = [
             "callsign" => "NAR310",
             "aircraft" => "A320",
             "origin" => "RKSS",
             "alternate" => null,
             "destination" => "RKPC",
-            "off_block" => Carbon::now()->addHour(),
+            "off_block" => $offBlock,
             "flight_time" => "1:05",
             "route" => "KAMI1W KAMIT Y722 OLMEN OLME2T",
             "remarks" => null,
