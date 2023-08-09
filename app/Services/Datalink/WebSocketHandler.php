@@ -118,7 +118,7 @@ class WebSocketHandler implements MessageComponentInterface {
     private function identify(DataLink $dataLink, ConnectionInterface $conn, MessageInterface $msg): bool {
         try {
             $id = $dataLink->getSocketId();
-            $request = json_decode($msg->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            $request = json_decode($msg->getPayload(), true, 512, JSON_THROW_ON_ERROR);
         } catch (Throwable) {
             $conn->send(JsonBuilder::response(400, null, "Request form is invalid."));
             return false;
