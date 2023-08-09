@@ -119,7 +119,7 @@ class DataLinkHandler {
         if (isset($booking)) {
             return JsonBuilder::response(200, $ident, $booking->toJson());
         } else {
-            return JsonBuilder::response(404, $ident, null);
+            return JsonBuilder::response(404, $ident, "You haven't booked a flight.");
         }
     }
 
