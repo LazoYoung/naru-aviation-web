@@ -85,7 +85,10 @@ class WebSocketHandler implements MessageComponentInterface {
     }
 
     private function _onMessage(DataLink $dataLink, ConnectionInterface $conn, MessageInterface $msg): void {
-        if (!$dataLink->isAuthorized() && !$this->identify($dataLink, $conn, $msg)) {
+        if (!$dataLink->isAuthorized()) {
+            if (!$this->identify($dataLink, $conn, $msg)) {
+                $conn->close(); // Auth failed
+            }
             return;
         }
 
