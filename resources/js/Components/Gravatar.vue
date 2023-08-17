@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref} from "vue";
-import MD5 from "crypto-js/md5.js";
 import {usePage} from "@inertiajs/vue3";
+import {getGravatarHash} from "@/api.js";
 
 const props = defineProps({
     hash: {
@@ -19,15 +19,9 @@ const props = defineProps({
 });
 const user = usePage().props.auth.user;
 const imgSrc = computed(() => {
-    let hash = getGravatarHash();
-    console.log(hash);
+    let hash = props.hash ? props.hash : getGravatarHash(user.email);
     return `https://www.gravatar.com/avatar/${hash}?s=${props.size}`;
 });
-
-function getGravatarHash() {
-    let def = props.hash;
-    return def ? def : MD5(user.email.trim().toLowerCase());
-}
 </script>
 
 <style>
