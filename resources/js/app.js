@@ -1,4 +1,6 @@
 import './bootstrap';
+import '../css/naru.css';
+import '../css/form.css';
 import '../css/tailwind.css';
 import '../scss/app.scss';
 
