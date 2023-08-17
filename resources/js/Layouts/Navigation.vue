@@ -20,7 +20,7 @@ const props = defineProps({
 
 onMounted(() => {
     nav = document.querySelector("#nav");
-    window.addEventListener("resize", (event) => {
+    window.addEventListener("resize", () => {
         if (
             window.innerWidth > lastWidth &&
             window.innerWidth > 1200 &&
@@ -422,6 +422,7 @@ function closeNarrowDropdown(element) {
     transition: opacity 0.1s ease-out;
     pointer-events: none;
 }
+
 #nav-background.show {
     opacity: 1;
     transition: opacity 0.2s ease-out;
@@ -513,11 +514,10 @@ function closeNarrowDropdown(element) {
     flex-wrap: wrap;
 }
 #nav-top .menu-wide .element {
-    display: block;
+    display: block flex;
     position: relative;
     margin-left: 2.5rem;
     width: fit-content;
-    display: flex;
     justify-content: flex-start;
     align-items: center;
 }
@@ -534,12 +534,12 @@ function closeNarrowDropdown(element) {
     display: block;
     position: absolute;
     background: var(--nav-bg);
-    padding: 0rem 0.75rem 0rem 0.75rem;
+    padding: 0 0.75rem 0 0.75rem;
     top: 2rem;
     left: -0.75rem;
 }
 #nav-top .menu-wide .element.dropdown > .content > a {
-    display: block;
+    display: block flex;
     width: max-content;
     font-size: 1.25rem;
     font-weight: 500;
@@ -547,7 +547,6 @@ function closeNarrowDropdown(element) {
     margin: 0.75rem 0 0.75rem 0;
     word-break: keep-all;
     cursor: pointer;
-    display: flex;
     justify-content: flex-start;
     align-items: center;
 }
@@ -715,18 +714,17 @@ function closeNarrowDropdown(element) {
 }
 #nav-bottom .menu-narrow .element.dropdown[opened] > .content {
     display: block;
-    padding: 1rem 1rem 0rem 1rem;
+    padding: 1rem 1rem 0 1rem;
     top: 2rem;
     left: -0.75rem;
 }
 #nav-bottom .menu-narrow .element.dropdown > .content > a {
-    display: block;
+    display: block flex;
     font-size: 1.25rem;
     font-weight: 500;
     line-height: 1.25rem;
     margin-top: 0.75rem;
     cursor: pointer;
-    display: flex;
     justify-content: flex-start;
     align-items: center;
 }

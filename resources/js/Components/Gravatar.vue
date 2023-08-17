@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {getGravatarHash} from "@/api.js";
 
