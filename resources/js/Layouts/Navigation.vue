@@ -6,17 +6,10 @@ import {getGravatarHash} from "@/api.js";
 import { Link } from '@inertiajs/vue3';
 
 const auth = usePage().props.auth;
-const showingNavigationDropdown = ref(false);
 const content = ref();
 let lastWidth = window.innerWidth;
 let lastWidthChange = null;
 let nav = null;
-const props = defineProps({
-    innerBody: {
-        type: Boolean,
-        default: false,
-    }
-});
 
 onMounted(() => {
     nav = document.querySelector("#nav");
@@ -347,9 +340,6 @@ function closeNarrowDropdown(element) {
                 <a class="element link" href="/">
                     <label><span class="name">About</span></label>
                 </a>
-                <a class="element link" href="/">
-                    <label><span class="name">Join the flight</span></label>
-                </a>
                 <div class="element dropdown">
                     <label>
                         <span class="name">Projects</span>
@@ -357,37 +347,37 @@ function closeNarrowDropdown(element) {
                     </label>
                     <div class="content">
                         <a
-                            class
                             href="https://github.com/LazoYoung/NaruACARS"
                             target="_blank"
                         >
-                            <label>NaruACARS</label>
+                            <label>Naru ACARS</label>
                             <span class="arrow">🡥</span>
                         </a>
-                        <a class href="/"><label>Dropdown 2</label></a>
-                        <a class href="/">
-                            <label>Long Dropdown Menu Message 3</label>
+                        <a
+                            href="https://github.com/LazoYoung/naru-aviation-web"
+                            target="_blank"
+                        >
+                            <label>Naru web</label>
                             <span class="arrow">🡥</span>
                         </a>
-                        <a class href="/"><label>Dropdown 4</label></a>
                     </div>
                 </div>
                 <div class="element dropdown">
                     <label>
-                        <span class="name">Service</span>
+                        <span class="name">Community</span>
                         <span class="arrow">&#x25BC;</span>
                     </label>
                     <div class="content">
-                        <a class href="/"><label>Dropdown 1</label></a>
-                        <a class href="/"><label>Dropdown 2</label></a>
-                        <a class href="/">
-                            <label>Long Dropdown Menu Message 3</label>
-                        </a>
-                        <a class href="/"><label>Dropdown 4</label></a>
+                        <a :href="route('forum.browse')"><label>Forum</label></a>
+                        <a :href="route('image.show.gallery')"><label>Gallery</label></a>
+                        <a :href="route('event.show.calendar')"><label>Official Events</label></a>
                     </div>
                 </div>
-                <a class="element link" href="/">
-                    <label><span class="name">Contact</span></label>
+                <a class="element link" href="#">
+                    <label><span class="name">Pilot Center</span></label>
+                </a>
+                <a class="element link" href="#">
+                    <label><span class="name">Passengers</span></label>
                 </a>
             </div>
         </div>
