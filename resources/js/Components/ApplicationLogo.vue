@@ -10,9 +10,11 @@ const props = defineProps({
 const getImageSource = computed(() => {
     switch (props.mode) {
         case 'text':
-            return '/logo_text.png';
+            // return '/logo_text.png';
+            return '/icon.svg'
         case 'icon':
-            return '/logo_icon.png';
+            // return '/logo_icon.png';
+            return '/icon.svg'
         default:
             return '';
     }
