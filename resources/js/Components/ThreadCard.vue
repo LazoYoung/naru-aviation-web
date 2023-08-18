@@ -51,7 +51,6 @@ function fetchViewCount() {
     fetchData(route('forum.thread.view-count'))
         .then(text => parseInt(text ? text : '0'))
         .then(count => {
-            // todo l18n
             if (count > 1) {
                 viewCount.value = count + " views";
             } else {

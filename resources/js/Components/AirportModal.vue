@@ -28,7 +28,6 @@ async function onSubmit() {
     let url = new URL(route('airport.new'));
     let form = new FormData();
 
-    // todo lat and longitude decimal loses precision
     form.append('name', state.name);
     form.append('icao', state.icao);
     form.append('latitude', state.latitude);

@@ -204,7 +204,6 @@ class ThreadController extends Controller {
         $h = floor($rem / self::hour);
         $min = $rem - $h * self::hour;
 
-        // todo l18n
         if ($y > 1) {
             return $y . " years ago";
         }
