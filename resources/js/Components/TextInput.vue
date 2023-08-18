@@ -2,6 +2,34 @@
 import { onMounted, ref } from 'vue';
 
 defineProps({
+    label: {
+        type: String,
+        required: false,
+    },
+    labelType: {
+        type: String,
+        default: "inner",
+    },
+    type: {
+        type: String,
+        default: "text",
+    },
+    required: {
+        type: Boolean,
+        default: false,
+    },
+    placeholder: {
+        type: String,
+        required: false,
+    },
+    autofocus: {
+        type: Boolean,
+        default: false,
+    },
+    autocomplete: {
+        type: String,
+        default: "off",
+    },
     modelValue: {
         type: String,
         required: true,
@@ -22,10 +50,18 @@ defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-    <input
-        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-        ref="input"
-    />
+    <form-input-text :label="labelType">
+        <input
+            ref="input"
+            @input="$emit('update:modelValue', $event.target.value)"
+            :type="type"
+            :value="modelValue"
+            :required="required"
+            :placeholder="placeholder"
+            :autofocus="autofocus"
+            :autocomplete="autocomplete"
+        />
+        <label v-html="label"></label>
+        <form-input-border></form-input-border>
+    </form-input-text>
 </template>

@@ -64,9 +64,9 @@ button[tiny] {
   Text input
   */
 :root {
-    --form-input-bg: black;
+    --form-input-bg: #3d3d3d;
     --form-input-fg: white;
-    --form-input-placeholder: gray;
+    --form-input-placeholder: #c4c4c4;
     --form-input-label: white;
     --form-input-outline: white;
 }
@@ -156,6 +156,7 @@ form-textarea > textarea:-webkit-autofill:focus {
     box-shadow: 0 0 0 100rem var(--form-input-bg) inset !important;
     -webkit-text-fill-color: var(--form-input-fg) !important;
     word-break: break-all;
+    border-radius: 0.25rem;
 }
 form-textarea > textarea {
     vertical-align: bottom;
@@ -236,7 +237,7 @@ form-textarea[label="top"] > label {
 form-input-text[label="top"] > input:placeholder-shown ~ label,
 form-textarea[label="top"] > textarea:placeholder-shown ~ label {
     opacity: 0;
-    top: 0rem;
+    top: 0;
 }
 form-input-text > form-input-border,
 form-textarea > form-input-border {

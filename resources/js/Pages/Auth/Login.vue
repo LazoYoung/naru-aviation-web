@@ -1,11 +1,10 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
 import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
+import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
     canResetPassword: {
@@ -39,12 +38,10 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    label="Email"
                     v-model="form.email"
                     required
                     autofocus
@@ -55,12 +52,10 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    label="Password"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
@@ -69,11 +64,8 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
+            <div class="input checkbox mt-4">
+                <Checkbox name="remember" label="Remember me" v-model:checked="form.remember"></Checkbox>
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -92,3 +84,12 @@ const submit = () => {
         </form>
     </AuthLayout>
 </template>
+
+<style scoped>
+.input.checkbox {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 1.5rem;
+}
+</style>

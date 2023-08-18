@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import Logo from '@/Components/Logo.vue';
 import {usePage} from '@inertiajs/vue3';
 import {getGravatarHash} from "@/api.js";
 import { Link } from '@inertiajs/vue3';
@@ -167,7 +167,7 @@ function closeNarrowDropdown(element) {
             <div class="left">
                 <a href="/" class="logo">
                     <div class="icon">
-                        <ApplicationLogo mode="icon"></ApplicationLogo>
+                        <Logo mode="icon"></Logo>
                     </div>
                     <div class="text">
                         <svg
