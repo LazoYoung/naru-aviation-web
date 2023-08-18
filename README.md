@@ -1,9 +1,10 @@
 <picture>
-  <img src="https://github.com/LazoYoung/virtual-airline-web/assets/9482578/9263bed1-6a0d-4bfc-aa60-a7d4319a8b59" width="500px">
+    <img src="logo.png" height="100px">
+    <img src="banner.png" height="100px">
 </picture>
 
 ## 사이트 바로가기
-[naru-air.kro.kr](https://naru-air.kro.kr)
+[naru.flylazo.com](https://naru.flylazo.com)
 
 ## 프로젝트 소개
 지속가능한 항공 커뮤니티의 비전을 품은 **나루 항공사** 공식 홈페이지입니다.
