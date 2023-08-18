@@ -28,7 +28,10 @@ button {
     box-shadow: inset 0 0 0 1px var(--button-fg);
     cursor: pointer;
 }
-button:hover {
+button i, button span {
+    color: var(--button-fg);
+}
+button:hover, button:hover i, button:hover span {
     background: var(--button-fg);
     color: var(--button-bg);
 }
