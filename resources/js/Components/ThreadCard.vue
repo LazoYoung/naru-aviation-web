@@ -106,3 +106,23 @@ function fetchData(url) {
         </td>
     </tr>
 </template>
+
+<style scoped>
+span {
+    color: var(--fg);
+}
+svg {
+    border-width: 1px;
+    border-color: white;
+}
+tr:hover {
+  cursor: pointer;
+  background-color: white;
+}
+tr:hover span, tr:hover i {
+  color: black;
+}
+tr:hover svg {
+    border-color: black;
+}
+</style>
