@@ -6,11 +6,9 @@ import InkMde from "ink-mde/vue";
 
 const csrfToken = usePage().props.auth['csrf_token'];
 const style = {
-    form: "fixed bottom-0 left-0 right-0 max-w-2xl mx-auto h-fit bg-gray-100 flex flex-col",
-    title: "border border-neutral-500 p-2 px-3 w-96 resize-none",
+    form: "fixed bottom-0 left-0 right-0 max-w-2xl mx-auto h-fit bg-gray-500 flex flex-col",
+    title: "text-black border border-neutral-500 p-2 px-3 w-96 resize-none",
     editor: "w-full h-60 resize-none",
-    submit: "rounded-md bg-indigo-600 px-3 py-2 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
-    close: "text-sm font-semibold leading-6 text-gray-900",
 };
 const form = useForm({
     'title': null,
@@ -117,8 +115,8 @@ defineEmits(["close"]);
                 <InkMde id="editor" v-model="content" :options="options" :class="style.editor"></InkMde>
             </div>
             <div class="flex justify-end items-center gap-4 me-4">
-                <button @click="$emit('close')" :class="style.cancel">Cancel</button>
-                <button type="submit" :class="style.submit">Post</button>
+                <button small @click="$emit('close')" :class="style.cancel">Cancel</button>
+                <button small filled type="submit">Post</button>
             </div>
         </div>
     </form>

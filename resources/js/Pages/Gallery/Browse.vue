@@ -64,16 +64,18 @@ function closeModal() {
 
     <MainLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Gallery</h2>
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h2 class="font-semibold text-xl leading-tight">Gallery</h2>
+            </div>
         </template>
 
-        <div class="max-w-7xl mx-auto py-12 sm:px-6">
+        <div class="max-w-7xl mx-auto sm:px-6">
             <div class="mb-6 flex flex-row justify-end">
                 <primary-button @click="onUploadClick">
                     Upload
                 </primary-button>
             </div>
-            <div class="p-6 bg-white shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-gray-500 shadow-sm sm:rounded-lg">
                 <p v-if="isEmpty" class="text-center">Gallery is empty.</p>
                 <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     <a v-for="image in state.images" :data-id="image['id']" @click.prevent="onImageClick($event)" href="#">

@@ -18,7 +18,7 @@ defineEmits(["update:modelValue"]);
 </script>
 
 <template>
-    <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="font-semibold" :required="required">
+    <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="font-semibold bg-black" :required="required">
         <option v-if="allowAll" value="" selected>All categories</option>
         <option v-else value="" disabled selected>Select a category...</option>
         <optgroup label="Notice">

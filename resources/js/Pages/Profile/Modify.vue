@@ -22,29 +22,29 @@ defineProps({
 
     <MainLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Profile</h2>
+            <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h2 class="font-semibold text-2xl leading-tight">Profile</h2>
+            </div>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-8 bg-white shadow sm:rounded-lg">
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                    />
-                </div>
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-8 bg-gray-400 shadow sm:rounded-lg">
+                <UpdateProfileInformationForm
+                    :must-verify-email="mustVerifyEmail"
+                    :status="status"
+                />
+            </div>
 
-                <div class="p-8 bg-white shadow sm:rounded-lg">
-                    <APIKeyForm class="max-w-lg" />
-                </div>
+            <div class="p-8 bg-gray-400 shadow sm:rounded-lg">
+                <APIKeyForm class="max-w-lg" />
+            </div>
 
-                <div class="p-8 bg-white shadow sm:rounded-lg">
-                    <UpdatePasswordForm class="max-w-lg" />
-                </div>
+            <div class="p-8 bg-gray-400 shadow sm:rounded-lg">
+                <UpdatePasswordForm class="max-w-lg" />
+            </div>
 
-                <div class="p-8 bg-white shadow sm:rounded-lg">
-                    <DeleteUserForm class="max-w-lg" />
-                </div>
+            <div class="p-8 bg-gray-400 shadow sm:rounded-lg">
+                <DeleteUserForm class="max-w-lg" />
             </div>
         </div>
     </MainLayout>

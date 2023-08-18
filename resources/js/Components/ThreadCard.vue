@@ -80,16 +80,16 @@ function fetchData(url) {
         <td class="flex-grow">
             <a :href="getLink()">
                 <div>
-                    <span class="text-black text-lg font-bold">{{ title }}</span>
+                    <span class="text-white text-lg font-bold">{{ title }}</span>
                     <div class="mt-2">
                         <svg class="inline-block w-[8px] h-[16px]">
                             <g :fill="getCategory().getColor()">
                                 <rect width="100%" height="100%"/>
                             </g>
                         </svg>
-                        <span class="text-black text-sm ps-2 pe-8">{{ getCategory().getName() }}</span>
+                        <span class="text-white text-sm ps-2 pe-8">{{ getCategory().getName() }}</span>
                         <i class="fa-solid fa-user align-text-bottom"></i>
-                        <span class="text-black text-sm ps-2">{{ authorName }}</span>
+                        <span class="text-white text-sm ps-2">{{ authorName }}</span>
                     </div>
                 </div>
             </a>

@@ -8,21 +8,17 @@ const content = ref();
 </script>
 
 <template>
-    <div>
-        <div class="min-h-screen bg-gray-100">
-            <div class="fixed w-full top-0 z-20">
-                <Navigation></Navigation>
-                <header class="bg-white shadow pt-20" v-if="$slots.header">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        <slot name="header" />
-                    </div>
-                </header>
-            </div>
-            <main>
-                <div class="pt-32">
-                    <slot />
-                </div>
-            </main>
-        </div>
+  <div>
+    <div class="min-h-screen">
+      <div class="fixed w-full top-0 z-20">
+        <Navigation></Navigation>
+      </div>
+      <main>
+        <header class="pt-24" v-if="$slots.header">
+          <slot name="header"/>
+        </header>
+        <slot/>
+      </main>
     </div>
+  </div>
 </template>

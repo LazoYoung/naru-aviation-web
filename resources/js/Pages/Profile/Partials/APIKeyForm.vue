@@ -72,21 +72,18 @@ function resetKey() {
         </header>
 
         <div class="mt-6">
-            <InputLabel for="api-key" value="API Key" />
-
             <TextInput
                 id="api-key"
                 :type="inputType"
                 :model-value="inputValue"
                 @click="revealKey"
-                class="mt-1 block w-full"
                 model-value="test"
             />
         </div>
 
         <div class="flex items-center gap-4">
-            <PrimaryButton v-if="keyExists" :disabled="processing" @click="resetKey">Reset</PrimaryButton>
-            <PrimaryButton v-else :disabled="processing" @click="resetKey">Generate</PrimaryButton>
+            <button small filled v-if="keyExists" :disabled="processing" @click="resetKey">Reset</button>
+            <button small filled v-else :disabled="processing" @click="resetKey">Generate</button>
         </div>
     </section>
 </template>

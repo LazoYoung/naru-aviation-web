@@ -26,7 +26,7 @@ function closeDraft() {
         </template>
 
         <div class="max-w-3xl mx-auto py-12 sm:px-6">
-            <div class="p-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-8 bg-gray-500 overflow-hidden shadow-sm sm:rounded-lg">
                 <Post v-for="(post, index) in posts" :post="post" :index="index" :last="posts.length - 1" @open-draft="draft = true" />
             </div>
             <PostDraft v-if="draft" :thread="thread" @close="closeDraft()" />

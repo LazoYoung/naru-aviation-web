@@ -71,27 +71,29 @@ function startThrottle() {
 
     <MainLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Forum</h2>
+          <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-2xl leading-tight">Forum</h2>
+          </div>
         </template>
 
-        <div class="max-w-7xl mx-auto py-12 sm:px-6">
-            <div class="p-6 bg-white shadow-sm sm:rounded-lg">
-                <div class="h-12 flex gap-x-4">
+        <div class="max-w-7xl mx-auto sm:px-6">
+            <div class="p-6 bg-gray-500 shadow-sm sm:rounded-lg">
+                <div class="h-12 flex gap-x-4 items-center">
                     <CategorySelect @input="reload" v-model="state.category" :allow-all="true" />
-                    <SearchBox @input="reload" v-model="state.search" />
+                    <SearchBox class="max-w-md" @input="reload" v-model="state.search" />
                     <div class="flex-grow"></div>
-                    <button @click="findMyPost" class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
+                    <button small @click="findMyPost">
                         <i class="fa-regular fa-folder-open"></i>
                         <span class="ms-2 hidden md:inline">My Posts</span>
                     </button>
-                    <button @click="state.draft = true" class="flex-shrink-0 inline-flex items-center px-4 py-4 bg-neutral-600 rounded-md text-white font-bold text-lg">
+                    <button small @click="state.draft = true">
                         <i class="fa-solid fa-plus"></i>
                         <span class="ms-2 hidden md:inline">New Post</span>
                     </button>
                 </div>
             </div>
 
-            <div class="mt-6 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="mt-6 bg-gray-500 overflow-hidden shadow-sm sm:rounded-lg">
                 <table class="w-full">
                     <tbody>
                         <ThreadCard v-for="t in state.threads" :id="t.id" :title="t.title" :category="t.category" />

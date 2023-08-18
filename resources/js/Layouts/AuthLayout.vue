@@ -30,7 +30,7 @@ div.form {
     width: 100%;
     margin-top: 1.5rem;
     padding: 1rem 1.5rem 1rem 1.5rem;
-    background-color: var(--fg);
+    background-color: var(--form-bg);
     overflow: hidden;
 }
 @media (min-width: 640px) {

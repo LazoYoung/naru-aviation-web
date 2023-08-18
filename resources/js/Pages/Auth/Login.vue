@@ -42,6 +42,7 @@ const submit = () => {
                     id="email"
                     type="email"
                     label="Email"
+                    label-type="inner"
                     v-model="form.email"
                     required
                     autofocus
@@ -56,6 +57,7 @@ const submit = () => {
                     id="password"
                     type="password"
                     label="Password"
+                    label-type="inner"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
@@ -77,9 +79,9 @@ const submit = () => {
                     Forgot your password?
                 </Link>
 
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <button filled class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
-                </PrimaryButton>
+                </button>
             </div>
         </form>
     </AuthLayout>

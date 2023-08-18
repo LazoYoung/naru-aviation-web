@@ -8,7 +8,7 @@ defineProps({
     },
     labelType: {
         type: String,
-        default: "inner",
+        required: false,
     },
     type: {
         type: String,

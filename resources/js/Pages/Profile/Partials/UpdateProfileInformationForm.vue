@@ -22,34 +22,6 @@ const form = useForm({
 });
 </script>
 
-<style>
-.left-box {
-    transition: width 0.2s ease-out;
-}
-.right-box {
-    width: 12rem;
-    transition: width 0.2s ease-out;
-}
-.sm-show {
-    display: block;
-}
-.sm-hidden {
-    display: none;
-}
-@media (min-width: 720px) {
-    .right-box {
-        width: 16rem;
-        transition: width 0.2s ease-out;
-    }
-    .sm-show {
-        display: none;
-    }
-    .sm-hidden {
-        display: block;
-    }
-}
-</style>
-
 <template>
     <div class="flex flex-row">
         <section class="left-box max-w-xl flex-grow md:me-8">
@@ -70,12 +42,11 @@ const form = useForm({
 
             <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6 max-w-lg">
                 <section>
-                    <InputLabel for="name" value="Name" />
-
                     <TextInput
                         id="name"
                         type="text"
-                        class="mt-1 block w-full"
+                        label="Name"
+                        label-type="top"
                         v-model="form.name"
                         required
                         autofocus
@@ -86,12 +57,11 @@ const form = useForm({
                 </section>
 
                 <section>
-                    <InputLabel for="email" value="Email" />
-
                     <TextInput
                         id="email"
                         type="email"
-                        class="mt-1 block w-full"
+                        label="Email"
+                        label-type="top"
                         v-model="form.email"
                         required
                         autocomplete="username"
@@ -123,7 +93,7 @@ const form = useForm({
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                    <button small filled :disabled="form.processing">Save</button>
 
                     <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
                         <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
@@ -137,3 +107,31 @@ const form = useForm({
         </div>
     </div>
 </template>
+
+<style>
+.left-box {
+    transition: width 0.2s ease-out;
+}
+.right-box {
+    width: 12rem;
+    transition: width 0.2s ease-out;
+}
+.sm-show {
+    display: block;
+}
+.sm-hidden {
+    display: none;
+}
+@media (min-width: 720px) {
+    .right-box {
+        width: 16rem;
+        transition: width 0.2s ease-out;
+    }
+    .sm-show {
+        display: none;
+    }
+    .sm-hidden {
+        display: block;
+    }
+}
+</style>

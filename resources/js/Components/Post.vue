@@ -132,16 +132,16 @@ function submitData(url) {
         </div>
         <div class="p-8" ref="content"></div>
         <div class="flex flex-row justify-end gap-4">
-            <button @click="onLikeAction" class="px-2">
+            <button small @click="onLikeAction" class="px-2">
                 <i v-if="liked" class="fa-solid fa-thumbs-up"></i>
                 <i v-else class="fa-regular fa-thumbs-up"></i>
                 <span class="ps-2 font-bold">{{ likeLabel }}</span>
             </button>
-            <button @click="copyLink" class="px-2">
+            <button small @click="copyLink" class="px-2">
                 <i class="fa-solid fa-link"></i>
                 <span class="ps-2 font-semibold">Share</span>
             </button>
-            <button @click="$emit('open-draft')" class="px-2">
+            <button small @click="$emit('open-draft')" class="px-2">
                 <i class="fa-solid fa-comment"></i>
                 <span class="ps-2 font-semibold">Reply</span>
             </button>

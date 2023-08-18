@@ -33,7 +33,7 @@ const proxyChecked = computed({
 
 function onToggle() {
     let yes = "var(--form-input-bg)";
-    let no = "var(--form-input-fg)";
+    let no = "var(--form-bg)";
     let checked = input.value.checked;
     button.value.style.backgroundColor = checked ? yes : no;
 }
@@ -67,10 +67,11 @@ label {
     display: block;
     width: auto;
     min-height: 1.5rem;
-    text-align: left;
     margin-left: 2rem;
     line-height: 1.5rem;
-    color: var(--form-input-bg);
+    text-align: left;
+    font-weight: 500;
+    color: var(--form-input-fg);
 }
 div.checkbtn {
     position: absolute;
@@ -81,7 +82,7 @@ div.checkbtn {
     border-radius: 100%;
     border-width: 2px;
     border-color: var(--form-input-bg);
-    background-color: var(--form-input-fg);
+    background-color: var(--form-bg);
     transition: background-color 200ms ease-in-out;
 }
 </style>

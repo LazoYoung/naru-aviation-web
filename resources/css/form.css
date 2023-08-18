@@ -68,7 +68,9 @@ button[tiny] {
     --form-input-fg: white;
     --form-input-placeholder: #c4c4c4;
     --form-input-label: white;
+    --form-input-label-bg: #777777;
     --form-input-outline: white;
+    --form-bg: #969b9b;
 }
 input,
 textarea {
@@ -127,7 +129,10 @@ form-input-text {
     align-items: center;
     position: relative;
     width: 100%;
-    height: 4rem;
+    height: 3.5rem;
+}
+form-input-text[label="inner"] {
+    height: 4.5rem;
 }
 form-textarea {
     display: inline-flex;
@@ -144,7 +149,7 @@ form-textarea > textarea,
 form-textarea > textarea:-webkit-autofill,
 form-textarea > textarea:-webkit-autofill:hover,
 form-textarea > textarea:-webkit-autofill:focus {
-    width: calc(100% - 2rem);
+    width: 100%;
     height: 100%;
     padding: 0 1rem 0 1rem;
     margin: 0;
@@ -152,16 +157,16 @@ form-textarea > textarea:-webkit-autofill:focus {
     font-family: var(--sans-serif);
     font-size: 1.25rem !important;
     font-weight: 500 !important;
-    background: var(--form-input-bg);
+    background: var(--form-input-bg) !important;
     box-shadow: 0 0 0 100rem var(--form-input-bg) inset !important;
     -webkit-text-fill-color: var(--form-input-fg) !important;
     word-break: break-all;
-    border-radius: 0.25rem;
+    border-radius: 0.25rem !important;
 }
 form-textarea > textarea {
     vertical-align: bottom;
-    max-width: calc(100% - 2rem);
-    min-width: calc(100% - 2rem);
+    max-width: 100%;
+    min-width: 100%;
     height: 100%;
     min-height: 6rem;
     padding: 1rem 1rem 1rem 1rem;
@@ -231,7 +236,7 @@ form-textarea[label="top"] > label {
     transition: opacity 0.2s ease-out, top 0.2s ease-out;
     pointer-events: none;
     color: var(--form-input-fg);
-    background: var(--form-input-bg);
+    background: var(--form-input-label-bg);
     padding: 0.3rem 0.5rem;
 }
 form-input-text[label="top"] > input:placeholder-shown ~ label,
