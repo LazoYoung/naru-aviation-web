@@ -113,16 +113,16 @@ span {
 }
 svg {
     border-width: 1px;
-    border-color: white;
+    border-color: var(--fg);
 }
 tr:hover {
-  cursor: pointer;
-  background-color: white;
+    cursor: pointer;
+    background-color: var(--fg);
 }
 tr:hover span, tr:hover i {
-  color: black;
+    color: var(--bg);
 }
 tr:hover svg {
-    border-color: black;
+    border-color: var(--bg);
 }
 </style>
