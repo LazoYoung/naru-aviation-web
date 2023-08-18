@@ -22,10 +22,12 @@ function closeDraft() {
 
     <MainLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{thread.title}}</h2>
+            <div class="max-w-3xl mx-auto py-6 sm:px-2 lg:px-4">
+                <h2 class="font-semibold text-2xl leading-tight">{{thread.title}}</h2>
+            </div>
         </template>
 
-        <div class="max-w-3xl mx-auto py-12 sm:px-6">
+        <div class="max-w-3xl mx-auto">
             <div class="p-8 bg-gray-500 overflow-hidden shadow-sm sm:rounded-lg">
                 <Post v-for="(post, index) in posts" :post="post" :index="index" :last="posts.length - 1" @open-draft="draft = true" />
             </div>

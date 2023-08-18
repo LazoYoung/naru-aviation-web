@@ -24,8 +24,8 @@ watch(props,  () => {
     fetchViewCount();
 });
 
-function getLink() {
-    return route('forum.thread.show', { id: props.id });
+function redirect() {
+    location.href = route('forum.thread.show', { id: props.id });
 }
 
 function getCategory() {
@@ -72,27 +72,25 @@ function fetchData(url) {
 </script>
 
 <template>
-    <tr class="flex flex-row items-center rounded-lg border-solid border-2 m-4">
+    <tr @click="redirect" class="flex flex-row items-center rounded-lg border-solid border-2 m-4">
         <td class="p-8 flex-shrink-0">
             <i v-if="!gravatarHash" class="fa-solid fa-circle-user fa-3x"></i>
             <Gravatar v-else :hash="gravatarHash" :large="false" :size="70"></Gravatar>
         </td>
         <td class="flex-grow">
-            <a :href="getLink()">
-                <div>
-                    <span class="text-white text-lg font-bold">{{ title }}</span>
-                    <div class="mt-2">
-                        <svg class="inline-block w-[8px] h-[16px]">
-                            <g :fill="getCategory().getColor()">
-                                <rect width="100%" height="100%"/>
-                            </g>
-                        </svg>
-                        <span class="text-white text-sm ps-2 pe-8">{{ getCategory().getName() }}</span>
-                        <i class="fa-solid fa-user align-text-bottom"></i>
-                        <span class="text-white text-sm ps-2">{{ authorName }}</span>
-                    </div>
+            <div>
+                <span class="text-white text-lg font-bold">{{ title }}</span>
+                <div class="mt-2">
+                    <svg class="inline-block w-[8px] h-[16px]">
+                        <g :fill="getCategory().getColor()">
+                            <rect width="100%" height="100%"/>
+                        </g>
+                    </svg>
+                    <span class="text-white text-sm ps-2 pe-8">{{ getCategory().getName() }}</span>
+                    <i class="fa-solid fa-user align-text-bottom"></i>
+                    <span class="text-white text-sm ps-2">{{ authorName }}</span>
                 </div>
-            </a>
+            </div>
         </td>
         <td class="flex flex-col flex-shrink-0 w-[170px]">
             <div>
