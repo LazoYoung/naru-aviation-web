@@ -67,9 +67,12 @@ onMounted(() => {
                 : openNarrowDropdown(target);
         });
     }
-    document
-        .querySelector("#account")
-        .addEventListener("click", expandProfile);
+
+    let account = document.querySelector("#account");
+    if (account) {
+        account.addEventListener("click", expandProfile);
+    }
+
     document
         .querySelector("#nav-background")
         .addEventListener("click", closeAll);
@@ -98,7 +101,7 @@ function closeAll() {
     )) {
         closeNarrowDropdown(other);
     }
-    foldProfile();
+    foldProfile(document.querySelector("#account"));
     closeNarrowMenu();
     hideBackground();
 }
@@ -124,14 +127,17 @@ function closeWideDropdown(element) {
     element.removeAttribute("opened");
 }
 
-function expandProfile() {
-    document.querySelector("#account").classList.add("expand");
-    showBackground();
+function expandProfile(element) {
+    if (element) {
+        element.setAttribute("expand", "");
+        showBackground();
+    }
 }
 
-function foldProfile() {
-    document.querySelector("#account").classList.remove("expand");
-    hideBackground();
+function foldProfile(element) {
+    if (element) {
+        element.classList.remove("expand");
+    }
 }
 
 function openNarrowMenu() {
