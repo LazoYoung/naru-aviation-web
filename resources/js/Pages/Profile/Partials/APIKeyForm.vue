@@ -78,6 +78,7 @@ function resetKey() {
                 :model-value="inputValue"
                 @click="revealKey"
                 model-value="test"
+                readonly
             />
         </div>
 
