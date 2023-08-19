@@ -70,7 +70,7 @@ onMounted(() => {
 
     let account = document.querySelector("#account");
     if (account) {
-        account.addEventListener("click", expandProfile);
+        account.addEventListener("click", () => expandProfile(account));
     }
 
     document
@@ -136,7 +136,7 @@ function expandProfile(element) {
 
 function foldProfile(element) {
     if (element) {
-        element.classList.remove("expand");
+        element.removeAttribute("expand");
     }
 }
 
@@ -604,7 +604,7 @@ function closeNarrowDropdown(element) {
     cursor: pointer;
     transition: max-height 0.5s ease-in-out;
 }
-#account.expand {
+#account[expand] {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;;
@@ -622,7 +622,7 @@ function closeNarrowDropdown(element) {
     flex-direction: row;
     align-items: center;
 }
-#account.expand > .profile {
+#account[expand] > .profile {
     margin-bottom: 1.5rem;
 }
 #account .image {
@@ -631,7 +631,7 @@ function closeNarrowDropdown(element) {
     border-radius: 100%;
     border: solid 1px var(--nav-fg);
 }
-#account.expand .image {
+#account[expand] .image {
     width: 3.2rem;
     height: 3.2rem;
     border-radius: 100%;
@@ -643,7 +643,7 @@ function closeNarrowDropdown(element) {
     margin-left: 0.5rem;
     cursor: pointer;
 }
-#account.expand .name {
+#account[expand] .name {
     font-weight: normal;
     margin-left: 1rem;
     cursor: pointer;
@@ -651,7 +651,7 @@ function closeNarrowDropdown(element) {
 #account > .element {
     visibility: hidden;
 }
-#account.expand > .element {
+#account[expand] > .element {
     visibility: visible;
     padding: 0 0 1.5rem 1rem;
     font-weight: bold;
@@ -662,10 +662,10 @@ function closeNarrowDropdown(element) {
 #account:hover .name {
     text-decoration: underline;
 }
-#account.expand:hover .name {
+#account[expand]:hover .name {
     text-decoration: none;
 }
-#account.expand .element:hover {
+#account[expand] .element:hover {
     text-decoration: underline;
 }
 
