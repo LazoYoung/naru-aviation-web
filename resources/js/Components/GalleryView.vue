@@ -7,7 +7,7 @@ defineEmits(['close'])
 
 <template>
     <Modal :show="show" max-width="4xl" @close="$emit('close')">
-        <div class="mx-auto p-8 bg-white rounded-xl">
+        <div id="model-div">
             <div class="flex flex-row justify-between">
                 <div>
                     <h1 class="text-xl font-semibold">{{image['title']}}</h1>
@@ -22,3 +22,10 @@ defineEmits(['close'])
         </div>
     </Modal>
 </template>
+
+<style scoped>
+#model-div {
+    padding: 2rem;
+    background-color: var(--bg);
+}
+</style>
