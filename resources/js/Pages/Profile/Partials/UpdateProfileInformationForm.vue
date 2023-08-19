@@ -3,6 +3,8 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {Link, useForm, usePage} from '@inertiajs/vue3';
 import Gravatar from "@/Components/Gravatar.vue";
+import Alert from "@/alert.js";
+import {ref} from "vue";
 
 defineProps({
     mustVerifyEmail: {
@@ -13,11 +15,33 @@ defineProps({
     },
 });
 
+const alert = new Alert();
 const user = usePage().props.auth.user;
+const nameInput = ref(null);
+const emailInput = ref(null);
 const form = useForm({
     name: user.name,
     email: user.email,
 });
+
+function submit() {
+    form.patch(route('profile.update'), {
+        onSuccess: () => {
+            alert.setType('success');
+            alert.pop('Profile saved!');
+        },
+        onError: () => {
+            if (form.errors.name) {
+                form.reset('name');
+                nameInput.value.focus();
+            }
+            if (form.errors.email) {
+                form.reset('email');
+                emailInput.value.focus();
+            }
+        }
+    });
+}
 </script>
 
 <template>
@@ -38,13 +62,14 @@ const form = useForm({
                 </div>
             </div>
 
-            <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6 max-w-lg">
+            <form @submit.prevent="submit()" class="mt-6 space-y-6 max-w-lg">
                 <section>
                     <TextInput
                         id="name"
                         type="text"
-                        label="Name"
-                        label-type="top"
+                        hint="Name"
+                        label="top"
+                        ref="nameInput"
                         v-model="form.name"
                         required
                         autofocus
@@ -58,8 +83,9 @@ const form = useForm({
                     <TextInput
                         id="email"
                         type="email"
-                        label="Email"
-                        label-type="top"
+                        hint="Email"
+                        label="top"
+                        ref="emailInput"
                         v-model="form.email"
                         required
                         autocomplete="username"
@@ -92,10 +118,6 @@ const form = useForm({
 
                 <div class="flex items-center gap-4">
                     <button small filled :disabled="form.processing">Save</button>
-
-                    <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                        <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
-                    </Transition>
                 </div>
             </form>
         </section>

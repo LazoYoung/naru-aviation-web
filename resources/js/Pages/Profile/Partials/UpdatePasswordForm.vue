@@ -50,8 +50,8 @@ const updatePassword = () => {
                 <TextInput
                     id="current_password"
                     ref="currentPasswordInput"
-                    label="Current Password"
-                    label-type="top"
+                    hint="Current Password"
+                    label="top"
                     v-model="form.current_password"
                     type="password"
                     autocomplete="current-password"
@@ -64,8 +64,8 @@ const updatePassword = () => {
                 <TextInput
                     id="password"
                     ref="passwordInput"
-                    label="New Password"
-                    label-type="top"
+                    hint="New Password"
+                    label="top"
                     v-model="form.password"
                     type="password"
                     class="mt-1 block w-full"
@@ -78,8 +78,8 @@ const updatePassword = () => {
             <div>
                 <TextInput
                     id="password_confirmation"
-                    label="Confirm Password"
-                    label-type="top"
+                    hint="Confirm Password"
+                    label="top"
                     v-model="form.password_confirmation"
                     type="password"
                     class="mt-1 block w-full"

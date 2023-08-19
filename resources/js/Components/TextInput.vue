@@ -1,12 +1,12 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-defineProps({
-    label: {
+const props = defineProps({
+    hint: {
         type: String,
         required: false,
     },
-    labelType: {
+    label: {
         type: String,
         required: false,
     },
@@ -18,10 +18,6 @@ defineProps({
         type: Boolean,
         default: false,
     },
-    placeholder: {
-        type: String,
-        required: false,
-    },
     autofocus: {
         type: Boolean,
         default: false,
@@ -30,38 +26,52 @@ defineProps({
         type: String,
         default: "off",
     },
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
     modelValue: {
         type: String,
         required: true,
     },
 });
-
-defineEmits(['update:modelValue']);
-
 const input = ref(null);
+const target = ref(null);
+defineEmits(['update:modelValue']);
 
 onMounted(() => {
     if (input.value.hasAttribute('autofocus')) {
         input.value.focus();
     }
+    input.value.addEventListener('focusin', onFocusIn);
+    input.value.addEventListener('focusout', onFocusOut);
 });
 
 defineExpose({ focus: () => input.value.focus() });
+
+function onFocusIn() {
+    target.value.setAttribute('label', props.label);
+}
+
+function onFocusOut() {
+    target.value.removeAttribute('label');
+}
 </script>
 
 <template>
-    <form-input-text :label="labelType">
+    <form-input-text ref="target">
         <input
             ref="input"
             @input="$emit('update:modelValue', $event.target.value)"
             :type="type"
             :value="modelValue"
             :required="required"
-            :placeholder="placeholder"
+            :placeholder="hint"
             :autofocus="autofocus"
             :autocomplete="autocomplete"
+            :readonly="readonly"
         />
-        <label v-html="label"></label>
+        <label class="btn-label" v-html="hint"></label>
         <form-input-border></form-input-border>
     </form-input-text>
 </template>

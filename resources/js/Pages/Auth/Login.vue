@@ -40,12 +40,10 @@ const submit = () => {
                 <TextInput
                     id="email"
                     type="email"
-                    label="Email"
-                    label-type="inner"
+                    hint="Email"
+                    label="inner"
                     v-model="form.email"
                     required
-                    autofocus
-                    autocomplete="username"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
@@ -55,11 +53,10 @@ const submit = () => {
                 <TextInput
                     id="password"
                     type="password"
-                    label="Password"
-                    label-type="inner"
+                    hint="Password"
+                    label="inner"
                     v-model="form.password"
                     required
-                    autocomplete="current-password"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
