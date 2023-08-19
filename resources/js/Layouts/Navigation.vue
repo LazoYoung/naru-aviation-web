@@ -165,7 +165,7 @@ function closeNarrowDropdown(element) {
         <div id="nav-background"></div>
         <div id="nav-top">
             <div class="left">
-                <a href="/" class="logo">
+                <a :href="route('home')" class="logo">
                     <div class="icon">
                         <Logo mode="icon"></Logo>
                     </div>
@@ -504,7 +504,7 @@ function closeNarrowDropdown(element) {
     flex-wrap: wrap;
 }
 #nav-top .menu-wide .element {
-    display: block flex;
+    display: flex;
     position: relative;
     margin-left: 2.5rem;
     width: fit-content;
@@ -529,7 +529,7 @@ function closeNarrowDropdown(element) {
     left: -0.75rem;
 }
 #nav-top .menu-wide .element.dropdown > .content > a {
-    display: block flex;
+    display: flex;
     width: max-content;
     font-size: 1.25rem;
     font-weight: 500;
@@ -709,7 +709,7 @@ function closeNarrowDropdown(element) {
     left: -0.75rem;
 }
 #nav-bottom .menu-narrow .element.dropdown > .content > a {
-    display: block flex;
+    display: flex;
     font-size: 1.25rem;
     font-weight: 500;
     line-height: 1.25rem;

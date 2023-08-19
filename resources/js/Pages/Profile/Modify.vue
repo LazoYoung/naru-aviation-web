@@ -17,7 +17,6 @@ defineProps({
 </script>
 
 <template>
-<!--  todo re-style with new css  -->
     <Head title="Profile" />
 
     <MainLayout>
