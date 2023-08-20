@@ -45,8 +45,8 @@ function submit() {
 </script>
 
 <template>
-    <div class="flex flex-row">
-        <section class="left-box max-w-xl flex-grow md:me-8">
+    <div id="parent">
+        <section class="left-box max-w-lg">
             <header>
                 <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
 
@@ -56,24 +56,23 @@ function submit() {
             </header>
 
             <div class="sm-show mt-6 space-y-6">
-                <label for="pic-small">Picture</label>
                 <div id="pic-small">
-                    <Gravatar :large="true" size="200"/>
+                    <Gravatar :large="true" size="512"/>
                 </div>
             </div>
 
-            <form @submit.prevent="submit()" class="mt-6 space-y-6 max-w-lg">
+            <form @submit.prevent="submit()" class="mt-6 space-y-6">
                 <section>
                     <TextInput
-                        id="name"
-                        type="text"
-                        hint="Name"
-                        label="top"
-                        ref="nameInput"
-                        v-model="form.name"
-                        required
-                        autofocus
-                        autocomplete="name"
+                            id="name"
+                            type="text"
+                            hint="Name"
+                            label="top"
+                            ref="nameInput"
+                            v-model="form.name"
+                            required
+                            autofocus
+                            autocomplete="name"
                     />
 
                     <InputError class="mt-2" :message="form.errors.name" />
@@ -81,14 +80,14 @@ function submit() {
 
                 <section>
                     <TextInput
-                        id="email"
-                        type="email"
-                        hint="Email"
-                        label="top"
-                        ref="emailInput"
-                        v-model="form.email"
-                        required
-                        autocomplete="username"
+                            id="email"
+                            type="email"
+                            hint="Email"
+                            label="top"
+                            ref="emailInput"
+                            v-model="form.email"
+                            required
+                            autocomplete="username"
                     />
 
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -99,18 +98,18 @@ function submit() {
                         Your email address is unverified.
                         <br>
                         <Link
-                            :href="route('verification.send')"
-                            method="post"
-                            as="button"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                :href="route('verification.send')"
+                                method="post"
+                                as="button"
+                                class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
                             Click here to re-send the verification email.
                         </Link>
                     </p>
 
                     <div
-                        v-show="status === 'verification-link-sent'"
-                        class="mt-2 font-medium text-sm text-green-600"
+                            v-show="status === 'verification-link-sent'"
+                            class="mt-2 font-medium text-sm text-green-600"
                     >
                         A new verification link has been sent to your email address.
                     </div>
@@ -122,29 +121,52 @@ function submit() {
             </form>
         </section>
 
-        <div class="right-box sm-hidden">
-            <Gravatar :large="true" size="512"/>
+        <div class="right-box">
+            <div id="pic-large">
+                <Gravatar :large="true" size="512"/>
+            </div>
         </div>
     </div>
 </template>
 
 <style>
+* {
+    --parent-height: 17rem;
+}
+#parent {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+}
 .left-box {
+    flex-grow: 1;
+    flex-shrink: 1;
     transition: width 0.2s ease-out;
 }
 .right-box {
-    width: 12rem;
+    display: none;
+    flex-grow: 1;
+    flex-shrink: 0;
     transition: width 0.2s ease-out;
 }
 .sm-show {
     display: block;
 }
-.sm-hidden {
-    display: none;
+#pic-small {
+    max-width: 350px;
+    max-height: 350px;
 }
-@media (min-width: 720px) {
+@media (min-width: 640px) {
+    #parent {
+        max-height: var(--parent-height);
+    }
+    #pic-large {
+        margin-left: auto;
+        margin-right: 0;
+        width: calc(var(--parent-height));
+    }
     .right-box {
-        width: 16rem;
+        display: block;
         transition: width 0.2s ease-out;
     }
     .sm-show {
