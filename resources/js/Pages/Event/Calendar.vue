@@ -46,6 +46,7 @@ const form = useForm({
 });
 
 onMounted(() => {
+    adjustDesign();
     fetchEvents();
 });
 
@@ -77,6 +78,13 @@ function onModeClick() {
     state.modeText = editMode ? editText : viewText;
 }
 
+function adjustDesign() {
+    let list = document.querySelectorAll("div.calendar button");
+    for (const button of list) {
+        button.setAttribute("small", "");
+    }
+}
+
 async function fetchEvents() {
     let json = await fetchJSON(route('event.fetch.all'), csrfToken);
 
@@ -103,7 +111,9 @@ async function fetchEvents() {
 <template>
     <MainLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Calendar</h2>
+            <div class="max-w-2xl mx-auto pt-6">
+                <h2 class="font-semibold text-2xl text-white leading-tight">Official Events</h2>
+            </div>
         </template>
         <div class="max-w-2xl mx-auto my-8">
             <div class="mb-8">
