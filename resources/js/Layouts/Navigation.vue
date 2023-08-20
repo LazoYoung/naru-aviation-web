@@ -91,17 +91,9 @@ function getProfileSource() {
 }
 
 function closeAll() {
-    for (const other of nav.querySelectorAll(
-        ".menu-wide .element.dropdown"
-    )) {
-        closeWideDropdown(other);
-    }
-    for (const other of nav.querySelectorAll(
-        ".menu-narrow .element.dropdown"
-    )) {
-        closeNarrowDropdown(other);
-    }
-    foldProfile(document.querySelector("#account"));
+    closeWideDropdowns();
+    closeNarrowDropdowns();
+    foldProfile();
     closeNarrowMenu();
     hideBackground();
 }
@@ -121,6 +113,14 @@ function openWideDropdown(element) {
     }
 }
 
+function closeWideDropdowns() {
+    for (const other of nav.querySelectorAll(
+        ".menu-wide .element.dropdown"
+    )) {
+        closeWideDropdown(other);
+    }
+}
+
 function closeWideDropdown(element) {
     element.removeAttribute("opened");
 }
@@ -130,12 +130,19 @@ function expandProfile(element) {
         closeAll();
         showBackground();
         element.setAttribute("expand", "");
+        document
+            .querySelector("#button-nav-narrow")
+            .classList.add("hidden");
     }
 }
 
-function foldProfile(element) {
-    if (element) {
-        element.removeAttribute("expand");
+function foldProfile() {
+    let elem = document.querySelector("#account");
+    if (elem) {
+        elem.removeAttribute("expand");
+        document
+            .querySelector("#button-nav-narrow")
+            .classList.remove("hidden");
     }
 }
 
@@ -154,8 +161,16 @@ function closeNarrowMenu() {
 
 function openNarrowDropdown(element) {
     if (element) {
-        closeAll();
+        closeNarrowDropdowns();
         element.setAttribute("opened", "");
+    }
+}
+
+function closeNarrowDropdowns() {
+    for (const other of nav.querySelectorAll(
+        ".menu-narrow .element.dropdown"
+    )) {
+        closeNarrowDropdown(other);
     }
 }
 
@@ -603,17 +618,17 @@ function closeNarrowDropdown(element) {
     transition: max-height 0.5s ease-in-out;
 }
 #account[expand] {
+    position: fixed;
+    top: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;;
+    justify-content: flex-end;
     border-radius: 1rem;
     height: fit-content;
     max-height: 30rem;
+    cursor: default;
     padding: 0.5rem 1rem 0.5rem 1rem;
     background: var(--nav-button-bg);
-    cursor: pointer;
-    position: absolute;
-    top: 20px;
 }
 #account > .profile {
     display: flex;
@@ -644,15 +659,17 @@ function closeNarrowDropdown(element) {
 #account[expand] .name {
     font-weight: normal;
     margin-left: 1rem;
-    cursor: pointer;
+    cursor: default;
 }
 #account > .element {
     visibility: hidden;
 }
 #account[expand] > .element {
     visibility: visible;
-    padding: 0 0 1.5rem 1rem;
+    padding: 0 0 1rem 1rem;
+    margin: 0.5rem 0 0.5rem 0;
     font-weight: bold;
+    cursor: pointer;
 }
 #account:hover {
     background: var(--nav-button-bg-hover);
@@ -740,6 +757,9 @@ function closeNarrowDropdown(element) {
     #button-nav-narrow {
         display: block;
     }
+    #button-nav-narrow.hidden {
+        display: none;
+    }
 }
 @media (max-width: 900px) {
     #nav-top > .left {
@@ -766,9 +786,6 @@ function closeNarrowDropdown(element) {
     }
     #nav-bottom .menu-narrow.show {
         height: 100%;
-    }
-    #account[expand] {
-        right: 60px
     }
 }
 @media print {
