@@ -115,12 +115,10 @@ function hideBackground() {
 }
 
 function openWideDropdown(element) {
-    for (const other of nav.querySelectorAll(
-        ".menu-wide .element.dropdown"
-    )) {
-        closeWideDropdown(other);
+    if (element) {
+        closeAll();
+        element.setAttribute("opened", "");
     }
-    element ? element.setAttribute("opened", "") : null;
 }
 
 function closeWideDropdown(element) {
@@ -129,8 +127,9 @@ function closeWideDropdown(element) {
 
 function expandProfile(element) {
     if (element) {
-        element.setAttribute("expand", "");
+        closeAll();
         showBackground();
+        element.setAttribute("expand", "");
     }
 }
 
@@ -141,9 +140,10 @@ function foldProfile(element) {
 }
 
 function openNarrowMenu() {
+    closeAll();
+    showBackground();
     document.querySelector("#button-nav-narrow").classList.add("cross");
     document.querySelector("#nav-bottom .menu-narrow").classList.add("show");
-    showBackground();
 }
 
 function closeNarrowMenu() {
@@ -153,12 +153,10 @@ function closeNarrowMenu() {
 }
 
 function openNarrowDropdown(element) {
-    for (const other of nav.querySelectorAll(
-        ".menu-narrow .element.dropdown"
-    )) {
-        closeNarrowDropdown(other);
+    if (element) {
+        closeAll();
+        element.setAttribute("opened", "");
     }
-    element ? element.setAttribute("opened", "") : null;
 }
 
 function closeNarrowDropdown(element) {
@@ -768,6 +766,9 @@ function closeNarrowDropdown(element) {
     }
     #nav-bottom .menu-narrow.show {
         height: 100%;
+    }
+    #account[expand] {
+        right: 60px
     }
 }
 @media print {
