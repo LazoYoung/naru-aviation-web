@@ -1,10 +1,11 @@
 <script setup>
 import Modal from "@/Components/Modal.vue";
-import {computed, reactive} from "vue";
+import {computed, reactive, watch} from "vue";
 import InkMde from "ink-mde/vue";
 import {usePage} from "@inertiajs/vue3";
 
 const emit = defineEmits(['close', 'update']);
+const csrfToken = usePage().props.auth['csrf_token'];
 const props = defineProps({
     show: {
         type: Boolean
@@ -12,9 +13,12 @@ const props = defineProps({
     event: {
         type: Number,
         default: null
+    },
+    date: {
+        type: String,
+        default: ''
     }
 });
-const csrfToken = usePage().props.auth['csrf_token'];
 const style = {
     input: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
     label: "block text-sm font-medium leading-6 text-gray-900",
@@ -51,6 +55,11 @@ const state = reactive({
     start: '',
     end: '',
     description: '',
+});
+
+watch(() => props.date, (date) => {
+    state.start = date + "T00:00";
+    state.end = date + "T23:59";
 });
 
 async function submitForm() {

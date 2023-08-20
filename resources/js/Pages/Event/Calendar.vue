@@ -21,11 +21,12 @@ const props = defineProps({
     }
 });
 const state = reactive({
+    date: null,
     showModal: false,
     modeIcon: viewIcon,
     modeText: viewText,
 });
-const calendarRef = ref();
+const calendarRef = ref(null);
 const options = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
@@ -50,10 +51,11 @@ onMounted(() => {
     fetchEvents();
 });
 
-function onDateClick() {
+function onDateClick(info) {
     if (!props.admin) return;
 
     if (window.confirm('Would you like to host a new event?')) {
+        state.date = info.dateStr;
         state.showModal = true;
     }
 }
@@ -117,13 +119,13 @@ async function fetchEvents() {
         </template>
         <div class="max-w-2xl mx-auto my-8">
             <div class="mb-8">
-                <FullCalendar ref="calendarRef" :options="options" />
+                <FullCalendar ref="calendarRef" class="calendar" :options="options" />
             </div>
-            <button v-if="admin" @click="onModeClick" class="inline-flex items-center px-4 py-2 bg-neutral-600 rounded-md text-white text-md">
+            <button small v-if="admin" @click="onModeClick" class="inline-flex items-center px-4 py-2 bg-neutral-600 rounded-md text-white text-md">
                 <i :class="state.modeIcon"></i>
                 <span class="ms-2">{{ state.modeText }}</span>
             </button>
         </div>
-        <CalendarModal :show="state.showModal" @close="state.showModal = false" @update="fetchEvents"></CalendarModal>
+        <CalendarModal :show="state.showModal" :date="state.date" @close="state.showModal = false" @update="fetchEvents"></CalendarModal>
     </MainLayout>
 </template>
