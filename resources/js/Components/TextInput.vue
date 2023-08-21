@@ -26,6 +26,10 @@ const props = defineProps({
         type: String,
         default: "off",
     },
+    spellcheck: {
+        type: Boolean,
+        default: false,
+    },
     readonly: {
         type: Boolean,
         default: false,
@@ -69,6 +73,8 @@ function onFocusOut() {
             :placeholder="hint"
             :autofocus="autofocus"
             :autocomplete="autocomplete"
+            :spellcheck="spellcheck"
+            :data-gramm="spellcheck"
             :readonly="readonly"
         />
         <label class="btn-label" v-html="hint"></label>
