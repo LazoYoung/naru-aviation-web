@@ -6,8 +6,8 @@ use App\Models\Booking;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\Exceptions\ParseErrorException;
-use DateTimeZone;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
@@ -20,7 +20,7 @@ class PilotController extends Controller {
         return Inertia::render("Pilot/Dispatch");
     }
 
-    public function dispatchFlight(Request $request): Response {
+    public function dispatchFlight(Request $request): RedirectResponse|Response {
         $val = $request->validate([
             "callsign" => ["required", "string"],
             "aircraft" => ["required", "string", "size:4"],
@@ -34,7 +34,7 @@ class PilotController extends Controller {
         ]);
 
         try {
-            $offBlock = Carbon::parse($val["off_block"], DateTimeZone::UTC);
+            $offBlock = Carbon::parse($val["off_block"]);
             $onBlock = $this->getOnBlockTime($offBlock, $val["flight_time"]);
             $booking = new Booking([
                 "preflight_at" => $offBlock->subMinutes(30),
@@ -50,7 +50,7 @@ class PilotController extends Controller {
             ]);
             $booking->user()->associate($request->user());
             $booking->saveOrFail();
-            return response($booking->toJson(), 200);
+            return to_route('home');
         } catch (Throwable $e) {
             return response($e->getMessage(), 500);
         }
