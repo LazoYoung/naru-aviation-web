@@ -149,7 +149,6 @@ div.author > span {
     margin-left: 8px;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    color: var(--fg);
 }
 div.details {
     display: flex;
