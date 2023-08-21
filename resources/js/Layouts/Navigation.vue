@@ -4,12 +4,21 @@ import Logo from '@/Components/Logo.vue';
 import {usePage} from '@inertiajs/vue3';
 import {getGravatarHash} from "@/api.js";
 import { Link } from '@inertiajs/vue3';
+import StandardMenu from "@/Components/StandardMenu.vue";
+import PilotMenu from "@/Components/PilotMenu.vue";
 
 const auth = usePage().props.auth;
 const content = ref();
 let lastWidth = window.innerWidth;
 let lastWidthChange = null;
 let nav = null;
+
+defineProps({
+    pilot: {
+        type: Boolean,
+        default: false
+    }
+});
 
 onMounted(() => {
     nav = document.querySelector("#nav");
@@ -186,7 +195,7 @@ function closeNarrowDropdown(element) {
             <div class="left">
                 <a :href="route('home')" class="logo">
                     <div class="icon">
-                        <Logo mode="icon"></Logo>
+                        <Logo :color="pilot ? 'blue' : 'white'"></Logo>
                     </div>
                     <div class="text">
                         <svg
@@ -279,48 +288,8 @@ function closeNarrowDropdown(element) {
             </div>
             <div class="center">
                 <div class="menu menu-wide">
-                    <a class="element link" href="/">
-                        <label><span class="name">About</span></label>
-                    </a>
-                    <div class="element dropdown">
-                        <label>
-                            <span class="name">Projects</span>
-                            <span class="arrow">&#x25BC;</span>
-                        </label>
-                        <div class="content">
-                            <a
-                                href="https://github.com/LazoYoung/NaruACARS"
-                                target="_blank"
-                            >
-                                <label>Naru ACARS</label>
-                                <span class="arrow">🡥</span>
-                            </a>
-                            <a
-                                href="https://github.com/LazoYoung/naru-aviation-web"
-                                target="_blank"
-                            >
-                                <label>Naru web</label>
-                                <span class="arrow">🡥</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="element dropdown">
-                        <label>
-                            <span class="name">Community</span>
-                            <span class="arrow">&#x25BC;</span>
-                        </label>
-                        <div class="content">
-                            <a :href="route('forum.browse')"><label>Forum</label></a>
-                            <a :href="route('image.show.gallery')"><label>Gallery</label></a>
-                            <a :href="route('event.show.calendar')"><label>Official Events</label></a>
-                        </div>
-                    </div>
-                    <a class="element link" href="#">
-                        <label><span class="name">Pilot Center</span></label>
-                    </a>
-                    <a class="element link" href="#">
-                        <label><span class="name">Passengers</span></label>
-                    </a>
+                    <PilotMenu v-if="pilot"></PilotMenu>
+                    <StandardMenu v-else></StandardMenu>
                 </div>
             </div>
             <div class="right">
@@ -356,48 +325,8 @@ function closeNarrowDropdown(element) {
         </div>
         <div id="nav-bottom">
             <div class="narrow-nav menu menu-narrow">
-                <a class="element link" href="/">
-                    <label><span class="name">About</span></label>
-                </a>
-                <div class="element dropdown">
-                    <label>
-                        <span class="name">Projects</span>
-                        <span class="arrow">&#x25BC;</span>
-                    </label>
-                    <div class="content">
-                        <a
-                            href="https://github.com/LazoYoung/NaruACARS"
-                            target="_blank"
-                        >
-                            <label>Naru ACARS</label>
-                            <span class="arrow">🡥</span>
-                        </a>
-                        <a
-                            href="https://github.com/LazoYoung/naru-aviation-web"
-                            target="_blank"
-                        >
-                            <label>Naru web</label>
-                            <span class="arrow">🡥</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="element dropdown">
-                    <label>
-                        <span class="name">Community</span>
-                        <span class="arrow">&#x25BC;</span>
-                    </label>
-                    <div class="content">
-                        <a :href="route('forum.browse')"><label>Forum</label></a>
-                        <a :href="route('image.show.gallery')"><label>Gallery</label></a>
-                        <a :href="route('event.show.calendar')"><label>Official Events</label></a>
-                    </div>
-                </div>
-                <a class="element link" href="#">
-                    <label><span class="name">Pilot Center</span></label>
-                </a>
-                <a class="element link" href="#">
-                    <label><span class="name">Passengers</span></label>
-                </a>
+                <PilotMenu v-if="pilot"></PilotMenu>
+                <StandardMenu v-else></StandardMenu>
             </div>
         </div>
     </nav>

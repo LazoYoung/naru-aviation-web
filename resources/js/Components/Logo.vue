@@ -2,19 +2,17 @@
 import {computed} from "vue";
 
 const props = defineProps({
-    mode: {
+    color: {
         type: String,
-        default: 'icon'
+        default: 'white'
     }
 });
 const getImageSource = computed(() => {
-    switch (props.mode) {
-        case 'text':
-            // return '/logo_text.png';
+    switch (props.color) {
+        case 'white':
             return '/icon.svg'
-        case 'icon':
-            // return '/logo_icon.png';
-            return '/icon.svg'
+        case 'blue':
+            return '/icon_blue.svg'
         default:
             return '';
     }
