@@ -77,22 +77,24 @@ function fetchData(url) {
             <i v-if="!gravatarHash" class="fa-solid fa-circle-user fa-3x"></i>
             <Gravatar v-else :hash="gravatarHash" :large="false" :size="70"></Gravatar>
         </td>
-        <td class="flex-grow">
-            <div>
-                <span class="text-white text-lg font-bold">{{ title }}</span>
-                <div class="mt-2">
+        <td class="center">
+            <span class="text-white text-lg font-bold">{{ title }}</span>
+            <div class="details">
+                <div class="category">
                     <svg class="inline-block w-[8px] h-[16px]">
                         <g :fill="getCategory().getColor()">
                             <rect width="100%" height="100%"/>
                         </g>
                     </svg>
-                    <span class="text-white text-sm ps-2 pe-8">{{ getCategory().getName() }}</span>
+                    <span>{{ getCategory().getName() }}</span>
+                </div>
+                <div class="author">
                     <i class="fa-solid fa-user align-text-bottom"></i>
-                    <span class="text-white text-sm ps-2">{{ authorName }}</span>
+                    <span>{{ authorName }}</span>
                 </div>
             </div>
         </td>
-        <td class="flex flex-col flex-shrink-0 w-[170px]">
+        <td class="right">
             <div>
                 <i class="fa-solid fa-clock"></i>
                 <span class="px-2">{{ createdTime }}</span>
@@ -122,5 +124,52 @@ tr:hover span, tr:hover i {
 }
 tr:hover svg {
     border-color: var(--bg);
+}
+td.center {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+td.right {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    width: 170px;
+}
+td.right span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+div.category, div.author {
+    position: relative;
+}
+div.category > span,
+div.author > span {
+    position: relative;
+    margin-left: 8px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--fg);
+}
+div.details {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+}
+
+@media (max-width: 600px) {
+    div.details {
+        flex-direction: column;
+        row-gap: 4px;
+    }
+    div.category > span,
+    div.author > span {
+        position: absolute;
+        left: 1.5rem;
+        margin-left: 0;
+    }
+    td.right {
+        width: 120px;
+    }
 }
 </style>
