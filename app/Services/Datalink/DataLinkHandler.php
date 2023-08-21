@@ -70,7 +70,7 @@ class DataLinkHandler {
     private function onStart(string $ident, array $bulk): string {
         $flightplan = $bulk["flightplan"];
 
-        if (strcasecmp("true", $bulk["scheduled"]) == 0) {
+        if ($bulk["scheduled"]) {
             return $this->onStartScheduled($ident, $flightplan);
         } else {
             return $this->onStartUnscheduled($ident, $flightplan);
@@ -114,9 +114,24 @@ class DataLinkHandler {
         $booking = Booking::whereUserId($user->id)
             ->orderBy("preflight_at")
             ->first();
+        $offBlock = Carbon::parse($booking->off_block)->toAtomString();
+        $onBlock = Carbon::parse($booking->on_block)->toAtomString();
+        $response = [
+            "flightplan" => [
+                "callsign" => $booking->callsign,
+                "aircraft" => $booking->aircraft,
+                "origin" => $booking->origin,
+                "alternate" => $booking->alternate,
+                "destination" => $booking->destination,
+                "off_block" => $offBlock,
+                "on_block" => $onBlock,
+                "route" => $booking->route,
+                "remarks" => $booking->remarks
+            ]
+        ];
 
         if (isset($booking)) {
-            return JsonBuilder::response(200, $ident, $booking->toJson());
+            return JsonBuilder::response(200, $ident, $response);
         } else {
             return JsonBuilder::response(404, $ident, "You haven't booked a flight.");
         }
@@ -164,15 +179,15 @@ class DataLinkHandler {
         }
 
         if (Carbon::parse($booking->preflight_at)->isAfter(Carbon::now())) {
-            return JsonBuilder::response(440, $ident, time());
+            return JsonBuilder::response(440, $ident, Carbon::parse($booking->preflight_at)->timestamp);
         }
 
         try {
             Flight::createFromBooking($booking);
+            return JsonBuilder::response(200, $ident, "Flight is submitted.");
         } catch (Throwable) {
             return JsonBuilder::response(500, $ident, "Failed to delete a booking record.");
         }
-        return JsonBuilder::response(200, $ident, "Flight is submitted.");
     }
 
     private function onStatusChangeEvent(Flight $flight, array $bulk): void {
