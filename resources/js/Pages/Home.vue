@@ -1,7 +1,6 @@
 <script setup>
 import {Head} from '@inertiajs/vue3';
 import {reactive} from "vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AirportModal from "@/Components/AirportModal.vue";
 import DestinationMap from "@/Components/DestinationMap.vue";
 import Navigation from "@/Layouts/Navigation.vue";
@@ -84,9 +83,9 @@ function getQuote() {
                         We will continue to expand our flight network.
                     </p>
                     <div class="flex flex-row justify-end mb-6">
-                        <PrimaryButton v-if="isAdmin" @click="openAirportModal">
+                        <button small v-if="isAdmin" @click="openAirportModal">
                             Add airport
-                        </PrimaryButton>
+                        </button>
                     </div>
                     <DestinationMap class="h-96" :api-key="mapApiKey"></DestinationMap>
                 </div>

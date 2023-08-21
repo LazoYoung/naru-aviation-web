@@ -1,9 +1,7 @@
 <script setup>
-import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import {onMounted, ref} from "vue";
 import Alert from "@/alert.js";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {usePage} from "@inertiajs/vue3";
 import {fetchResponse} from "@/api.js";
 

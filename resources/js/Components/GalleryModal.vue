@@ -11,12 +11,6 @@ const props = defineProps({
     }
 });
 const csrfToken = usePage().props.auth['csrf_token'];
-const style = {
-    input: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-    label: "block text-sm font-medium leading-6 text-gray-900",
-    submit: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
-    cancel: "text-sm font-semibold leading-6 text-gray-900",
-};
 const state = reactive({
     title: '',
     description: '',
@@ -64,27 +58,27 @@ function closeModal() {
 <template>
     <Modal :show="show" @close="closeModal">
         <form @submit.prevent="submitForm">
-            <div class="max-w-2xl mx-auto p-8 bg-white rounded-xl">
+            <div class="modal">
                 <h1 class="text-xl font-semibold leading-7 text-gray-900">New Image</h1>
-                <p class="mt-1 text-sm leading-6 text-gray-600">Share with people your flight experience!</p>
+                <p class="mt-1 text-sm leading-6 text-white">Share anything for this community!</p>
 
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div class="sm:col-span-3">
-                        <label for="title" :class="style.label">Title</label>
+                        <label for="title" class="text-black">Title</label>
                         <div class="mt-2">
-                            <input type="text" id="title" v-model="state.title" :class="style.input"/>
+                            <input type="text" id="title" v-model="state.title" class="text-black"/>
                         </div>
                     </div>
 
                     <div class="sm:col-span-3">
-                        <label for="description" :class="style.label">Description</label>
+                        <label for="description" class="text-black">Description</label>
                         <div class="mt-2">
-                            <input type="text" id="description" v-model="state.description" :class="style.input"/>
+                            <input type="text" id="description" v-model="state.description" class="text-black w-full"/>
                         </div>
                     </div>
 
                     <div class="sm:col-span-3">
-                        <label for="file" :class="style.label">Image file</label>
+                        <label for="file" class="text-black">Image file</label>
                         <div class="mt-2">
                             <input
                                 type="file"
@@ -96,17 +90,28 @@ function closeModal() {
                         </div>
                     </div>
                     <div class="sm:col-span-3">
-                        <label for="img" :class="style.label">Preview</label>
+                        <label for="img" class="text-black">Preview</label>
                         <img v-if="state.preview" alt="" id="img" :src="state.preview"/>
-                        <p v-else>No image selected.</p>
+                        <p v-else class="mt-2">No image selected.</p>
                     </div>
                 </div>
 
                 <div class="flex justify-end items-center gap-4 mt-8">
-                    <button type="button" @click="closeModal" :class="style.cancel">Cancel</button>
-                    <button type="submit" :class="style.submit">Submit</button>
+                    <button small type="button" @click="closeModal">Cancel</button>
+                    <button small filled type="submit">Submit</button>
                 </div>
             </div>
         </form>
     </Modal>
 </template>
+
+<style scoped>
+.modal {
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    background-color: var(--form-bg);
+}
+</style>

@@ -1,7 +1,6 @@
 <script setup>
 import {Head, usePage} from "@inertiajs/vue3"
 import MainLayout from "@/Layouts/MainLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {computed, onMounted, reactive} from "vue";
 import {fetchJSON} from "@/api.js";
 import GalleryView from "@/Components/GalleryView.vue";
@@ -64,17 +63,15 @@ function closeModal() {
 
     <MainLayout>
         <template #header>
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <h2 class="font-semibold text-xl leading-tight">Gallery</h2>
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
+                <h2 class="font-semibold text-2xl leading-tight">Gallery</h2>
+                <button small filled @click="onUploadClick">
+                    Upload
+                </button>
             </div>
         </template>
 
         <div class="max-w-7xl mx-auto sm:px-6">
-            <div class="mb-6 flex flex-row justify-end">
-                <primary-button @click="onUploadClick">
-                    Upload
-                </primary-button>
-            </div>
             <div class="p-6 bg-gray-500 shadow-sm sm:rounded-lg">
                 <p v-if="isEmpty" class="text-center">Gallery is empty.</p>
                 <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
