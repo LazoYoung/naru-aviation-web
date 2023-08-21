@@ -729,6 +729,9 @@ function closeNarrowDropdown(element) {
     top: 2rem;
     left: -0.75rem;
 }
+#nav-bottom .menu-narrow .element.dropdown[opened] > label > .arrow {
+    transform: rotate(180deg);
+}
 #nav-bottom .menu-narrow .element.dropdown > .content > a {
     display: flex;
     font-size: 1.25rem;
