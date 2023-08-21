@@ -51,6 +51,10 @@ function onFileChange(event) {
 }
 
 function closeModal() {
+    state.title = '';
+    state.description = '';
+    state.file = null;
+    state.preview = null;
     emit('close');
 }
 </script>
