@@ -15,7 +15,7 @@ export default defineConfig({
                     includeAbsolute: false,
                 },
                 compilerOptions: {
-                    isCustomElement: (tag) => ['layer', 'inwrapper', 'outwrapper', 'form-input-border', 'form-input-text'].includes(tag),
+                    isCustomElement: (tag) => ['Head', 'layer', 'inwrapper', 'outwrapper', 'form-input-border', 'form-input-text', 'form-textarea'].includes(tag),
                 }
             },
         }),
