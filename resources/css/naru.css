@@ -3,6 +3,10 @@
 :root {
     --bg: rgb(35, 35, 35);
     --fg: white;
+    --red: red;
+    --yellow: yellow;
+    --green: green;
+    --t245: rgb(245, 245, 245);
 
     --sans-serif: "Pretendard Variable", "Malgun Gothic", sans-serif;
 }
