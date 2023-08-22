@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use InvalidArgumentException;
 use Throwable;
@@ -20,6 +21,9 @@ class PilotController extends Controller {
         return Inertia::render("Pilot/Dispatch");
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function dispatchFlight(Request $request): RedirectResponse|Response {
         $val = $request->validate([
             "callsign" => ["required", "string"],
@@ -33,8 +37,15 @@ class PilotController extends Controller {
             "remarks" => ["nullable", "string"]
         ]);
 
+        $offBlock = Carbon::parse($val["off_block"]);
+
+        if ($offBlock->isBefore(Carbon::now()->addMinutes(30))) {
+            throw ValidationException::withMessages([
+                "off_block" => "Departure time is invalid.",
+            ]);
+        }
+
         try {
-            $offBlock = Carbon::parse($val["off_block"]);
             $onBlock = $this->getOnBlockTime($offBlock, $val["flight_time"]);
             $booking = new Booking([
                 "preflight_at" => $offBlock->subMinutes(30),

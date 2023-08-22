@@ -1,24 +1,31 @@
 <script setup>
-import {router, usePage} from "@inertiajs/vue3";
-import {reactive} from "vue";
+import {useForm, usePage} from "@inertiajs/vue3";
+import {onMounted} from "vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import TextInput from "@/Components/TextInput.vue";
 import TextArea from "@/Components/TextArea.vue";
 import Alert from "@/alert.js";
+import {DateTime, TimeZone, TzDatabase} from "timezonecomplete";
+import tzData from "tzdata/timezone-data.json";
+import InputError from "@/Components/InputError.vue";
 
 const token = usePage().props.auth['csrf_token'];
 const url = route('pilot.dispatch.submit');
 const alert = new Alert();
-const form = reactive({
-    callsign: '',      // 항공편명
-    aircraft: '',      // 비행 기종
-    origin: '',        // 출발 공항
-    alternate: '',     // 회항 공항 (공란 가능)
-    destination: '',   // 도착 공항
-    off_block: '',     // 출발 날짜 및 시각 (ISO-8601 in UTC)
-    flight_time: '',   // 비행 시간
-    route: '',         // 비행 경로 (공란 가능)
-    remarks: '',       // 비고 (공란 가능)
+const form = useForm({
+    callsign: '',
+    aircraft: '',
+    origin: '',
+    alternate: '',
+    destination: '',
+    off_block: '',
+    flight_time: '',
+    route: '',
+    remarks: '',
+});
+
+onMounted(() => {
+    TzDatabase.init(tzData);
 });
 
 function loadSimbrief() {
@@ -46,8 +53,19 @@ function parseOFP(json) {
     form.remarks = Array.isArray(dx_rmk) ? dx_rmk.join('\n') : dx_rmk;
 }
 
+function getZuluTime(localTime) {
+    let zone = TimeZone.local();
+    let dateTime = new DateTime(localTime, zone);
+    let zuluTime = dateTime.convert(TimeZone.utc());
+    return zuluTime.format("yyyy-MM-ddTHH:mm");
+}
+
 function submit() {
-    router.post(url, form, {
+    form.off_block = getZuluTime(form.off_block);
+    form.post(url, {
+        onFinish: () => {
+            form.reset('off_block');
+        },
         onError: () => {
             alert.setType('error');
             alert.pop('Bad request!');
@@ -84,6 +102,7 @@ function submit() {
                                         autocomplete="none"
                                         required
                                 ></TextInput>
+                                <InputError class="mt-2" :message="form.errors.callsign"></InputError>
                             </div>
 
                             <div class="input">
@@ -95,6 +114,7 @@ function submit() {
                                         autocomplete="none"
                                         required
                                 ></TextInput>
+                                <InputError class="mt-2" :message="form.errors.aircraft"></InputError>
                             </div>
 
                             <div class="input">
@@ -104,6 +124,7 @@ function submit() {
                                         id="off_block"
                                         type="datetime-local"
                                         required>
+                                <InputError class="mt-2" :message="form.errors.off_block"></InputError>
                             </div>
 
                             <div class="input">
@@ -115,6 +136,7 @@ function submit() {
                                         autocomplete="none"
                                         required
                                 ></TextInput>
+                                <InputError class="mt-2" :message="form.errors.flight_time"></InputError>
                             </div>
                         </div>
                         <div class="column">
@@ -127,6 +149,7 @@ function submit() {
                                         autocomplete="none"
                                         required
                                 ></TextInput>
+                                <InputError class="mt-2" :message="form.errors.origin"></InputError>
                             </div>
 
                             <div class="input">
@@ -138,6 +161,7 @@ function submit() {
                                         autocomplete="none"
                                         required
                                 ></TextInput>
+                                <InputError class="mt-2" :message="form.errors.destination"></InputError>
                             </div>
 
                             <div class="input">
@@ -148,6 +172,7 @@ function submit() {
                                         hint="ICAO"
                                         autocomplete="none"
                                 ></TextInput>
+                                <InputError class="mt-2" :message="form.errors.alternate"></InputError>
                             </div>
 
                             <div class="input">
@@ -157,6 +182,7 @@ function submit() {
                                         hint="Route"
                                         autocomplete="none"
                                 ></TextArea>
+                                <InputError class="mt-2" :message="form.errors.route"></InputError>
                             </div>
 
                             <div class="input">
@@ -167,6 +193,7 @@ function submit() {
                                         hint="Remarks"
                                         autocomplete="none"
                                 ></TextArea>
+                                <InputError class="mt-2" :message="form.errors.remarks"></InputError>
                             </div>
                         </div>
                     </div>
@@ -174,7 +201,7 @@ function submit() {
                         <span class="text-lg">* These are optional fields</span>
                         <div class="flex-grow h-0"></div>
                         <button small @click.prevent="loadSimbrief()">Load Simbrief</button>
-                        <button small filled>Submit</button>
+                        <button small filled :disabled="form.processing">Submit</button>
                     </div>
                 </form>
             </div>
@@ -193,6 +220,10 @@ function submit() {
 input[type="datetime-local"] {
     color: var(--form-input-fg);
     background-color: var(--form-input-bg);
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjAgM2gtMVYxaC0ydjJIN1YxSDV2Mkg0Yy0xLjEgMC0yIC45LTIgMnYxNmMwIDEuMS45IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMThINFY4aDE2djEzeiIvPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiLz48L3N2Zz4=");
 }
 
 div.input > label {
