@@ -17,11 +17,8 @@ class Alert {
      * @param timeout Pop-up duration
      * @param style CSS style mappings
      */
-    constructor(type = '', style = {}, timeout = 5000) {
-        let defStyle = {
-            color: '#ffffff',
-            background: '#02a3e8'
-        };
+    constructor(type = 'success', style = {}, timeout = 5000) {
+        let defStyle = {};
         this.type = type;
         this.style = Object.assign(defStyle, style);
         this.timeout = timeout;
@@ -99,7 +96,7 @@ class Alert {
         this.notifications.appendChild(notification);
         setTimeout(() => {
             //notification.classList.add('show');
-            animate.spring(0.35, 5).to({ right: '0px' }, 1000);
+            animate.spring(0.35, 5).to({right: '0px'}, 1000);
         }, 100);
     }
 
@@ -115,7 +112,7 @@ class Alert {
         }
 
         notification.classList.add('hide');
-        animate.easeout().to({ right: '-900px' }, 200);
+        animate.easeout().to({right: '-900px'}, 200);
         setTimeout(() => {
             this.notifications.removeChild(notification);
 
