@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use InvalidArgumentException;
@@ -25,7 +26,7 @@ class PilotController extends Controller {
      * @throws ValidationException
      */
     public function dispatchFlight(Request $request): RedirectResponse|Response {
-        $val = $request->validate([
+        $validator = Validator::make($request->all(), [
             "callsign" => ["required", "string"],
             "aircraft" => ["required", "string", "size:4"],
             "origin" => ["required", "string", "size:4"],
@@ -36,28 +37,45 @@ class PilotController extends Controller {
             "route" => ["required", "string"],
             "remarks" => ["nullable", "string"]
         ]);
+        $input = $validator->validated();
+        $offBlock = $input["off_block"] ? Carbon::parse($input["off_block"]) : null;
+        $onBlock = null;
 
-        $offBlock = Carbon::parse($val["off_block"]);
+        $validator->after(function (\Illuminate\Validation\Validator $v) use ($input, &$offBlock, &$onBlock) {
+            if (preg_match("/^(NAR\d+)$/", $input["callsign"]) != 1) {
+                $v->errors()->add("callsign", "The callsign must start with NAR followed by digits.");
+            }
 
-        if ($offBlock->isBefore(Carbon::now()->addMinutes(30))) {
-            throw ValidationException::withMessages([
-                "off_block" => "Departure time is invalid.",
-            ]);
+            if (!isset($offBlock) || $offBlock->isBefore(Carbon::now()->addMinutes(30))) {
+                $v->errors()->add("off_block", "You cannot depart this early.");
+            }
+
+            try {
+                $flightTime = $this->parseMinutes($input["flight_time"]);
+                $onBlock = $this->getOnBlockTime($offBlock, $flightTime);
+            } catch (Throwable) {
+                $v->errors()->add("flight_time", "The format must be either HOUR:MIN or MIN");
+            }
+        });
+
+        if ($validator->fails()) {
+            return to_route('pilot.dispatch.view')
+                ->withErrors($validator)
+                ->withInput($request->all());
         }
 
         try {
-            $onBlock = $this->getOnBlockTime($offBlock, $val["flight_time"]);
             $booking = new Booking([
                 "preflight_at" => $offBlock->subMinutes(30),
-                "callsign" => $val["callsign"],
-                "aircraft" => $val["aircraft"],
-                "origin" => $val["origin"],
-                "alternate" => $val["alternate"],
-                "destination" => $val["destination"],
+                "callsign" => $input["callsign"],
+                "aircraft" => $input["aircraft"],
+                "origin" => $input["origin"],
+                "alternate" => $input["alternate"],
+                "destination" => $input["destination"],
                 "off_block" => $offBlock,
                 "on_block" => $onBlock,
-                "route" => $val["route"],
-                "remarks" => $val["remarks"]
+                "route" => $input["route"],
+                "remarks" => $input["remarks"]
             ]);
             $booking->user()->associate($request->user());
             $booking->saveOrFail();
@@ -72,13 +90,8 @@ class PilotController extends Controller {
         return response(null, 404);
     }
 
-    /**
-     * @throws InvalidArgumentException string format is neither HH:MM nor MM
-     * @throws Exception failed to parse $flightTime to CarbonInterval
-     */
-    private function getOnBlockTime(Carbon $offBlock, string $flightTime): Carbon {
-        $min = $this->parseMinutes($flightTime);
-        return $offBlock->copy()->add($min);
+    private function getOnBlockTime(Carbon $offBlock, CarbonInterval $blockTime): Carbon {
+        return $offBlock->copy()->add($blockTime);
     }
 
     /**
