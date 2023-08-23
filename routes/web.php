@@ -39,8 +39,10 @@ Route::get('/', function (Request $request) {
 Route::controller(PilotController::class)
     ->middleware(['auth', 'verified'])
     ->group(function () {
+        Route::get('/pilot', 'getDashboardView')
+            ->name('pilot.dashboard');
         Route::get('/dispatch', 'getDispatchView')
-            ->name('pilot.dispatch.view');
+            ->name('pilot.dispatch');
         Route::post('/dispatch', 'dispatchFlight')
             ->name('pilot.dispatch.submit');
     });

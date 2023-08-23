@@ -35,10 +35,10 @@
             <a :href="route('event.show.calendar')"><label>Official Events</label></a>
         </div>
     </div>
-    <a class="element link" href="#">
-        <label><span class="name">Pilot Center</span></label>
-    </a>
-    <a class="element link" href="#">
-        <label><span class="name">Passengers</span></label>
+    <a class="element link" :href="route('pilot.dashboard')">
+        <label>
+            <span class="name">Pilot Center</span>
+            <span class="arrow-link">&#x1F865;</span>
+        </label>
     </a>
 </template>

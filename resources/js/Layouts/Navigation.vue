@@ -390,6 +390,14 @@ function closeNarrowDropdown(element) {
     margin-left: 0.35rem;
 }
 
+#nav .menu .element > label > .arrow-link {
+    display: inline-block;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    margin: 0.35rem;
+}
+
 #nav-top {
     position: absolute;
     top: 0;

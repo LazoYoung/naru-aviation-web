@@ -18,6 +18,10 @@ use Throwable;
 
 class PilotController extends Controller {
 
+    public function getDashboardView(): \Inertia\Response {
+        return Inertia::render("Pilot/Dashboard");
+    }
+
     public function getDispatchView(): \Inertia\Response {
         return Inertia::render("Pilot/Dispatch");
     }
@@ -59,7 +63,7 @@ class PilotController extends Controller {
         });
 
         if ($validator->fails()) {
-            return to_route('pilot.dispatch.view')
+            return to_route('pilot.dispatch')
                 ->withErrors($validator)
                 ->withInput($request->all());
         }
