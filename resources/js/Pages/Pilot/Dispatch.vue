@@ -8,6 +8,7 @@ import Alert from "@/alert.js";
 import {DateTime, TimeZone, TzDatabase} from "timezonecomplete";
 import tzData from "tzdata/timezone-data.json";
 import InputError from "@/Components/InputError.vue";
+import DateTimeInput from "@/Components/DateTimeInput.vue";
 
 const token = usePage().props.auth['csrf_token'];
 const url = route('pilot.dispatch.submit');
@@ -119,11 +120,11 @@ function submit() {
 
                             <div class="input">
                                 <label for="off_block">Departure time</label>
-                                <input
+                                <DateTimeInput
                                         v-model="form.off_block"
                                         id="off_block"
-                                        type="datetime-local"
-                                        required>
+                                        required
+                                ></DateTimeInput>
                                 <InputError class="mt-2" :message="form.errors.off_block"></InputError>
                             </div>
 
@@ -215,15 +216,6 @@ function submit() {
     flex-direction: row;
     column-gap: 1.5rem;
     padding: 1rem;
-}
-
-input[type="datetime-local"] {
-    color: var(--form-input-fg);
-    background-color: var(--form-input-bg);
-}
-
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjAgM2gtMVYxaC0ydjJIN1YxSDV2Mkg0Yy0xLjEgMC0yIC45LTIgMnYxNmMwIDEuMS45IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMThINFY4aDE2djEzeiIvPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiLz48L3N2Zz4=");
 }
 
 div.input > label {
