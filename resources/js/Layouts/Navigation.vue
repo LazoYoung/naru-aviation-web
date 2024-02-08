@@ -588,7 +588,7 @@ function closeNarrowDropdown(element) {
     border: solid 1px var(--nav-fg);
 }
 #account .name {
-    font-size: 1rem;
+    font-size: 1.0rem;
     font-weight: 500;
     margin-left: 0.5rem;
     cursor: pointer;
@@ -599,10 +599,10 @@ function closeNarrowDropdown(element) {
     cursor: default;
 }
 #account > .element {
-    visibility: hidden;
+    display: none;
 }
 #account[expand] > .element {
-    visibility: visible;
+    display: flex;
     padding: 0 0 1rem 1rem;
     margin: 0.5rem 0 0.5rem 0;
     font-weight: bold;

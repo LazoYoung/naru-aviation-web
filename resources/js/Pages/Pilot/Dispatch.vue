@@ -37,7 +37,7 @@ async function loadSimbrief() {
     let username = await getResp.text();
 
     if (!username || !getResp.ok) {
-        username = window.prompt("Please specify your Simbrief ID or username.");
+        username = window.prompt("Please specify your Simbrief ID.");
     }
 
     let id = parseInt(username);
