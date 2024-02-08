@@ -27,6 +27,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property mixed $password
  * @property int $is_admin
  * @property string|null $remember_token
+ * @property string|null $simbrief_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read int|null $notifications_count
@@ -81,6 +82,7 @@ class User extends Authenticatable {
         'is_admin',
         'password',
         'remember_token',
+        'simbrief_id',
     ];
 
     /**

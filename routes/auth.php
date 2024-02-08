@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\SimbriefController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,4 +64,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('api-key/reset-acars', [KeyController::class, 'resetACARSKey'])
         ->name('acars.reset');
+
+    Route::get('simbrief/get-id', [SimbriefController::class, 'getId'])
+        ->name('simbrief.get-id');
+
+    Route::get('simbrief/update-id', [SimbriefController::class, 'updateId'])
+        ->name('simbrief.update-id');
 });

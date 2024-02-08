@@ -5,6 +5,7 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 import APIKeyForm from "@/Pages/Profile/Partials/APIKeyForm.vue";
+import SimbriefForm from "@/Pages/Profile/Partials/SimbriefForm.vue";
 
 defineProps({
     mustVerifyEmail: {
@@ -36,6 +37,10 @@ defineProps({
 
             <div class="p-8 bg-gray-400 shadow sm:rounded-lg">
                 <APIKeyForm class="max-w-lg" />
+            </div>
+
+            <div class="p-8 bg-gray-400 shadow sm:rounded-lg">
+                <SimbriefForm class="max-w-lg" />
             </div>
 
             <div class="p-8 bg-gray-400 shadow sm:rounded-lg">

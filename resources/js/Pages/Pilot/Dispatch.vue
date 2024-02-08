@@ -1,6 +1,6 @@
 <script setup>
 import {useForm, usePage} from "@inertiajs/vue3";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import TextInput from "@/Components/TextInput.vue";
 import TextArea from "@/Components/TextArea.vue";
@@ -9,10 +9,13 @@ import {DateTime, TimeZone, TzDatabase} from "timezonecomplete";
 import tzData from "tzdata/timezone-data.json";
 import InputError from "@/Components/InputError.vue";
 import DateTimeInput from "@/Components/DateTimeInput.vue";
+import {fetchResponse} from "@/api.js";
 
+const user = usePage().props.auth['user'];
 const token = usePage().props.auth['csrf_token'];
 const url = route('pilot.dispatch.submit');
 const alert = new Alert();
+const loading = ref(false);
 const form = useForm({
     callsign: '',
     aircraft: '',
@@ -29,14 +32,38 @@ onMounted(() => {
     TzDatabase.init(tzData);
 });
 
-function loadSimbrief() {
-    let url = "https://www.simbrief.com/api/xml.fetcher.php?username=lazoyoung&json=1"
-    fetch(url)
-        .catch(reason => {
-            console.log(reason);
-        })
-        .then(r => r.json())
-        .then(json => parseOFP(json));
+async function loadSimbrief() {
+    let getResp = await fetchResponse(route('simbrief.get-id'));
+    let username = await getResp.text();
+
+    if (!username || !getResp.ok) {
+        username = window.prompt("Please specify your Simbrief ID or username.");
+    }
+
+    let id = parseInt(username);
+    let url;
+
+    if (isNaN(id)) {
+        url = `https://www.simbrief.com/api/xml.fetcher.php?username=${username}&json=1`;
+    } else {
+        url = `https://www.simbrief.com/api/xml.fetcher.php?userid=${id}&json=1`;
+    }
+
+    loading.value = true;
+    let response = await fetch(url);
+
+    if (!response.ok) {
+        alert.setType("error");
+        alert.pop("Failed to fetch!");
+        loading.value = false;
+        return;
+    }
+
+    let json = await response.json();
+    parseOFP(json);
+    alert.setType("success");
+    alert.pop("Import complete.");
+    loading.value = false;
 }
 
 function parseOFP(json) {
@@ -201,7 +228,7 @@ function submit() {
                     <div id="actions">
                         <span class="text-lg">* These are optional fields</span>
                         <div class="flex-grow h-0"></div>
-                        <button small @click.prevent="loadSimbrief()">Load Simbrief</button>
+                        <button small @click.prevent="loadSimbrief()" :disabled="loading">Load Simbrief</button>
                         <button small filled :disabled="form.processing">Submit</button>
                     </div>
                 </form>

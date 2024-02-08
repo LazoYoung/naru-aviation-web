@@ -8,6 +8,7 @@ use App\Services\Flight\Flight;
 use App\Services\Flight\FlightPlan;
 use App\Services\Flight\FlightStatus;
 use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -58,7 +59,7 @@ class FlightManagerTask {
      * @return Collection<Booking> collection of flights where preflight is overdue
      */
     private function getOverdueBookings(): Collection {
-        return Booking::where("preflight_at", ">=", Carbon::now())->get();
+        return Booking::where("preflight_at", ">=", Carbon::now(DateTimeZone::UTC))->get();
     }
 
 }

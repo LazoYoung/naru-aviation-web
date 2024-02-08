@@ -5,7 +5,7 @@ import Alert from "@/alert.js";
 import {usePage} from "@inertiajs/vue3";
 import {fetchResponse} from "@/api.js";
 
-const token = usePage().props.auth['csrf_token']
+const token = usePage().props.auth['csrf_token'];
 const inputValue = ref('');
 const inputType = ref('text');
 const keyExists = ref(false);
@@ -65,7 +65,7 @@ function resetKey() {
 
             <p class="mt-1 text-sm text-gray-600">
                 Your <a href="https://github.com/LazoYoung/Naru-ACARS" target="_blank" class="underline font-bold">ACARS software</a>
-                requires the API key to record your flight.
+                will need this API key to record your flight.
             </p>
         </header>
 
