@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
     required: {
@@ -18,13 +18,17 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    tabindex: {
+        type: String,
+        required: false,
+    },
 });
 const input = ref(null);
 const target = ref(null);
-defineEmits(['update:modelValue']);
+defineEmits(["update:modelValue"]);
 
 onMounted(() => {
-    if (input.value.hasAttribute('autofocus')) {
+    if (input.value.hasAttribute("autofocus")) {
         input.value.focus();
     }
 });
@@ -42,6 +46,7 @@ defineExpose({ focus: () => input.value.focus() });
             :required="required"
             :autofocus="autofocus"
             :readonly="readonly"
+            :tabindex="tabindex"
         />
         <form-input-border></form-input-border>
     </form-datetime>
