@@ -26,6 +26,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    uppercase: {
+        type: Boolean,
+        default: false,
+    },
     readonly: {
         type: Boolean,
         default: false,
@@ -37,7 +41,7 @@ const props = defineProps({
 });
 const input = ref(null);
 const target = ref(null);
-defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue']);
 
 onMounted(() => {
     if (input.value.hasAttribute('autofocus')) {
@@ -56,13 +60,24 @@ function onFocusIn() {
 function onFocusOut() {
     target.value.removeAttribute('label');
 }
+
+function onInput(event) {
+    let value = event.target.value;
+
+    if (props.uppercase) {
+        value = value.toUpperCase();
+        event.target.value = value;
+    }
+
+    emit('update:modelValue', value);
+}
 </script>
 
 <template>
     <form-textarea ref="target">
         <textarea
                 ref="input"
-                @input="$emit('update:modelValue', $event.target.value)"
+                @input="onInput($event)"
                 type="text"
                 :value="modelValue"
                 :required="required"

@@ -37,7 +37,7 @@ class PilotController extends Controller {
             "alternate" => ["nullable", "string", "size:4"],
             "destination" => ["required", "string", "size:4"],
             "off_block" => ["required", "date"],
-            "flight_time" => ["required", "string"],
+            "block_time" => ["required", "string"],
             "route" => ["required", "string"],
             "remarks" => ["nullable", "string"]
         ]);
@@ -55,10 +55,10 @@ class PilotController extends Controller {
             }
 
             try {
-                $flightTime = $this->parseMinutes($input["flight_time"]);
-                $onBlock = $this->getOnBlockTime($offBlock, $flightTime);
+                $blockTime = $this->parseMinutes($input["block_time"]);
+                $onBlock = $this->getOnBlockTime($offBlock, $blockTime);
             } catch (Throwable) {
-                $v->errors()->add("flight_time", "The format must be either HOUR:MIN or MIN");
+                $v->errors()->add("block_time", "The format must be either HOUR:MIN or MIN");
             }
         });
 
@@ -83,7 +83,7 @@ class PilotController extends Controller {
             ]);
             $booking->user()->associate($request->user());
             $booking->saveOrFail();
-            return to_route('home');
+            return to_route('pilot.dashboard');
         } catch (Throwable $e) {
             return response($e->getMessage(), 500);
         }
