@@ -30,3 +30,4 @@ _ide_helper.php
 
 # Others
 .editorconfig
+package-lock.json
