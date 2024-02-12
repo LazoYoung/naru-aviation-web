@@ -59,8 +59,9 @@ class WebSocketHandler implements MessageComponentInterface {
             $dataLink = $this->getDataLink($conn);
             $this->_onMessage($dataLink, $conn, $msg);
         } catch (Throwable $t) {
-            Log::error("Exception while receiving a socket message.");
+            Log::error($t->getMessage());
             Log::error(print_r($t->getTraceAsString(), true));
+            $conn->send(JsonBuilder::response(500, null, "Fatal error!"));
         }
     }
 
@@ -92,19 +93,14 @@ class WebSocketHandler implements MessageComponentInterface {
             return;
         }
 
-        try {
-            $id = $dataLink->getSocketId();
-            Log::info("Inbound payload from socket $id: {$msg->getPayload()}");
+        $id = $dataLink->getSocketId();
+        Log::info("Inbound payload from socket $id: {$msg->getPayload()}");
 
-            $response = $dataLink->getHandler()->computeIntent($msg);
+        $response = $dataLink->getHandler()->computeIntent($msg);
 
-            if (isset($response)) {
-                $conn->send($response);
-                Log::debug("Response sent to socket $id: $response");
-            }
-        } catch (Throwable $t) {
-            Log::error($t->getMessage());
-            Log::error(print_r($t->getTraceAsString(), true));
+        if (isset($response)) {
+            $conn->send($response);
+            Log::debug("Response sent to socket $id: $response");
         }
     }
 
@@ -137,12 +133,11 @@ class WebSocketHandler implements MessageComponentInterface {
 
         try {
             $input = $request["bulk"]["key"];
+            $key = Key::getDatalinkKey($input);
         } catch (Throwable) {
             $conn->send(JsonBuilder::response(400, $ident, "Request form is invalid."));
             return false;
         }
-
-        $key = Key::getDatalinkKey($input);
 
         if ($key === null) {
             $conn->send(JsonBuilder::response(404, $ident, "Key does not match."));

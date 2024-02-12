@@ -10,6 +10,8 @@ class JsonBuilder {
     private static array $response = [
         200 => "Success",
         400 => "Bad Request",
+        401 => "Bad Callsign",
+        403 => "Forbidden",
         404 => "Not Found",
         440 => "Before Flight",
         450 => "Bad State",
@@ -21,7 +23,7 @@ class JsonBuilder {
             "intent" => "response",
             "ident" => $ident ?: "",
             "status" => $status,
-            "message" => JsonBuilder::$response[$status],
+            "message" => JsonBuilder::$response[$status] ?? "Undefined response",
             "response" => $response
         ];
         try {

@@ -136,7 +136,7 @@ function updateOffBlock() {
 
     if (d && h && m) {
         form.off_block = `${d}T${h}:${m}`;
-        // console.log(form.off_block);
+        console.log(form.off_block);
     }
 }
 
@@ -146,7 +146,7 @@ function updateBlockTime() {
 
     if (h && m) {
         form.block_time = parseInt(h) ? `${h}:${m}` : m;
-        // console.log(form.block_time);
+        console.log(form.block_time);
     }
 }
 </script>
