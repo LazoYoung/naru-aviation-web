@@ -46,6 +46,7 @@ class DataLinkHandler {
             return match ($intent) {
                 "fetch" => $this->onFetch($ident, $bulk),
                 "start" => $this->onStart($ident, $bulk),
+                "cancel" => $this->onCancel($ident),
                 "report" => $this->onReport($bulk),
                 "event" => $this->onEvent($bulk),
                 default => throw new UnknownIntentException(),
@@ -68,12 +69,29 @@ class DataLinkHandler {
     }
 
     private function onStart(string $ident, array $bulk): string {
-        $flightplan = $bulk["flightplan"];
+        $flightplan = $bulk["flightplan"] ?? null;
 
         if ($bulk["scheduled"]) {
-            return $this->onStartScheduled($ident, $flightplan);
+            return $this->onFlightStart($ident, $flightplan);
         } else {
-            return $this->onStartUnscheduled($ident, $flightplan);
+            return $this->onCharterFlightStart($ident, $flightplan);
+        }
+    }
+
+    private function onCancel(string $ident): string {
+        try {
+            $user_id = $this->dataLink->getUser()->id;
+            $flight = Flight::get($user_id);
+
+            if (!isset($flight)) {
+                return JsonBuilder::response(450, $ident, "There is no flight.");
+            }
+
+            $flight->delete();
+            return JsonBuilder::response(200, $ident, "Flight cancelled.");
+        } catch (Throwable $t) {
+            Log::warning($t->getMessage());
+            return JsonBuilder::response(500, $ident, "Server error.");
         }
     }
 
@@ -114,6 +132,11 @@ class DataLinkHandler {
         $booking = Booking::whereUserId($user->id)
             ->orderBy("preflight_at")
             ->first();
+
+        if (!isset($booking)) {
+            return JsonBuilder::response(404, $ident, "You haven't booked a flight.");
+        }
+
         $offBlock = Carbon::parse($booking->off_block)->toAtomString();
         $onBlock = Carbon::parse($booking->on_block)->toAtomString();
         $response = [
@@ -130,14 +153,10 @@ class DataLinkHandler {
             ]
         ];
 
-        if (isset($booking)) {
-            return JsonBuilder::response(200, $ident, $response);
-        } else {
-            return JsonBuilder::response(404, $ident, "You haven't booked a flight.");
-        }
+        return JsonBuilder::response(200, $ident, $response);
     }
 
-    private function onStartUnscheduled(string $ident, array $flightplan): string {
+    private function onCharterFlightStart(string $ident, array $flightplan): string {
         $user_id = $this->dataLink->getUser()->id;
 
         if (Flight::get($user_id) !== null) {
@@ -146,27 +165,43 @@ class DataLinkHandler {
 
         try {
             $fpn = FlightPlan::createFromArray($flightplan);
+            $callsign = $fpn->getCallsign();
+
+            foreach (Flight::getAllFlights() as $flight) {
+                if (strcmp($callsign, $flight->getFlightPlan()->getCallsign()) == 0) {
+                    return JsonBuilder::response(401, $ident, "Callsign in use.");
+                }
+            }
+
+            if (Booking::whereCallsign($callsign)->exists()) {
+                return JsonBuilder::response(401, $ident, "Callsign in use.");
+            }
+
+            Flight::create($user_id, $fpn);
+            return JsonBuilder::response(200, $ident, "Flight is submitted.");
         } catch (Throwable) {
             return JsonBuilder::response(400, $ident, "Flightplan form is invalid.");
         }
-
-        Flight::create($user_id, $fpn);
-        return JsonBuilder::response(200, $ident, "Flight is submitted.");
     }
 
 
-    private function onStartScheduled(string $ident, array $flightplan): string {
+    private function onFlightStart(string $ident, array $flight_plan): string {
         $user_id = $this->dataLink->getUser()->id;
         $flight = Flight::get($user_id);
 
         if (isset($flight)) {
-            if ($flight->getBeacon()->isOffline()) {
-                $base = $flight->getFlightPlan();
-                $fpn = FlightPlan::createFromArray($flightplan, $base);
-                $flight->setFlightPlan($fpn);
-                return JsonBuilder::response(200, $ident, "Flight is submitted with revised flightplan.");
-            }
-
+//            $basePlan = $flight->getFlightPlan();
+//            $fpn = FlightPlan::createFromArray($flightplan);
+//
+//            if (strcmp($fpn->getCallsign(), $basePlan->getCallsign()) != 0) {
+//                return JsonBuilder::response(400, $ident, "Request form is invalid.");
+//            }
+//
+//            if ($flight->getBeacon()->isOffline()) {
+//                $fpn = FlightPlan::createFromArray($flightplan, $basePlan);
+//                $flight->setFlightPlan($fpn);
+//                return JsonBuilder::response(200, $ident, "Flight is submitted with revised flightplan.");
+//            }
             return JsonBuilder::response(450, $ident, "The flight has already started.");
         }
 
@@ -182,9 +217,26 @@ class DataLinkHandler {
             return JsonBuilder::response(440, $ident, Carbon::parse($booking->preflight_at)->timestamp);
         }
 
+        if ($flight_plan) {
+            $fpn = FlightPlan::createFromArray($flight_plan);
+
+            if (strcmp($fpn->getCallsign(), $booking->callsign) == 0) {
+                $booking->aircraft = $fpn->getAircraft();
+                $booking->route = $fpn->getRoute();
+                $booking->origin = $fpn->getOrigin();
+                $booking->destination = $fpn->getDestination();
+                $booking->alternate = $fpn->getAlternate();
+                $booking->off_block = $fpn->getOffBlock();
+                $booking->on_block = $fpn->getOnBlock();
+                $booking->remarks = $fpn->getRemarks();
+            } else {
+                return JsonBuilder::response(400, $ident, "Callsign does not match.");
+            }
+        }
+
         try {
             Flight::createFromBooking($booking);
-            return JsonBuilder::response(200, $ident, "Flight is submitted.");
+            return JsonBuilder::response(200, $ident, "Flight started.");
         } catch (Throwable) {
             return JsonBuilder::response(500, $ident, "Failed to delete a booking record.");
         }
