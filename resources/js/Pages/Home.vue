@@ -57,7 +57,7 @@ function getQuote() {
         <section id="root-header">
             <layer class="bg">
                 <video autoplay loop muted>
-                    <source src="https://naru.flylazo.com/promo.mp4" />
+                    <source src="https://flynaru.com/promo.mp4" />
                 </video>
             </layer>
             <layer class="cv"></layer>
