@@ -4,7 +4,7 @@
 </picture>
 
 ## 사이트 바로가기
-[naru.flylazo.com](https://naru.flylazo.com)
+[flynaru.com](https://flynaru.com)
 
 ## 프로젝트 소개
 지속가능한 항공 커뮤니티의 비전을 품은 **나루 항공사** 공식 홈페이지입니다.
